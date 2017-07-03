@@ -1,5 +1,10 @@
 language: node_js
 node_js:
   - 4.3.1
+install:
+  - npm install
+  - npm install forever -g
 before_script:
-  - node tests/test-server.js
+  - forever start tests/test-server.js
+after_script:
+  - forever stopall
