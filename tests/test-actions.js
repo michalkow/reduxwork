@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
-var serverAdress = 'http://127.0.0.1'
+var serverAdress = 'http://127.0.0.1:1234'
 const socket = io(serverAdress);
 
 const config = {

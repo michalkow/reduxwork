@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-var port = process.env.PORT || 80;
+var port = process.env.PORT || 1234;
 
 // Run server on port
 server.listen(port, function () {
