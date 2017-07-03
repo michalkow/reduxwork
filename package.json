@@ -36,7 +36,7 @@
     "webpack": "^2.1.0-beta.28"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest tests --forceExit",
     "start": "webpack -p"
   },
   "jest": {
