@@ -1,6 +1,6 @@
 export default function socketDispatcher(config, action, name, dispatch, payload, cb, options) {
   console.log('socketDispatcher')
-  action = action.toUpperCase();
+  if(action) action = action.toUpperCase();
   if(!config) config = {};
   if(!config.eventName) config.eventName = "redux_action_event";
   if(config.socketIoFunction) {
