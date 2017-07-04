@@ -5,7 +5,7 @@ export default function socketDispatcher(config, action, name, dispatch, payload
   if(!config.eventName) config.eventName = "redux_action_event";
   if(config.socketIoFunction) {
     let actionData = {
-      type: action+'_'+name
+      type: (action ? action+'_'+name : name)
     };
     if(payload) actionData.data = payload;
     console.log('socketDispatcher config', config)
@@ -14,13 +14,13 @@ export default function socketDispatcher(config, action, name, dispatch, payload
       config.socketIoFunction(config.eventName, actionData, (err, res) => {
         if(err) {
           dispatch({
-            type: action+'_'+name+'_FAILED',
+            type: (action ? action+'_'+name : name)+'_FAILED',
             error: err,
           });
           reject(err);
         } else { 
           dispatch({
-            type: action+'_'+name+'_COMPLETED',
+            type: (action ? action+'_'+name : name)+'_COMPLETED',
             data: res,
           });
           resolve(res);

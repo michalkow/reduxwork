@@ -1,4 +1,5 @@
 import createAction from './actions/createAction';
+import createSocketAction from './actions/createSocketAction';
 import createLocalActions from './actions/createLocalActions';
 import {createSocketActions, createFetchActions, createIoActions} from './actions/createIoActions';
 import {createSocketGetAction, createFetchGetAction, createGetAction} from './actions/createGetAction';
@@ -9,6 +10,7 @@ import createLocalReducers from './reducers/createLocalReducers';
 
 var reduxwork = {
 	createAction, 
+	createSocketAction,
 	createLocalActions, 
 	createSocketActions, 
 	createFetchActions, 
@@ -27,6 +29,7 @@ var reduxwork = {
 exports.default = reduxwork;
 
 exports.createAction = createAction; 
+exports.createSocketAction = createSocketAction; 
 exports.createLocalActions = createLocalActions; 
 exports.createSocketActions = createSocketActions; 
 exports.createFetchActions = createFetchActions; 

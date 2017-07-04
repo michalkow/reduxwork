@@ -5,7 +5,7 @@ export default function buildAction(config, action, name, data, cb, options) {
   console.log('buildAction', options)
   return function (dispatch) {
     let actionData = {
-      type: action+'_'+name.toUpperCase(),
+      type: (action ? action+'_'+name.toUpperCase() : name.toUpperCase()),
       data
     };
     dispatch(actionData)
