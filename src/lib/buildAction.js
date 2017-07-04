@@ -4,6 +4,10 @@ import fetchDispatcher from '../lib/fetchDispatcher';
 export default function buildAction(config, action, name, data, cb, options) {
   console.log('buildAction', options)
   return function (dispatch) {
+    if(config.addKeyOnCreate && action=="CREATE") {
+      let keyName = config.keyName || 'id';
+      if(!data[keyName]) data[keyName] = new Date().getTime();
+    }
     let actionData = {
       type: (action ? action+'_'+name.toUpperCase() : name.toUpperCase()),
       data
