@@ -1,5 +1,17 @@
 export default function createLocalActions(config, name, options) {
   return {
+    [`find${name}`](data, cb) {
+      return {
+        type: 'FIND_'+name.toUpperCase(),
+        data
+      }
+    },
+    [`sync${name}`](data, cb) {
+      return {
+        type: 'SYNC_'+name.toUpperCase(),
+        data
+      }
+    },
     [`clear${name}`]() {
       return {
         type: 'CLEAR_'+name.toUpperCase()

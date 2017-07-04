@@ -28,51 +28,21 @@ export default function createLocalReducers(config, name, customState, customAct
   return function(rState = initialState, rAction) {
     var defaultActions = Object.assign({
       [`FIND_${name}`](state, action) {
-        let find = {
-          isFinding: true,
-          findError: null,
-        };
-        find.query = action.query || null;
-        find.params = action.params || null;
-        if(!_.isEqual(find.query, state.query) || !_.isEqual(find.params, state.params)) find.items = [];
-        return Object.assign({}, state, find);  
-      },
-      [`FIND_${name}_FAILED`](state, action) {
-        return Object.assign({}, state, {
-          findError: action.error,
-          isFinding: false,
-        })
-      },
-      [`FIND_${name}_COMPLETED`](state, action) {
+        let data = action.data;
+        if(!_.isArray(data)) data = [data];
         return Object.assign({}, state, {
           init: true,
-          isFinding: false,
-          findError: null,
-          items: action.data,
-        })      
-      },
-      [`SYNC_${name}`](state, action) {
-        return Object.assign({}, state, {
-          isSyncing: true,
-          syncError: null
+          items: data,
         });  
       },
-      [`SYNC_${name}_FAILED`](state, action) {
-        return Object.assign({}, state, {
-          syncError: action.error,
-          isSyncing: false,
-        })
-      },
-      [`SYNC_${name}_COMPLETED`](state, action) {
+      [`SYNC_${name}`](state, action) {
         let data = action.data;
         if(!_.isArray(data)) data = [data];
         let items = _.unionBy(data, [...state.items], config.keyName);
         return Object.assign({}, state, {
-          isSyncing: false,
-          syncError: null,
           init: true,
           items: items,
-        })      
+        });  
       },
       [`RECEIVE_${name}`](state, action) {
         let data = action.data;
