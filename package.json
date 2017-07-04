@@ -2,7 +2,7 @@
   "name": "reduxwork",
   "version": "1.0.0",
   "description": "Framework for creating redux actions and reducers that get data from server via ajax of websockets",
-  "main": "index.js",
+  "main": "dist/reduxwork.js",
   "dependencies": {
     "lodash": "^4.17.4"
   },
