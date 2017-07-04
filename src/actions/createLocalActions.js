@@ -1,4 +1,4 @@
-export function createLocalActions(config, name, options) {
+export default function createLocalActions(config, name, options) {
   return {
     [`clear${name}`]() {
       return {

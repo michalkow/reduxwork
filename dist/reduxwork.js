@@ -332,7 +332,7 @@ exports.createLocalReducers = _createLocalReducers2.default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createAction = createAction;
+exports.default = createAction;
 function createAction(name, binding) {
   return function (data) {
     var action = { type: name };
@@ -351,7 +351,7 @@ function createAction(name, binding) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createLocalActions = createLocalActions;
+exports.default = createLocalActions;
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
