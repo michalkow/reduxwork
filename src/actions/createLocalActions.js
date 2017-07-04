@@ -22,10 +22,10 @@ export default function createLocalActions(config, name, options) {
         type: 'RESET_'+name.toUpperCase()
       }
     },
-    [`select${name}`](selected) {
+    [`select${name}`](data) {
       return {
         type: 'SELECT_'+name.toUpperCase(),
-        selected
+        data
       }
     },
     [`create${name}`](data) {

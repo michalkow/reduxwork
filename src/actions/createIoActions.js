@@ -15,10 +15,10 @@ export function createSocketActions(config, name, options) {
         type: 'RESET_'+ name.toUpperCase()
       }
     },
-    [`select${name}`](selected) {
+    [`select${name}`](data) {
       return {
         type: 'SELECT_'+ name.toUpperCase(),
-        selected
+        data
       }
     },
     [`find${name}`](data, cb) {
@@ -59,10 +59,10 @@ export function createFetchActions(config, name, options) {
         type: 'RESET_'+ name.toUpperCase()
       }
     },
-    [`select${name}`](selected) {
+    [`select${name}`](data) {
       return {
         type: 'SELECT_'+ name.toUpperCase(),
-        selected
+        data
       }
     },
     [`find${name}`](params, query, cb) {
