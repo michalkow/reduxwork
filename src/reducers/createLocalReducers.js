@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export function createLocalReducers(config, name, customState, customActions, options) {
+export default function createLocalReducers(config, name, customState, customActions, options) {
   options = Object.assign({keyName: "id"}, options);
   if(!customState) customState = {};
   if(!customActions) customActions = {};

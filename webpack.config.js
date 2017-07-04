@@ -8,6 +8,8 @@ module.exports = {
   output: {
     filename: 'reduxwork.js',
     path: resolve(__dirname, 'dist'),
+    library: 'reduxwork',
+    libraryTarget: "umd"
   },
   context: resolve(__dirname, 'src'),
   module: {
@@ -20,5 +22,13 @@ module.exports = {
         exclude: /node_modules/
       }
     ],
+  },
+  externals: {
+      "lodash": {
+          commonjs: "lodash",
+          commonjs2: "lodash",
+          amd: "lodash",
+          root: "_"
+      }
   }
 };

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export function createIoReducers(config, name, customState, customActions, options) {
+export default function createIoReducers(config, name, customState, customActions, options) {
 	options = Object.assign({keyName: "id"}, options);
   if(!customState) customState = {};
   if(!customActions) customActions = {};

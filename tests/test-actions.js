@@ -1,4 +1,4 @@
-import { createSocketActions, createFetchActions } from '../src/reduxwork.js'
+import { createSocketActions, createFetchActions } from '../dist/reduxwork.js'
 import io from 'socket.io-client';
 require('es6-promise').polyfill();
 require('isomorphic-fetch');

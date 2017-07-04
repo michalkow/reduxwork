@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { createIoReducers } from '../src/reduxwork.js'
+import { createIoReducers } from '../dist/reduxwork.js'
 
 export default {
   messages: createIoReducers({}, 'messages', {
