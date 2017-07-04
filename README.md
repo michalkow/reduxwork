@@ -22,7 +22,7 @@ bower install reduxwork
 
 ## Framework
 
-I created this libary while working on my own projects. It have been really useful, so I though others might like it as well. It was created to fit me and my style. I tried to turn it into open-source project that would fit all the best I could. If you have any feedback on style, naming or other thing, please let me know or submit a push request. Thanks! 
+I created this libary while working on my own projects. It has been really useful, so I thought others might like it as well. It was created to fit me and my own style. Did my best to turn it into an open-source project that accounts for a broad range of usecases. If you have any feedback on style, naming or other things, please let me know or submit a pull request. Thanks! 
 
 ## License
 
