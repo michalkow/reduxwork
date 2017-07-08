@@ -146,7 +146,7 @@ test('Create failed reducer', () => {
 test('Destroy reducer', () => {
  expect(
     testReducers.messages(Object.assign({}, reducerDefaluts, {
-    	items: [{"body": "test", id: 1}]
+    	items: [{"body": "test", id: 1}, {"body": "test2", id: 2}, {"body": "test3", id: 3}]
     }), {
       type: 'DESTROY_MESSAGES',
       data: {id: 1}
@@ -156,7 +156,7 @@ test('Destroy reducer', () => {
     	isWritting: true,
 	    destroyedItem: {"body": "test", id: 1},
 	    destroyedItemIndex: 0,
-	    items: []
+	    items: [{"body": "test2", id: 2}, {"body": "test3", id: 3}]
 	  })
   )
 });
@@ -168,6 +168,7 @@ test('Destroy complete reducer', () => {
 	      destroyError: null,
 	      destroyedItem: {"body": "test", id: 1},
 	      destroyedItemIndex: 0,
+        items: [{"body": "test2", id: 2}, {"body": "test3", id: 3}]
     	}), {
       type: 'DESTROY_MESSAGES_COMPLETED',
       data: true
@@ -178,6 +179,7 @@ test('Destroy complete reducer', () => {
       destroyError: null,
       destroyedItem: null,
       destroyedItemIndex: null,
+      items: [{"body": "test2", id: 2}, {"body": "test3", id: 3}]
 	  })
   )
 });
@@ -189,6 +191,7 @@ test('Destroy failed reducer', () => {
 	    	destroyError: null,
 	      destroyedItem: {"body": "test", id: 1},
 	      destroyedItemIndex: 0,
+        items: [{"body": "test2", id: 2}, {"body": "test3", id: 3}]
     	}), {
       type: 'DESTROY_MESSAGES_FAILED',
       error: "failed"
@@ -199,7 +202,7 @@ test('Destroy failed reducer', () => {
       destroyError: "failed",
       destroyedItem: null,
       destroyedItemIndex: null,
-      items: [{"body": "test", id: 1}]
+      items: [{"body": "test", id: 1}, {"body": "test2", id: 2}, {"body": "test3", id: 3}]
 	  })
   )
 });
