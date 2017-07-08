@@ -82,6 +82,15 @@ export default function createIoReducers(config, name, customState, customAction
           items: items,
         })      
       },
+      [`REMOVE_${name}`](state, action) {
+        var update = {};
+        if(action.data[options.keyName]) {
+          var items = [...state.items];
+          items.splice(_.findIndex(items, (item) => item[options.keyName] == action.data[options.keyName]), 1);
+          update.items = items;
+        }
+        return Object.assign({}, state, update)    
+      },
       [`CREATE_${name}`](state, action) {
         let item = Object.assign({}, action.data, {_temp: true});
         console.log('CREATE', action)
