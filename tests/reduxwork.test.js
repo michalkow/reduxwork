@@ -18,7 +18,6 @@ const reducerDefaluts = {
   init: false,
   selected: null,
   query: null,
-  params: null,
   isFinding: false,
   isSyncing: false,
   isWritting: false,
@@ -47,6 +46,20 @@ test('Find messages', () => {
 		expectedActions.push({ type: 'FIND_MESSAGES_COMPLETED', data: res})
 		expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
 	});
+});
+
+test('Find messages by id', () => {
+  var data = {id: 4};
+  var store = mockStore({ messages: {} });
+  var expectedActions = [
+    { type: 'FIND_MESSAGES', data: data}
+  ];
+  return store.dispatch(findMessages(data))
+  .then((res) => {
+    console.log(res)
+    expectedActions.push({ type: 'FIND_MESSAGES_COMPLETED', data: res})
+    expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
+  });
 });
 
 test('Create new message', () => {

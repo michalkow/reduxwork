@@ -10,7 +10,6 @@ export default function createLocalReducers(config, name, customState, customAct
     init: false,
     selected: null,
     query: null,
-    params: null,
     isFinding: false,
     isSyncing: false,
     isWritting: false,

@@ -10,7 +10,6 @@ export default function createIoReducers(config, name, customState, customAction
     init: false,
     selected: null,
     query: null,
-    params: null,
     isFinding: false,
     isSyncing: false,
     isWritting: false,
@@ -34,9 +33,8 @@ export default function createIoReducers(config, name, customState, customAction
           isFinding: true,
           findError: null,
         };
-        find.query = action.query || null;
-        find.params = action.params || null;
-        if(!_.isEqual(find.query, state.query) || !_.isEqual(find.params, state.params)) find.items = [];
+        find.query = (action.data && !_.isEmpty(action.data)) ? action.data : null;
+        if(!_.isEqual(find.query, state.query)) find.items = [];
         return Object.assign({}, state, find);  
       },
       [`FIND_${name}_FAILED`](state, action) {

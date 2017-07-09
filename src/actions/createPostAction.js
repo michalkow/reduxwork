@@ -1,4 +1,3 @@
-import buildFetchGetAction from '../lib/buildFetchGetAction';
 import buildAction from '../lib/buildAction';
 import socketDispatcher from '../lib/socketDispatcher';
 import fetchDispatcher from '../lib/fetchDispatcher';

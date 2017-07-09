@@ -6,13 +6,9 @@ const fetchDefaults = {
   }
 }
 
-export default function buildFetchOptions(options, action, payload) {
+export default function buildFetchOptions(options, payload, method) {
   var fetchOptions = options.fetchOptions || fetchDefaults;
-  if(action=='GET' || action=='FIND' || action=='SYNC') fetchOptions.method = 'GET';
-  else if(action=='POST' || action=='CREATE') fetchOptions.method = 'POST';
-  else if(action=='UPDATE') fetchOptions.method = 'PUT';
-  else if(action=='DESTROY') fetchOptions.method = 'DELETE';
-  else fetchOptions.method = 'POST';
+  fetchOptions.method = method;
   if(fetchOptions.method!='GET') fetchOptions.body = JSON.stringify(payload);
   return fetchOptions;
 }

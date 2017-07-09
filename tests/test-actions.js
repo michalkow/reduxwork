@@ -1,4 +1,4 @@
-import { createSocketActions, createFetchActions } from '../dist/reduxwork.js'
+import { createIoActions } from '../dist/reduxwork.js'
 import io from 'socket.io-client';
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
@@ -8,6 +8,7 @@ const socket = io(serverAdress);
 
 const config = {
   baseURL: serverAdress+"/api",
+  type: 'fetch',
   socketIoFunction: function(action, data, cb) { socket.emit(action, data, cb) },
   fetchFunction: fetch
 }
@@ -22,5 +23,5 @@ export var {
   syncMessages,
   receiveMessages,
   resetMessages
-} = createSocketActions(config, 'Messages');
+} = createIoActions(config, 'Messages');
 

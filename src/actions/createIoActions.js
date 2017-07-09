@@ -1,4 +1,3 @@
-import buildFetchGetAction from '../lib/buildFetchGetAction';
 import buildAction from '../lib/buildAction';
 
 export function createSocketActions(config, name) {
@@ -65,28 +64,26 @@ export function createFetchActions(config, name) {
         data
       }
     },
-    [`find${name}`](params, query, cb) {
+    [`find${name}`](data, cb) {
       var action = "FIND";
-      return buildFetchGetAction(config, action, name, params, query, cb)
+      return buildAction(config, action, name, data, cb)
     },
-    [`sync${name}`](params, query, cb) {
+    [`sync${name}`](data, cb) {
       var action = "SYNC";
-      return buildFetchGetAction(config, action, name, params, query, cb)
+      return buildAction(config, action, name, data, cb)
+      
     },
     [`create${name}`](data, cb) {
       var action = "CREATE";
       return buildAction(config, action, name, data, cb)
-      
     },
     [`update${name}`](data, cb, mod) {
       var action = "UPDATE";
       return buildAction(config, action, name, data, cb)
-      
     },
     [`destroy${name}`](data, cb) {
       var action = "DESTROY";
       return buildAction(config, action, name, data, cb)
-      
     }
   }
 }

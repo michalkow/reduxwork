@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import buildFetchGetAction from '../lib/buildFetchGetAction';
 import buildAction from '../lib/buildAction';
 import socketDispatcher from '../lib/socketDispatcher';
 import fetchDispatcher from '../lib/fetchDispatcher';
@@ -18,7 +17,7 @@ export function createFetchGetAction(config, name) {
   if(!config) config = {};
   config.type = "fetch";
   return function (parama, query, cb) {
-    return buildFetchGetAction(config, action, name, params, query, cb)
+    return buildAction(config, action, name, params, query, cb)
   }
 }
 

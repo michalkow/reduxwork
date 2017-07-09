@@ -44,13 +44,21 @@ var mockDB = {
     dataset[collection] = _.reject(dataset[collection], data);
     return true;
   },
-  find: function(collection, query) {
-    if(!query) query = {};
-    return _.filter(dataset[collection], query);
+  find: function(collection, data) {
+    if(!data) data = {};
+    return _.filter(dataset[collection], data);
   },
 }
 
 app.post('/api/:collection/:action', function(req, res, next) {
+  res.json(mockDB[req.params.action](req.params.collection, req.body));
+});
+
+app.delete('/api/:collection/:action', function(req, res, next) {
+  res.json(mockDB[req.params.action](req.params.collection, req.body));
+});
+
+app.put('/api/:collection/:action', function(req, res, next) {
   res.json(mockDB[req.params.action](req.params.collection, req.body));
 });
 

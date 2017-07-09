@@ -1,5 +1,6 @@
 import buildFetchOptions from './buildFetchOptions';
 import buildURL from './buildURL';
+import getFetchMethod from './getFetchMethod';
 
 export default function fetchDispatcher(config, action, name, dispatch, payload, cb) {
   console.log('fetchDispatcher')
@@ -12,8 +13,8 @@ export default function fetchDispatcher(config, action, name, dispatch, payload,
     )
     return new Promise((resolve, reject) => {
       config.fetchFunction( 
-        buildURL(config, action, name, payload), 
-        buildFetchOptions(config, action, payload) 
+        buildURL(config, action, name, payload, getFetchMethod(config, action)), 
+        buildFetchOptions(config, payload, getFetchMethod(config, action)) 
       )
       .then(response => {
         return response.json()
