@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import selectedUpdate from '../lib/selectedUpdate';
 
 export default function createIoReducers(config, name, customState, customActions) {
 	if(!config) config = {};
@@ -45,12 +46,13 @@ export default function createIoReducers(config, name, customState, customAction
         })
       },
       [`FIND_${name}_COMPLETED`](state, action) {
+        let selected = selectedUpdate(state, action.data);
         return Object.assign({}, state, {
           init: true,
           isFinding: false,
           findError: null,
           items: action.data,
-        })      
+        }, selected)      
       },
       [`SYNC_${name}`](state, action) {
         return Object.assign({}, state, {
@@ -68,20 +70,22 @@ export default function createIoReducers(config, name, customState, customAction
         let data = action.data;
         if(!_.isArray(data)) data = [data];
         let items = _.unionBy(data, [...state.items], config.keyName);
+        let selected = selectedUpdate(state, items);
         return Object.assign({}, state, {
           isSyncing: false,
           syncError: null,
           init: true,
           items: items,
-        })      
+        }, selected)      
       },
       [`RECEIVE_${name}`](state, action) {
         let data = action.data;
         if(!_.isArray(data)) data = [data];
         let items = _.unionBy(data, [...state.items], config.keyName);
+        let selected = selectedUpdate(state, items);
         return Object.assign({}, state, {
           items: items,
-        })      
+        }, selected)     
       },
       [`REMOVE_${name}`](state, action) {
         var update = {};
@@ -90,7 +94,8 @@ export default function createIoReducers(config, name, customState, customAction
           items.splice(_.findIndex(items, (item) => item[config.keyName] == action.data[config.keyName]), 1);
           update.items = items;
         }
-        return Object.assign({}, state, update)    
+        let selected = update.items ? selectedUpdate(state, update.items) : {};
+        return Object.assign({}, state, update, selected)    
       },
       [`CREATE_${name}`](state, action) {
         let item = Object.assign({}, action.data, {_temp: true});
@@ -167,7 +172,8 @@ export default function createIoReducers(config, name, customState, customAction
 	        update.items = _.unionBy(data, items, config.keyName);
         }
         console.log(update)
-        return Object.assign({}, state, update)      
+        let selected = update.items ? selectedUpdate(state, update.items) : {};
+        return Object.assign({}, state, update, selected)      
       },
       [`DESTROY_${name}`](state, action) {
         var update = {
@@ -197,21 +203,27 @@ export default function createIoReducers(config, name, customState, customAction
         return Object.assign({}, state, update)      
       },
       [`DESTROY_${name}_COMPLETED`](state, action) {
+        let selected = selectedUpdate(state, state.items);
         return Object.assign({}, state, {
           isWritting: false,
           destroyError: null,
           destroyedItem: null,
           destroyedItemIndex: null,
-        })     
+        }, selected)     
       },
       [`CLEAR_${name}`](state, action) {
         return Object.assign({}, state, {
-          items: []
+          items: [],
+          selected: null
         })     
       },
       [`SELECT_${name}`](state, action) {
+        let selected = null;
+        if(_.isString(action.data) || _.isNumber(action.data)) selected = _.find(state.items, (item) => item[config.keyName] == action.data);
+        if(_.isObject(action.data) && action.data[config.keyName]) selected = _.find(state.items, (item) => item[config.keyName] == action.data[config.keyName]);
+        else selected = action.data;
         return Object.assign({}, state, {
-          selected: action.data
+          selected: selected
         })  
       },
       [`RESET_${name}`](state, action) {

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import selectedUpdate from '../lib/selectedUpdate';
 
 export default function createLocalReducers(config, name, customState, customActions) {
   if(!config) config = {};
@@ -31,27 +32,30 @@ export default function createLocalReducers(config, name, customState, customAct
       [`FIND_${name}`](state, action) {
         let data = action.data;
         if(!_.isArray(data)) data = [data];
+        let selected = selectedUpdate(state, data);
         return Object.assign({}, state, {
           init: true,
           items: data,
-        });  
+        }, selected);  
       },
       [`SYNC_${name}`](state, action) {
         let data = action.data;
         if(!_.isArray(data)) data = [data];
         let items = _.unionBy(data, [...state.items], config.keyName);
+        let selected = selectedUpdate(state, items);
         return Object.assign({}, state, {
           init: true,
           items: items,
-        });  
+        }, selected);  
       },
       [`RECEIVE_${name}`](state, action) {
         let data = action.data;
         if(!_.isArray(data)) data = [data];
         let items = _.unionBy(data, [...state.items], config.keyName);
+        let selected = selectedUpdate(state, items);
         return Object.assign({}, state, {
           items: items,
-        })      
+        }, selected)      
       },
       [`CREATE_${name}`](state, action) {
         return Object.assign({}, state, {
@@ -70,7 +74,8 @@ export default function createLocalReducers(config, name, customState, customAct
           );
           update.items = items;
         }
-        return Object.assign({}, state, update)      
+        let selected = update.items ? selectedUpdate(state, update.items) : {};
+        return Object.assign({}, state, update, selected)      
       },
       [`DESTROY_${name}`](state, action) {
         var update = {};
@@ -80,11 +85,13 @@ export default function createLocalReducers(config, name, customState, customAct
           items.splice(destroyedItemIndex, 1);
           update.items = items;
         }
-        return Object.assign({}, state, update)      
+        let selected = update.items ? selectedUpdate(state, update.items) : {};
+        return Object.assign({}, state, update, selected)      
       },
       [`CLEAR_${name}`](state, action) {
         return Object.assign({}, state, {
-          items: []
+          items: [],
+          selected: null
         })     
       },
       [`SELECT_${name}`](state, action) {
