@@ -8,7 +8,7 @@ export function createSocketGetAction(config, name) {
   if(!config) config = {};
   config.type = "socket";
   return function (data, cb) {
-    return buildAction(config, action, name, params, query, cb)
+    return buildAction(config, action, name, data, cb)
   }
 }
 
@@ -17,7 +17,7 @@ export function createFetchGetAction(config, name) {
   if(!config) config = {};
   config.type = "fetch";
   return function (parama, query, cb) {
-    return buildAction(config, action, name, params, query, cb)
+    return buildAction(config, action, name, data, cb)
   }
 }
 
