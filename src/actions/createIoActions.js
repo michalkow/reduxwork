@@ -1,9 +1,9 @@
 import buildFetchGetAction from '../lib/buildFetchGetAction';
 import buildAction from '../lib/buildAction';
 
-export function createSocketActions(config, name, options) {
-  if(!options) options = {};
-  options.type = "socket";
+export function createSocketActions(config, name) {
+  if(!config) config = {};
+  config.type = "socket";
   return {
     [`clear${name}`]() {
       return {
@@ -23,31 +23,31 @@ export function createSocketActions(config, name, options) {
     },
     [`find${name}`](data, cb) {
       var action = "FIND";
-      return buildAction(config, action, name, data, cb, options)
+      return buildAction(config, action, name, data, cb)
     },
     [`sync${name}`](data, cb) {
       var action = "SYNC";
-      return buildAction(config, action, name, data, cb, options)
+      return buildAction(config, action, name, data, cb)
       
     },
     [`create${name}`](data, cb) {
       var action = "CREATE";
-      return buildAction(config, action, name, data, cb, options)
+      return buildAction(config, action, name, data, cb)
     },
     [`update${name}`](data, cb, mod) {
       var action = "UPDATE";
-      return buildAction(config, action, name, data, cb, options)
+      return buildAction(config, action, name, data, cb)
     },
     [`destroy${name}`](data, cb) {
       var action = "DESTROY";
-      return buildAction(config, action, name, data, cb, options)
+      return buildAction(config, action, name, data, cb)
     }
   }
 }
 
-export function createFetchActions(config, name, options) {
-  if(!options) options = {};
-  options.type = "fetch";
+export function createFetchActions(config, name) {
+  if(!config) config = {};
+  config.type = "fetch";
   return {
     [`clear${name}`]() {
       return {
@@ -67,33 +67,33 @@ export function createFetchActions(config, name, options) {
     },
     [`find${name}`](params, query, cb) {
       var action = "FIND";
-      return buildFetchGetAction(config, action, name, params, query, cb, options)
+      return buildFetchGetAction(config, action, name, params, query, cb)
     },
     [`sync${name}`](params, query, cb) {
       var action = "SYNC";
-      return buildFetchGetAction(config, action, name, params, query, cb, options)
+      return buildFetchGetAction(config, action, name, params, query, cb)
     },
     [`create${name}`](data, cb) {
       var action = "CREATE";
-      return buildAction(config, action, name, data, cb, options)
+      return buildAction(config, action, name, data, cb)
       
     },
     [`update${name}`](data, cb, mod) {
       var action = "UPDATE";
-      return buildAction(config, action, name, data, cb, options)
+      return buildAction(config, action, name, data, cb)
       
     },
     [`destroy${name}`](data, cb) {
       var action = "DESTROY";
-      return buildAction(config, action, name, data, cb, options)
+      return buildAction(config, action, name, data, cb)
       
     }
   }
 }
 
-export function createIoActions(config, name, options) {
-  if(options.type == "socket") 
-    return createSocketActions(config, name, options);
-  if(options.type == "fetch") 
-    return createFetchActions(config, name, options);
+export function createIoActions(config, name) {
+  if(config.type == "socket") 
+    return createSocketActions(config, name);
+  if(config.type == "fetch") 
+    return createFetchActions(config, name);
 }

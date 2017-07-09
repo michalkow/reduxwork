@@ -1,6 +1,6 @@
 import fetchDispatcher from '../lib/fetchDispatcher';
 
-export default function buildFetchGetAction(config, action, name, params, query, cb, options) {
+export default function buildFetchGetAction(config, action, name, params, query, cb) {
 	if(params && typeof params !== 'object') {
     let id = params;
     params = {};
@@ -15,6 +15,6 @@ export default function buildFetchGetAction(config, action, name, params, query,
     if(query) actionData.query = query;
     if(params) actionData.params = params;
     dispatch(actionData)
-    return fetchDispatcher(config, action, name.toUpperCase(), dispatch, {params, query}, cb, options);
+    return fetchDispatcher(config, action, name.toUpperCase(), dispatch, {params, query}, cb);
   }
 }

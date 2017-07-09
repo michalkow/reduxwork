@@ -4,27 +4,27 @@ import buildAction from '../lib/buildAction';
 import socketDispatcher from '../lib/socketDispatcher';
 import fetchDispatcher from '../lib/fetchDispatcher';
 
-export function createSocketGetAction(config, name, options) {
+export function createSocketGetAction(config, name) {
   var action = "GET";
-  if(!options) options = {};
-  options.type = "socket";
+  if(!config) config = {};
+  config.type = "socket";
   return function (data, cb) {
-    return buildAction(config, action, name, params, query, cb, options)
+    return buildAction(config, action, name, params, query, cb)
   }
 }
 
-export function createFetchGetAction(config, name, options) {
+export function createFetchGetAction(config, name) {
   var action = "GET";
-  if(!options) options = {};
-  options.type = "fetch";
+  if(!config) config = {};
+  config.type = "fetch";
   return function (parama, query, cb) {
-    return buildFetchGetAction(config, action, name, params, query, cb, options)
+    return buildFetchGetAction(config, action, name, params, query, cb)
   }
 }
 
-export function createGetAction(config, name, options) {
-  if(options.type == "socket") 
-    return createSocketGetAction(config, name, options);
-  if(options.type == "fetch") 
-    return createFetchGetAction(config, name, options);
+export function createGetAction(config, name) {
+  if(config.type == "socket") 
+    return createSocketGetAction(config, name);
+  if(config.type == "fetch") 
+    return createFetchGetAction(config, name);
 }

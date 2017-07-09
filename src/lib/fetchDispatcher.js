@@ -1,7 +1,7 @@
 import buildFetchOptions from './buildFetchOptions';
 import buildURL from './buildURL';
 
-export default function fetchDispatcher(config, action, name, dispatch, payload, cb, options) {
+export default function fetchDispatcher(config, action, name, dispatch, payload, cb) {
   console.log('fetchDispatcher')
   action = action.toUpperCase();
   if(!config) config = {};

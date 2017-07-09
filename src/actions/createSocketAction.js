@@ -1,9 +1,9 @@
 import buildAction from '../lib/buildAction';
 
-export default function createSocketAction(config, name, options) {
-  if(!options) options = {};
-  options.type = "socket";
+export default function createSocketAction(config, name) {
+  if(!config) config = {};
+  config.type = "socket";
   return function (data, cb) {
-    return buildAction(config, null, name, data, cb, options)
+    return buildAction(config, null, name, data, cb)
   }
 }

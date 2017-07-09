@@ -1,4 +1,4 @@
-export default function createLocalActions(config, name, options) {
+export default function createLocalActions(config, name) {
   return {
     [`find${name}`](data, cb) {
       return {

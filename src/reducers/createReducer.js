@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export default function createReducer(config, name, customState, customActions, options) {
+export default function createReducer(config, name, customState, customActions) {
   if(!customState) customState = {};
   if(!customActions) customActions = {};
   let initialState = Object.assign({}, customState);

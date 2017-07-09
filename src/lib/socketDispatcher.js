@@ -1,4 +1,4 @@
-export default function socketDispatcher(config, action, name, dispatch, payload, cb, options) {
+export default function socketDispatcher(config, action, name, dispatch, payload, cb) {
   console.log('socketDispatcher')
   if(action) action = action.toUpperCase();
   if(!config) config = {};
