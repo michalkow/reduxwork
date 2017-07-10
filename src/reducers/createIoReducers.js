@@ -44,7 +44,7 @@ export default function createIoReducers(config, name, customState, customAction
         })
       },
       [`FIND_${name}_COMPLETED`](state, action) {
-        let selected = selectedUpdate(state, action.data);
+        let selected = selectedUpdate(config, state, action.data);
         return Object.assign({}, state, {
           init: true,
           isFinding: false,
@@ -68,7 +68,7 @@ export default function createIoReducers(config, name, customState, customAction
         let data = action.data;
         if(!_.isArray(data)) data = [data];
         let items = _.unionBy(data, [...state.items], config.keyName);
-        let selected = selectedUpdate(state, items);
+        let selected = selectedUpdate(config, state, items);
         return Object.assign({}, state, {
           isSyncing: false,
           syncError: null,
@@ -80,7 +80,7 @@ export default function createIoReducers(config, name, customState, customAction
         let data = action.data;
         if(!_.isArray(data)) data = [data];
         let items = _.unionBy(data, [...state.items], config.keyName);
-        let selected = selectedUpdate(state, items);
+        let selected = selectedUpdate(config, state, items);
         return Object.assign({}, state, {
           items: items,
         }, selected)     
@@ -92,7 +92,7 @@ export default function createIoReducers(config, name, customState, customAction
           items.splice(_.findIndex(items, (item) => item[config.keyName] == action.data[config.keyName]), 1);
           update.items = items;
         }
-        let selected = update.items ? selectedUpdate(state, update.items) : {};
+        let selected = update.items ? selectedUpdate(config, state, update.items) : {};
         return Object.assign({}, state, update, selected)    
       },
       [`CREATE_${name}`](state, action) {
@@ -170,7 +170,7 @@ export default function createIoReducers(config, name, customState, customAction
 	        update.items = _.unionBy(data, items, config.keyName);
         }
         console.log(update)
-        let selected = update.items ? selectedUpdate(state, update.items) : {};
+        let selected = update.items ? selectedUpdate(config, state, update.items) : {};
         return Object.assign({}, state, update, selected)      
       },
       [`DESTROY_${name}`](state, action) {
@@ -201,7 +201,7 @@ export default function createIoReducers(config, name, customState, customAction
         return Object.assign({}, state, update)      
       },
       [`DESTROY_${name}_COMPLETED`](state, action) {
-        let selected = selectedUpdate(state, state.items);
+        let selected = selectedUpdate(config, state, state.items);
         return Object.assign({}, state, {
           isWritting: false,
           destroyError: null,

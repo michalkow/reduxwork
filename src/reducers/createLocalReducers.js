@@ -31,7 +31,7 @@ export default function createLocalReducers(config, name, customState, customAct
       [`FIND_${name}`](state, action) {
         let data = action.data;
         if(!_.isArray(data)) data = [data];
-        let selected = selectedUpdate(state, data);
+        let selected = selectedUpdate(config, state, data);
         return Object.assign({}, state, {
           init: true,
           items: data,
@@ -41,7 +41,7 @@ export default function createLocalReducers(config, name, customState, customAct
         let data = action.data;
         if(!_.isArray(data)) data = [data];
         let items = _.unionBy(data, [...state.items], config.keyName);
-        let selected = selectedUpdate(state, items);
+        let selected = selectedUpdate(config, state, items);
         return Object.assign({}, state, {
           init: true,
           items: items,
@@ -51,7 +51,7 @@ export default function createLocalReducers(config, name, customState, customAct
         let data = action.data;
         if(!_.isArray(data)) data = [data];
         let items = _.unionBy(data, [...state.items], config.keyName);
-        let selected = selectedUpdate(state, items);
+        let selected = selectedUpdate(config, state, items);
         return Object.assign({}, state, {
           items: items,
         }, selected)      
@@ -73,7 +73,7 @@ export default function createLocalReducers(config, name, customState, customAct
           );
           update.items = items;
         }
-        let selected = update.items ? selectedUpdate(state, update.items) : {};
+        let selected = update.items ? selectedUpdate(config, state, update.items) : {};
         return Object.assign({}, state, update, selected)      
       },
       [`DESTROY_${name}`](state, action) {
@@ -84,7 +84,7 @@ export default function createLocalReducers(config, name, customState, customAct
           items.splice(destroyedItemIndex, 1);
           update.items = items;
         }
-        let selected = update.items ? selectedUpdate(state, update.items) : {};
+        let selected = update.items ? selectedUpdate(config, state, update.items) : {};
         return Object.assign({}, state, update, selected)      
       },
       [`CLEAR_${name}`](state, action) {
