@@ -36,7 +36,7 @@ export default function fetchDispatcher(config, action, name, dispatch, payload,
           resolve(json);
         }
         if(cb) cb(json.err, json);
-        return cb;
+        return json;
       })
     });
   }

@@ -26,7 +26,7 @@ export default function socketDispatcher(config, action, name, dispatch, payload
           resolve(res);
         }
         if(cb) cb(err, res);
-        return cb;
+        return {err, res};
       });
     });
   } 

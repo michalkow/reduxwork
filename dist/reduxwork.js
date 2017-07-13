@@ -1,1 +1,1108 @@
-!function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t(require("lodash")):"function"==typeof define&&define.amd?define(["lodash"],t):"object"==typeof exports?exports.reduxwork=t(require("lodash")):e.reduxwork=t(e._)}(this,function(e){return function(e){function t(r){if(n[r])return n[r].exports;var a=n[r]={i:r,l:!1,exports:{}};return e[r].call(a.exports,a,a.exports,t),a.l=!0,a.exports}var n={};return t.m=e,t.c=n,t.d=function(e,n,r){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:r})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="",t(t.s=5)}([function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}function a(e,t,n,r,a){return function(u){if(e.addKeyOnCreate&&"CREATE"==t){var c=e.keyName||"id";r[c]||(r[c]=(new Date).getTime())}return u({type:t?t+"_"+n.toUpperCase():n.toUpperCase(),data:r}),"socket"==e.type?(0,i.default)(e,t,n.toUpperCase(),u,r,a,e):"fetch"==e.type?(0,o.default)(e,t,n.toUpperCase(),u,r,a,e):void 0}}Object.defineProperty(t,"__esModule",{value:!0}),t.default=a;var u=n(2),i=r(u),c=n(3),o=r(c)},function(t,n){t.exports=e},function(e,t,n){"use strict";function r(e,t,n,r,a,u){if(t&&(t=t.toUpperCase()),e||(e={}),e.eventName||(e.eventName="redux_action_event"),e.socketIoFunction){var i={type:t?t+"_"+n:n};return a&&(i.data=a),new Promise(function(a,c){e.socketIoFunction(e.eventName,i,function(e,i){return e?(r({type:(t?t+"_"+n:n)+"_FAILED",error:e}),c(e)):(r({type:(t?t+"_"+n:n)+"_COMPLETED",data:i}),a(i)),u&&u(e,i),u})})}}Object.defineProperty(t,"__esModule",{value:!0}),t.default=r},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}function a(e,t,n,r,a,u){if(t=t.toUpperCase(),e||(e={}),e.fetchFunction)return new Promise(function(c,s){e.fetchFunction((0,o.default)(e,t,n,a,(0,d.default)(e,t)),(0,i.default)(e,a,(0,d.default)(e,t))).then(function(e){return e.json()}).then(function(e){return e.err?(r({type:t+"_"+n.toUpperCase()+"_FAILED",error:e.err}),s(e.err)):(r({type:t+"_"+n.toUpperCase()+"_COMPLETED",data:e}),c(e)),u&&u(e.err,e),u})})}Object.defineProperty(t,"__esModule",{value:!0}),t.default=a;var u=n(9),i=r(u),c=n(10),o=r(c),s=n(11),d=r(s)},function(e,t,n){"use strict";function r(e,t,n){var r={};return t.selected&&t.selected[e.keyName]&&(r.selected=_.find(n,function(n){return n[e.keyName]==t.selected[e.keyName]})),r}Object.defineProperty(t,"__esModule",{value:!0}),t.default=r},function(e,t,n){e.exports=n(6)},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}var a=n(7),u=r(a),i=n(8),c=r(i),o=n(12),s=r(o),d=n(13),f=n(14),l=n(15),y=n(16),p=r(y),m=n(17),E=r(m),_=n(18),v=r(_),A={createAction:u.default,createSocketAction:c.default,createLocalActions:s.default,createSocketActions:d.createSocketActions,createFetchActions:d.createFetchActions,createIoActions:d.createIoActions,createSocketGetAction:f.createSocketGetAction,createFetchGetAction:f.createFetchGetAction,createGetAction:f.createGetAction,createSocketPostAction:l.createSocketPostAction,createFetchPostAction:l.createFetchPostAction,createPostAction:l.createPostAction,createReducer:p.default,createIoReducers:E.default,createLocalReducers:v.default};t.default=A,t.createAction=u.default,t.createSocketAction=c.default,t.createLocalActions=s.default,t.createSocketActions=d.createSocketActions,t.createFetchActions=d.createFetchActions,t.createIoActions=d.createIoActions,t.createSocketGetAction=f.createSocketGetAction,t.createFetchGetAction=f.createFetchGetAction,t.createGetAction=f.createGetAction,t.createSocketPostAction=l.createSocketPostAction,t.createFetchPostAction=l.createFetchPostAction,t.createPostAction=l.createPostAction,t.createReducer=p.default,t.createIoReducers=E.default,t.createLocalReducers=v.default},function(e,t,n){"use strict";function r(e,t){return function(n){var r={type:e};return t&&(r[t]=n),r}}Object.defineProperty(t,"__esModule",{value:!0}),t.default=r},function(e,t,n){"use strict";function r(e,t){return e||(e={}),e.type="socket",function(n,r){return(0,u.default)(e,null,t,n,r)}}Object.defineProperty(t,"__esModule",{value:!0}),t.default=r;var a=n(0),u=function(e){return e&&e.__esModule?e:{default:e}}(a)},function(e,t,n){"use strict";function r(e,t,n){var r=e.fetchOptions||a;return r.method=n,"GET"!=r.method&&(r.body=JSON.stringify(t)),r}Object.defineProperty(t,"__esModule",{value:!0}),t.default=r;var a={credentials:"same-origin",headers:{Accept:"application/json","Content-Type":"application/json"}}},function(e,t,n){"use strict";function r(e,t,n,r,a){var u=e.baseURL;if(e.customUrl?u+=e.customUrl:u+="/"+n.toLowerCase()+"/"+t.toLowerCase(),r&&"GET"==a){var i=!0;u+="/";for(var c in r)i?(u+="?"+c+"="+r[c],i=!1):u+="&"+c+"="+r[c]}return u}Object.defineProperty(t,"__esModule",{value:!0}),t.default=r},function(e,t,n){"use strict";function r(e,t){return e.fetchMethod?e.fetchMethod:e.fetchOptions&&e.fetchOptions.method?e.fetchOptions.method:"GET"==t||"FIND"==t||"SYNC"==t?"GET":"POST"==t||"CREATE"==t?"POST":"UPDATE"==t?"PUT":"DESTROY"==t?"DELETE":"POST"}Object.defineProperty(t,"__esModule",{value:!0}),t.default=r},function(e,t,n){"use strict";function r(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function a(e,t){var n;return n={},r(n,"find"+t,function(e,n){return{type:"FIND_"+t.toUpperCase(),data:e}}),r(n,"sync"+t,function(e,n){return{type:"SYNC_"+t.toUpperCase(),data:e}}),r(n,"clear"+t,function(){return{type:"CLEAR_"+t.toUpperCase()}}),r(n,"reset"+t,function(){return{type:"RESET_"+t.toUpperCase()}}),r(n,"select"+t,function(e){return{type:"SELECT_"+t.toUpperCase(),data:e}}),r(n,"create"+t,function(e){return{type:"CREATE_"+t.toUpperCase(),data:e}}),r(n,"update"+t,function(e){return{type:"UPDATE_"+t.toUpperCase(),data:e}}),r(n,"destroy"+t,function(e){return{type:"DESTROY_"+t.toUpperCase(),data:e}}),n}Object.defineProperty(t,"__esModule",{value:!0}),t.default=a},function(e,t,n){"use strict";function r(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function a(e,t){var n;return e||(e={}),e.type="socket",n={},r(n,"clear"+t,function(){return{type:"CLEAR_"+t.toUpperCase()}}),r(n,"reset"+t,function(){return{type:"RESET_"+t.toUpperCase()}}),r(n,"select"+t,function(e){return{type:"SELECT_"+t.toUpperCase(),data:e}}),r(n,"find"+t,function(n,r){return(0,o.default)(e,"FIND",t,n,r)}),r(n,"sync"+t,function(n,r){return(0,o.default)(e,"SYNC",t,n,r)}),r(n,"create"+t,function(n,r){return(0,o.default)(e,"CREATE",t,n,r)}),r(n,"update"+t,function(n,r,a){return(0,o.default)(e,"UPDATE",t,n,r)}),r(n,"destroy"+t,function(n,r){return(0,o.default)(e,"DESTROY",t,n,r)}),n}function u(e,t){var n;return e||(e={}),e.type="fetch",n={},r(n,"clear"+t,function(){return{type:"CLEAR_"+t.toUpperCase()}}),r(n,"reset"+t,function(){return{type:"RESET_"+t.toUpperCase()}}),r(n,"select"+t,function(e){return{type:"SELECT_"+t.toUpperCase(),data:e}}),r(n,"find"+t,function(n,r){return(0,o.default)(e,"FIND",t,n,r)}),r(n,"sync"+t,function(n,r){return(0,o.default)(e,"SYNC",t,n,r)}),r(n,"create"+t,function(n,r){return(0,o.default)(e,"CREATE",t,n,r)}),r(n,"update"+t,function(n,r,a){return(0,o.default)(e,"UPDATE",t,n,r)}),r(n,"destroy"+t,function(n,r){return(0,o.default)(e,"DESTROY",t,n,r)}),n}function i(e,t){return"socket"==e.type?a(e,t):"fetch"==e.type?u(e,t):void 0}Object.defineProperty(t,"__esModule",{value:!0}),t.createSocketActions=a,t.createFetchActions=u,t.createIoActions=i;var c=n(0),o=function(e){return e&&e.__esModule?e:{default:e}}(c)},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}function a(e,t){return e||(e={}),e.type="socket",function(n,r){return(0,s.default)(e,"GET",t,n,r)}}function u(e,t){return e||(e={}),e.type="fetch",function(n,r,a){return(0,s.default)(e,"GET",t,data,a)}}function i(e,t){return"socket"==e.type?a(e,t):"fetch"==e.type?u(e,t):void 0}Object.defineProperty(t,"__esModule",{value:!0}),t.createSocketGetAction=a,t.createFetchGetAction=u,t.createGetAction=i;var c=n(1),o=(r(c),n(0)),s=r(o),d=n(2),f=(r(d),n(3));r(f)},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}function a(e,t){return e||(e={}),e.type="socket",function(n,r){return(0,o.default)(e,"POST",t,n,r)}}function u(e,t){return e||(e={}),e.type="fetch",function(n,r){return(0,o.default)(e,"POST",t,n,r)}}function i(e,t){return"socket"==e.type?a(e,t):"fetch"==e.type?u(e,t):void 0}Object.defineProperty(t,"__esModule",{value:!0}),t.createSocketPostAction=a,t.createFetchPostAction=u,t.createPostAction=i;var c=n(0),o=r(c),s=n(2),d=(r(s),n(3));r(d)},function(e,t,n){"use strict";function r(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function a(e,t,n,a){n||(n={}),a||(a={});var u=Object.assign({},n);return t=i.default.toUpper(i.default.snakeCase(t)),function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:u,n=arguments[1],i=Object.assign(r({},"RESET_"+t,function(e,t){return Object.assign({},u)}));return a[n.type]?a[n.type](e,n):i[n.type]?i[n.type](e,n):e}}Object.defineProperty(t,"__esModule",{value:!0}),t.default=a;var u=n(1),i=function(e){return e&&e.__esModule?e:{default:e}}(u)},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}function a(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function u(e){if(Array.isArray(e)){for(var t=0,n=Array(e.length);t<e.length;t++)n[t]=e[t];return n}return Array.from(e)}function i(e,t,n,r){e||(e={}),e.keyName||(e.keyName="id"),n||(n={}),r||(r={});var i=Object.assign({},{init:!1,selected:null,query:null,isFinding:!1,isSyncing:!1,isWritting:!1,syncError:null,findError:null,writeError:null,updateError:null,destroyError:null,error:null,updatedItem:null,destroyedItem:null,destroyedItemIndex:null,items:[]},n);return t=o.default.toUpper(o.default.snakeCase(t)),function(){var n,c=arguments.length>0&&void 0!==arguments[0]?arguments[0]:i,s=arguments[1],f=Object.assign((n={},a(n,"FIND_"+t,function(e,t){var n={isFinding:!0,findError:null};return n.query=t.data&&!o.default.isEmpty(t.data)?t.data:null,o.default.isEqual(n.query,e.query)||(n.items=[]),Object.assign({},e,n)}),a(n,"FIND_"+t+"_FAILED",function(e,t){return Object.assign({},e,{findError:t.error,isFinding:!1})}),a(n,"FIND_"+t+"_COMPLETED",function(t,n){var r=(0,d.default)(e,t,n.data);return Object.assign({},t,{init:!0,isFinding:!1,findError:null,items:n.data},r)}),a(n,"SYNC_"+t,function(e,t){return Object.assign({},e,{isSyncing:!0,syncError:null})}),a(n,"SYNC_"+t+"_FAILED",function(e,t){return Object.assign({},e,{syncError:t.error,isSyncing:!1})}),a(n,"SYNC_"+t+"_COMPLETED",function(t,n){var r=n.data;o.default.isArray(r)||(r=[r]);var a=o.default.unionBy(r,[].concat(u(t.items)),e.keyName),i=(0,d.default)(e,t,a);return Object.assign({},t,{isSyncing:!1,syncError:null,init:!0,items:a},i)}),a(n,"RECEIVE_"+t,function(t,n){var r=n.data;o.default.isArray(r)||(r=[r]);var a=o.default.unionBy(r,[].concat(u(t.items)),e.keyName),i=(0,d.default)(e,t,a);return Object.assign({},t,{items:a},i)}),a(n,"REMOVE_"+t,function(t,n){var r={};if(n.data[e.keyName]){var a=[].concat(u(t.items));a.splice(o.default.findIndex(a,function(t){return t[e.keyName]==n.data[e.keyName]}),1),r.items=a}var i=r.items?(0,d.default)(e,t,r.items):{};return Object.assign({},t,r,i)}),a(n,"CREATE_"+t,function(e,t){var n=Object.assign({},t.data,{_temp:!0});return Object.assign({},e,{isWritting:!0,items:[].concat(u(e.items),[n])})}),a(n,"CREATE_"+t+"_FAILED",function(t,n){var r=t.items.filter(function(t){return t[e.keyName]!==n.tempId});return Object.assign({},t,{isWritting:!1,items:r,writeError:n.error})}),a(n,"CREATE_"+t+"_COMPLETED",function(t,n){var r=t.items.filter(function(t){return t[e.keyName]!==n.tempId});return Object.assign({},t,{isWritting:!1,writeError:null,items:[].concat(u(r),[n.data])})}),a(n,"UPDATE_"+t,function(t,n){var r={isWritting:!0};if(o.default.isObject(n.data)&&n.data[e.keyName]){var a=[].concat(u(t.items)),i=o.default.find(a,function(t){return t[e.keyName]==n.data[e.keyName]});a.splice(o.default.findIndex(a,function(t){return t[e.keyName]==n.data[e.keyName]}),1,Object.assign({},i,n.data)),r.updatedItem=i,r.items=a}return Object.assign({},t,r)}),a(n,"UPDATE_"+t+"_FAILED",function(t,n){var r={isWritting:!1,updateError:n.error,updatedItem:null};if(t.updatedItem&&t.updatedItem[e.keyName]){var a=[].concat(u(t.items));a.splice(o.default.findIndex(a,function(n){return n[e.keyName]==t.updatedItem[e.keyName]}),1,t.updatedItem),r.items=a}return Object.assign({},t,r)}),a(n,"UPDATE_"+t+"_COMPLETED",function(t,n){var r={isWritting:!1,updateError:null,updatedItem:null};if(n.rewrite||e.rewriteOnUpdate){var a=[].concat(u(t.items)),i=n.data;o.default.isArray(i)||(i=[i]),r.items=o.default.unionBy(i,a,e.keyName)}var c=r.items?(0,d.default)(e,t,r.items):{};return Object.assign({},t,r,c)}),a(n,"DESTROY_"+t,function(t,n){var r={isWritting:!0};if(n.data[e.keyName]){var a=[].concat(u(t.items));r.destroyedItem=o.default.find(a,function(t){return t[e.keyName]==n.data[e.keyName]}),r.destroyedItemIndex=o.default.findIndex(a,function(t){return t[e.keyName]==n.data[e.keyName]}),a.splice(r.destroyedItemIndex,1),r.items=a}return Object.assign({},t,r)}),a(n,"DESTROY_"+t+"_FAILED",function(e,t){var n={isWritting:!1,destroyError:t.error,destroyedItem:null,destroyedItemIndex:null};if(e.destroyedItem&&null!=e.destroyedItemIndex){var r=[].concat(u(e.items));r.splice(e.destroyedItemIndex,0,e.destroyedItem),n.items=r}return Object.assign({},e,n)}),a(n,"DESTROY_"+t+"_COMPLETED",function(t,n){var r=(0,d.default)(e,t,t.items);return Object.assign({},t,{isWritting:!1,destroyError:null,destroyedItem:null,destroyedItemIndex:null},r)}),a(n,"CLEAR_"+t,function(e,t){return Object.assign({},e,{items:[],selected:null})}),a(n,"SELECT_"+t,function(t,n){var r=null;return(o.default.isString(n.data)||o.default.isNumber(n.data))&&(r=o.default.find(t.items,function(t){return t[e.keyName]==n.data})),r=o.default.isObject(n.data)&&n.data[e.keyName]?o.default.find(t.items,function(t){return t[e.keyName]==n.data[e.keyName]}):n.data,Object.assign({},t,{selected:r})}),a(n,"RESET_"+t,function(e,t){return Object.assign({},i)}),n));return r[s.type]?r[s.type](c,s):f[s.type]?f[s.type](c,s):c}}Object.defineProperty(t,"__esModule",{value:!0}),t.default=i;var c=n(1),o=r(c),s=n(4),d=r(s)},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}function a(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function u(e){if(Array.isArray(e)){for(var t=0,n=Array(e.length);t<e.length;t++)n[t]=e[t];return n}return Array.from(e)}function i(e,t,n,r){e||(e={}),e.keyName||(e.keyName="id"),n||(n={}),r||(r={});var i=Object.assign({},{init:!1,selected:null,query:null,isFinding:!1,isSyncing:!1,isWritting:!1,syncError:null,findError:null,writeError:null,updateError:null,destroyError:null,error:null,updatedItem:null,destroyedItem:null,destroyedItemIndex:null,items:[]},n);return t=o.default.toUpper(o.default.snakeCase(t)),function(){var n,c=arguments.length>0&&void 0!==arguments[0]?arguments[0]:i,s=arguments[1],f=Object.assign((n={},a(n,"FIND_"+t,function(t,n){var r=n.data;o.default.isArray(r)||(r=[r]);var a=(0,d.default)(e,t,r);return Object.assign({},t,{init:!0,items:r},a)}),a(n,"SYNC_"+t,function(t,n){var r=n.data;o.default.isArray(r)||(r=[r]);var a=o.default.unionBy(r,[].concat(u(t.items)),e.keyName),i=(0,d.default)(e,t,a);return Object.assign({},t,{init:!0,items:a},i)}),a(n,"RECEIVE_"+t,function(t,n){var r=n.data;o.default.isArray(r)||(r=[r]);var a=o.default.unionBy(r,[].concat(u(t.items)),e.keyName),i=(0,d.default)(e,t,a);return Object.assign({},t,{items:a},i)}),a(n,"CREATE_"+t,function(e,t){return Object.assign({},e,{items:[].concat(u(e.items),[t.data])})}),a(n,"UPDATE_"+t,function(t,n){var r={};if(o.default.isObject(n.data)&&n.data[e.keyName]){var a=[].concat(u(t.items)),i=o.default.find(a,function(t){return t[e.keyName]==n.data[e.keyName]});a.splice(o.default.findIndex(a,function(t){return t[e.keyName]==n.data[e.keyName]}),1,Object.assign({},i,n.data)),r.items=a}var c=r.items?(0,d.default)(e,t,r.items):{};return Object.assign({},t,r,c)}),a(n,"DESTROY_"+t,function(t,n){var r={};if(n.data[e.keyName]){var a=[].concat(u(t.items));o.default.find(a,function(t){return t[e.keyName]==n.data[e.keyName]});a.splice(destroyedItemIndex,1),r.items=a}var i=r.items?(0,d.default)(e,t,r.items):{};return Object.assign({},t,r,i)}),a(n,"CLEAR_"+t,function(e,t){return Object.assign({},e,{items:[],selected:null})}),a(n,"SELECT_"+t,function(e,t){return Object.assign({},e,{selected:t.data})}),a(n,"RESET_"+t,function(e,t){return Object.assign({},i)}),n));return r[s.type]?r[s.type](c,s):f[s.type]?f[s.type](c,s):c}}Object.defineProperty(t,"__esModule",{value:!0}),t.default=i;var c=n(1),o=r(c),s=n(4),d=r(s)}])});
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory(require("lodash"));
+	else if(typeof define === 'function' && define.amd)
+		define(["lodash"], factory);
+	else if(typeof exports === 'object')
+		exports["reduxwork"] = factory(require("lodash"));
+	else
+		root["reduxwork"] = factory(root["_"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__) {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = buildAction;
+
+var _socketDispatcher = __webpack_require__(2);
+
+var _socketDispatcher2 = _interopRequireDefault(_socketDispatcher);
+
+var _fetchDispatcher = __webpack_require__(3);
+
+var _fetchDispatcher2 = _interopRequireDefault(_fetchDispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function buildAction(config, action, name, data, cb) {
+  return function (dispatch) {
+    if (config.addKeyOnCreate && action == "CREATE") {
+      var keyName = config.keyName || 'id';
+      if (!data[keyName]) data[keyName] = new Date().getTime();
+    }
+    var actionData = {
+      type: action ? action + '_' + name.toUpperCase() : name.toUpperCase(),
+      data: data
+    };
+    dispatch(actionData);
+
+    if (config.type == "socket") return (0, _socketDispatcher2.default)(config, action, name.toUpperCase(), dispatch, data, cb, config);else if (config.type == "fetch") return (0, _fetchDispatcher2.default)(config, action, name.toUpperCase(), dispatch, data, cb, config);
+  };
+}
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = socketDispatcher;
+function socketDispatcher(config, action, name, dispatch, payload, cb) {
+  if (action) action = action.toUpperCase();
+  if (!config) config = {};
+  if (!config.eventName) config.eventName = "redux_action_event";
+  if (config.socketIoFunction) {
+    var actionData = {
+      type: action ? action + '_' + name : name
+    };
+    if (payload) actionData.data = payload;
+
+    return new Promise(function (resolve, reject) {
+      config.socketIoFunction(config.eventName, actionData, function (err, res) {
+        if (err) {
+          dispatch({
+            type: (action ? action + '_' + name : name) + '_FAILED',
+            error: err
+          });
+          reject(err);
+        } else {
+          dispatch({
+            type: (action ? action + '_' + name : name) + '_COMPLETED',
+            data: res
+          });
+          resolve(res);
+        }
+        if (cb) cb(err, res);
+        return { err: err, res: res };
+      });
+    });
+  }
+}
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = fetchDispatcher;
+
+var _buildFetchOptions = __webpack_require__(9);
+
+var _buildFetchOptions2 = _interopRequireDefault(_buildFetchOptions);
+
+var _buildURL = __webpack_require__(10);
+
+var _buildURL2 = _interopRequireDefault(_buildURL);
+
+var _getFetchMethod = __webpack_require__(11);
+
+var _getFetchMethod2 = _interopRequireDefault(_getFetchMethod);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function fetchDispatcher(config, action, name, dispatch, payload, cb) {
+  action = action.toUpperCase();
+  if (!config) config = {};
+  if (config.fetchFunction) {
+    return new Promise(function (resolve, reject) {
+      config.fetchFunction((0, _buildURL2.default)(config, action, name, payload, (0, _getFetchMethod2.default)(config, action)), (0, _buildFetchOptions2.default)(config, payload, (0, _getFetchMethod2.default)(config, action))).then(function (response) {
+        return response.json();
+      }).then(function (json) {
+        if (json.err) {
+          dispatch({
+            type: action + '_' + name.toUpperCase() + '_FAILED',
+            error: json.err
+          });
+          reject(json.err);
+        } else {
+          dispatch({
+            type: action + '_' + name.toUpperCase() + '_COMPLETED',
+            data: json
+          });
+          resolve(json);
+        }
+        if (cb) cb(json.err, json);
+        return json;
+      });
+    });
+  }
+}
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = selectedUpdate;
+function selectedUpdate(config, state, items) {
+	var update = {};
+	if (state.selected && state.selected[config.keyName]) update.selected = _.find(items, function (item) {
+		return item[config.keyName] == state.selected[config.keyName];
+	});
+	return update;
+}
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(6);
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createAction = __webpack_require__(7);
+
+var _createAction2 = _interopRequireDefault(_createAction);
+
+var _createSocketAction = __webpack_require__(8);
+
+var _createSocketAction2 = _interopRequireDefault(_createSocketAction);
+
+var _createLocalActions = __webpack_require__(12);
+
+var _createLocalActions2 = _interopRequireDefault(_createLocalActions);
+
+var _createIoActions = __webpack_require__(13);
+
+var _createGetAction = __webpack_require__(14);
+
+var _createPostAction = __webpack_require__(15);
+
+var _createReducer = __webpack_require__(16);
+
+var _createReducer2 = _interopRequireDefault(_createReducer);
+
+var _createIoReducers = __webpack_require__(17);
+
+var _createIoReducers2 = _interopRequireDefault(_createIoReducers);
+
+var _createLocalReducers = __webpack_require__(18);
+
+var _createLocalReducers2 = _interopRequireDefault(_createLocalReducers);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var reduxwork = {
+	createAction: _createAction2.default,
+	createSocketAction: _createSocketAction2.default,
+	createLocalActions: _createLocalActions2.default,
+	createSocketActions: _createIoActions.createSocketActions,
+	createFetchActions: _createIoActions.createFetchActions,
+	createIoActions: _createIoActions.createIoActions,
+	createSocketGetAction: _createGetAction.createSocketGetAction,
+	createFetchGetAction: _createGetAction.createFetchGetAction,
+	createGetAction: _createGetAction.createGetAction,
+	createSocketPostAction: _createPostAction.createSocketPostAction,
+	createFetchPostAction: _createPostAction.createFetchPostAction,
+	createPostAction: _createPostAction.createPostAction,
+	createReducer: _createReducer2.default,
+	createIoReducers: _createIoReducers2.default,
+	createLocalReducers: _createLocalReducers2.default
+};
+
+exports.default = reduxwork;
+
+exports.createAction = _createAction2.default;
+exports.createSocketAction = _createSocketAction2.default;
+exports.createLocalActions = _createLocalActions2.default;
+exports.createSocketActions = _createIoActions.createSocketActions;
+exports.createFetchActions = _createIoActions.createFetchActions;
+exports.createIoActions = _createIoActions.createIoActions;
+exports.createSocketGetAction = _createGetAction.createSocketGetAction;
+exports.createFetchGetAction = _createGetAction.createFetchGetAction;
+exports.createGetAction = _createGetAction.createGetAction;
+exports.createSocketPostAction = _createPostAction.createSocketPostAction;
+exports.createFetchPostAction = _createPostAction.createFetchPostAction;
+exports.createPostAction = _createPostAction.createPostAction;
+exports.createReducer = _createReducer2.default;
+exports.createIoReducers = _createIoReducers2.default;
+exports.createLocalReducers = _createLocalReducers2.default;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = createAction;
+function createAction(name, binding) {
+  return function (data) {
+    var action = { type: name };
+    if (binding) action[binding] = data;
+    return action;
+  };
+}
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = createSocketAction;
+
+var _buildAction = __webpack_require__(0);
+
+var _buildAction2 = _interopRequireDefault(_buildAction);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function createSocketAction(config, name) {
+  if (!config) config = {};
+  config.type = "socket";
+  return function (data, cb) {
+    return (0, _buildAction2.default)(config, null, name, data, cb);
+  };
+}
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = buildFetchOptions;
+var fetchDefaults = {
+  credentials: 'same-origin',
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  }
+};
+
+function buildFetchOptions(options, payload, method) {
+  var fetchOptions = options.fetchOptions || fetchDefaults;
+  fetchOptions.method = method;
+  if (fetchOptions.method != 'GET') fetchOptions.body = JSON.stringify(payload);
+  return fetchOptions;
+}
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = buildURL;
+function buildURL(config, action, name, payload, method) {
+  var url = config.baseURL;
+  if (config.customUrl) url += config.customUrl;else url += '/' + name.toLowerCase() + '/' + action.toLowerCase();
+  if (payload && method == 'GET') {
+    var first = true;
+    url += '/';
+    for (var q in payload) {
+      if (first) {
+        url += '?' + q + '=' + payload[q];
+        first = false;
+      } else url += '&' + q + '=' + payload[q];
+    }
+  }
+  return url;
+}
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = getFetchMethod;
+function getFetchMethod(config, action) {
+  if (config.fetchMethod) return config.fetchMethod;else if (config.fetchOptions && config.fetchOptions.method) return config.fetchOptions.method;else if (action == 'GET' || action == 'FIND' || action == 'SYNC') return 'GET';else if (action == 'POST' || action == 'CREATE') return 'POST';else if (action == 'UPDATE') return 'PUT';else if (action == 'DESTROY') return 'DELETE';else return 'POST';
+}
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = createLocalActions;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function createLocalActions(config, name) {
+  var _ref;
+
+  return _ref = {}, _defineProperty(_ref, 'find' + name, function undefined(data, cb) {
+    return {
+      type: 'FIND_' + name.toUpperCase(),
+      data: data
+    };
+  }), _defineProperty(_ref, 'sync' + name, function undefined(data, cb) {
+    return {
+      type: 'SYNC_' + name.toUpperCase(),
+      data: data
+    };
+  }), _defineProperty(_ref, 'clear' + name, function undefined() {
+    return {
+      type: 'CLEAR_' + name.toUpperCase()
+    };
+  }), _defineProperty(_ref, 'reset' + name, function undefined() {
+    return {
+      type: 'RESET_' + name.toUpperCase()
+    };
+  }), _defineProperty(_ref, 'select' + name, function undefined(data) {
+    return {
+      type: 'SELECT_' + name.toUpperCase(),
+      data: data
+    };
+  }), _defineProperty(_ref, 'create' + name, function undefined(data) {
+    return {
+      type: 'CREATE_' + name.toUpperCase(),
+      data: data
+    };
+  }), _defineProperty(_ref, 'update' + name, function undefined(data) {
+    return {
+      type: 'UPDATE_' + name.toUpperCase(),
+      data: data
+    };
+  }), _defineProperty(_ref, 'destroy' + name, function undefined(data) {
+    return {
+      type: 'DESTROY_' + name.toUpperCase(),
+      data: data
+    };
+  }), _ref;
+}
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createSocketActions = createSocketActions;
+exports.createFetchActions = createFetchActions;
+exports.createIoActions = createIoActions;
+
+var _buildAction = __webpack_require__(0);
+
+var _buildAction2 = _interopRequireDefault(_buildAction);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function createSocketActions(config, name) {
+  var _ref;
+
+  if (!config) config = {};
+  config.type = "socket";
+  return _ref = {}, _defineProperty(_ref, 'clear' + name, function undefined() {
+    return {
+      type: 'CLEAR_' + name.toUpperCase()
+    };
+  }), _defineProperty(_ref, 'reset' + name, function undefined() {
+    return {
+      type: 'RESET_' + name.toUpperCase()
+    };
+  }), _defineProperty(_ref, 'select' + name, function undefined(data) {
+    return {
+      type: 'SELECT_' + name.toUpperCase(),
+      data: data
+    };
+  }), _defineProperty(_ref, 'find' + name, function undefined(data, cb) {
+    var action = "FIND";
+    return (0, _buildAction2.default)(config, action, name, data, cb);
+  }), _defineProperty(_ref, 'sync' + name, function undefined(data, cb) {
+    var action = "SYNC";
+    return (0, _buildAction2.default)(config, action, name, data, cb);
+  }), _defineProperty(_ref, 'create' + name, function undefined(data, cb) {
+    var action = "CREATE";
+    return (0, _buildAction2.default)(config, action, name, data, cb);
+  }), _defineProperty(_ref, 'update' + name, function undefined(data, cb, mod) {
+    var action = "UPDATE";
+    return (0, _buildAction2.default)(config, action, name, data, cb);
+  }), _defineProperty(_ref, 'destroy' + name, function undefined(data, cb) {
+    var action = "DESTROY";
+    return (0, _buildAction2.default)(config, action, name, data, cb);
+  }), _ref;
+}
+
+function createFetchActions(config, name) {
+  var _ref2;
+
+  if (!config) config = {};
+  config.type = "fetch";
+  return _ref2 = {}, _defineProperty(_ref2, 'clear' + name, function undefined() {
+    return {
+      type: 'CLEAR_' + name.toUpperCase()
+    };
+  }), _defineProperty(_ref2, 'reset' + name, function undefined() {
+    return {
+      type: 'RESET_' + name.toUpperCase()
+    };
+  }), _defineProperty(_ref2, 'select' + name, function undefined(data) {
+    return {
+      type: 'SELECT_' + name.toUpperCase(),
+      data: data
+    };
+  }), _defineProperty(_ref2, 'find' + name, function undefined(data, cb) {
+    var action = "FIND";
+    return (0, _buildAction2.default)(config, action, name, data, cb);
+  }), _defineProperty(_ref2, 'sync' + name, function undefined(data, cb) {
+    var action = "SYNC";
+    return (0, _buildAction2.default)(config, action, name, data, cb);
+  }), _defineProperty(_ref2, 'create' + name, function undefined(data, cb) {
+    var action = "CREATE";
+    return (0, _buildAction2.default)(config, action, name, data, cb);
+  }), _defineProperty(_ref2, 'update' + name, function undefined(data, cb, mod) {
+    var action = "UPDATE";
+    return (0, _buildAction2.default)(config, action, name, data, cb);
+  }), _defineProperty(_ref2, 'destroy' + name, function undefined(data, cb) {
+    var action = "DESTROY";
+    return (0, _buildAction2.default)(config, action, name, data, cb);
+  }), _ref2;
+}
+
+function createIoActions(config, name) {
+  if (config.type == "socket") return createSocketActions(config, name);
+  if (config.type == "fetch") return createFetchActions(config, name);
+}
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createSocketGetAction = createSocketGetAction;
+exports.createFetchGetAction = createFetchGetAction;
+exports.createGetAction = createGetAction;
+
+var _lodash = __webpack_require__(1);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _buildAction = __webpack_require__(0);
+
+var _buildAction2 = _interopRequireDefault(_buildAction);
+
+var _socketDispatcher = __webpack_require__(2);
+
+var _socketDispatcher2 = _interopRequireDefault(_socketDispatcher);
+
+var _fetchDispatcher = __webpack_require__(3);
+
+var _fetchDispatcher2 = _interopRequireDefault(_fetchDispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function createSocketGetAction(config, name) {
+  var action = "GET";
+  if (!config) config = {};
+  config.type = "socket";
+  return function (data, cb) {
+    return (0, _buildAction2.default)(config, action, name, data, cb);
+  };
+}
+
+function createFetchGetAction(config, name) {
+  var action = "GET";
+  if (!config) config = {};
+  config.type = "fetch";
+  return function (parama, query, cb) {
+    return (0, _buildAction2.default)(config, action, name, data, cb);
+  };
+}
+
+function createGetAction(config, name) {
+  if (config.type == "socket") return createSocketGetAction(config, name);
+  if (config.type == "fetch") return createFetchGetAction(config, name);
+}
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createSocketPostAction = createSocketPostAction;
+exports.createFetchPostAction = createFetchPostAction;
+exports.createPostAction = createPostAction;
+
+var _buildAction = __webpack_require__(0);
+
+var _buildAction2 = _interopRequireDefault(_buildAction);
+
+var _socketDispatcher = __webpack_require__(2);
+
+var _socketDispatcher2 = _interopRequireDefault(_socketDispatcher);
+
+var _fetchDispatcher = __webpack_require__(3);
+
+var _fetchDispatcher2 = _interopRequireDefault(_fetchDispatcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function createSocketPostAction(config, name) {
+  var action = "POST";
+  if (!config) config = {};
+  config.type = "socket";
+  return function (data, cb) {
+    return (0, _buildAction2.default)(config, action, name, data, cb);
+  };
+}
+
+function createFetchPostAction(config, name) {
+  var action = "POST";
+  if (!config) config = {};
+  config.type = "fetch";
+  return function (data, cb) {
+    return (0, _buildAction2.default)(config, action, name, data, cb);
+  };
+}
+
+function createPostAction(config, name) {
+  if (config.type == "socket") return createSocketPostAction(config, name);
+  if (config.type == "fetch") return createFetchPostAction(config, name);
+}
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = createReducer;
+
+var _lodash = __webpack_require__(1);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function createReducer(config, name, customState, customActions) {
+  if (!customState) customState = {};
+  if (!customActions) customActions = {};
+  var initialState = Object.assign({}, customState);
+  name = _lodash2.default.toUpper(_lodash2.default.snakeCase(name));
+  return function () {
+    var rState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+    var rAction = arguments[1];
+
+    var defaultActions = Object.assign(_defineProperty({}, 'RESET_' + name, function undefined(state, action) {
+      return Object.assign({}, initialState);
+    }));
+    if (customActions[rAction.type]) return customActions[rAction.type](rState, rAction);else if (defaultActions[rAction.type]) return defaultActions[rAction.type](rState, rAction);else return rState;
+  };
+}
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = createIoReducers;
+
+var _lodash = __webpack_require__(1);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _selectedUpdate = __webpack_require__(4);
+
+var _selectedUpdate2 = _interopRequireDefault(_selectedUpdate);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function createIoReducers(config, name, customState, customActions) {
+  if (!config) config = {};
+  if (!config.keyName) config.keyName = 'id';
+  if (!customState) customState = {};
+  if (!customActions) customActions = {};
+  var initialState = Object.assign({}, {
+    init: false,
+    selected: null,
+    query: null,
+    isFinding: false,
+    isSyncing: false,
+    isWritting: false,
+    syncError: null,
+    findError: null,
+    writeError: null,
+    updateError: null,
+    destroyError: null,
+    error: null,
+    updatedItem: null,
+    destroyedItem: null,
+    destroyedItemIndex: null,
+    items: []
+  }, customState);
+  name = _lodash2.default.toUpper(_lodash2.default.snakeCase(name));
+
+  return function () {
+    var _Object$assign;
+
+    var rState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+    var rAction = arguments[1];
+
+    var defaultActions = Object.assign((_Object$assign = {}, _defineProperty(_Object$assign, 'FIND_' + name, function undefined(state, action) {
+      var find = {
+        isFinding: true,
+        findError: null
+      };
+      find.query = action.data && !_lodash2.default.isEmpty(action.data) ? action.data : null;
+      if (!_lodash2.default.isEqual(find.query, state.query)) find.items = [];
+      return Object.assign({}, state, find);
+    }), _defineProperty(_Object$assign, 'FIND_' + name + '_FAILED', function undefined(state, action) {
+      return Object.assign({}, state, {
+        findError: action.error,
+        isFinding: false
+      });
+    }), _defineProperty(_Object$assign, 'FIND_' + name + '_COMPLETED', function undefined(state, action) {
+      var selected = (0, _selectedUpdate2.default)(config, state, action.data);
+      return Object.assign({}, state, {
+        init: true,
+        isFinding: false,
+        findError: null,
+        items: action.data
+      }, selected);
+    }), _defineProperty(_Object$assign, 'SYNC_' + name, function undefined(state, action) {
+      return Object.assign({}, state, {
+        isSyncing: true,
+        syncError: null
+      });
+    }), _defineProperty(_Object$assign, 'SYNC_' + name + '_FAILED', function undefined(state, action) {
+      return Object.assign({}, state, {
+        syncError: action.error,
+        isSyncing: false
+      });
+    }), _defineProperty(_Object$assign, 'SYNC_' + name + '_COMPLETED', function undefined(state, action) {
+      var data = action.data;
+      if (!_lodash2.default.isArray(data)) data = [data];
+      var items = _lodash2.default.unionBy(data, [].concat(_toConsumableArray(state.items)), config.keyName);
+      var selected = (0, _selectedUpdate2.default)(config, state, items);
+      return Object.assign({}, state, {
+        isSyncing: false,
+        syncError: null,
+        init: true,
+        items: items
+      }, selected);
+    }), _defineProperty(_Object$assign, 'RECEIVE_' + name, function undefined(state, action) {
+      var data = action.data;
+      if (!_lodash2.default.isArray(data)) data = [data];
+      var items = _lodash2.default.unionBy(data, [].concat(_toConsumableArray(state.items)), config.keyName);
+      var selected = (0, _selectedUpdate2.default)(config, state, items);
+      return Object.assign({}, state, {
+        items: items
+      }, selected);
+    }), _defineProperty(_Object$assign, 'REMOVE_' + name, function undefined(state, action) {
+      var update = {};
+      if (action.data[config.keyName]) {
+        var items = [].concat(_toConsumableArray(state.items));
+        items.splice(_lodash2.default.findIndex(items, function (item) {
+          return item[config.keyName] == action.data[config.keyName];
+        }), 1);
+        update.items = items;
+      }
+      var selected = update.items ? (0, _selectedUpdate2.default)(config, state, update.items) : {};
+      return Object.assign({}, state, update, selected);
+    }), _defineProperty(_Object$assign, 'CREATE_' + name, function undefined(state, action) {
+      var item = Object.assign({}, action.data, { _temp: true });
+
+      return Object.assign({}, state, {
+        isWritting: true,
+        items: [].concat(_toConsumableArray(state.items), [item])
+      });
+    }), _defineProperty(_Object$assign, 'CREATE_' + name + '_FAILED', function undefined(state, action) {
+      var items = state.items.filter(function (obj) {
+        return obj[config.keyName] !== action.tempId;
+      });
+      return Object.assign({}, state, {
+        isWritting: false,
+        items: items,
+        writeError: action.error
+      });
+    }), _defineProperty(_Object$assign, 'CREATE_' + name + '_COMPLETED', function undefined(state, action) {
+      var items = state.items.filter(function (obj) {
+        return obj[config.keyName] !== action.tempId;
+      });
+      return Object.assign({}, state, {
+        isWritting: false,
+        writeError: null,
+        items: [].concat(_toConsumableArray(items), [action.data])
+      });
+    }), _defineProperty(_Object$assign, 'UPDATE_' + name, function undefined(state, action) {
+      var update = {
+        isWritting: true
+      };
+      if (_lodash2.default.isObject(action.data) && action.data[config.keyName]) {
+        var items = [].concat(_toConsumableArray(state.items));
+        var updatedItem = _lodash2.default.find(items, function (item) {
+          return item[config.keyName] == action.data[config.keyName];
+        });
+        items.splice(_lodash2.default.findIndex(items, function (item) {
+          return item[config.keyName] == action.data[config.keyName];
+        }), 1, Object.assign({}, updatedItem, action.data));
+        update.updatedItem = updatedItem;
+        update.items = items;
+      }
+      return Object.assign({}, state, update);
+    }), _defineProperty(_Object$assign, 'UPDATE_' + name + '_FAILED', function undefined(state, action) {
+      var update = {
+        isWritting: false,
+        updateError: action.error,
+        updatedItem: null
+      };
+      if (state.updatedItem && state.updatedItem[config.keyName]) {
+        var items = [].concat(_toConsumableArray(state.items));
+        items.splice(_lodash2.default.findIndex(items, function (item) {
+          return item[config.keyName] == state.updatedItem[config.keyName];
+        }), 1, state.updatedItem);
+        update.items = items;
+      }
+      return Object.assign({}, state, update);
+    }), _defineProperty(_Object$assign, 'UPDATE_' + name + '_COMPLETED', function undefined(state, action) {
+      var update = {
+        isWritting: false,
+        updateError: null,
+        updatedItem: null
+      };
+      if (action.rewrite || config.rewriteOnUpdate) {
+        var items = [].concat(_toConsumableArray(state.items));
+        var data = action.data;
+        if (!_lodash2.default.isArray(data)) data = [data];
+        update.items = _lodash2.default.unionBy(data, items, config.keyName);
+      }
+
+      var selected = update.items ? (0, _selectedUpdate2.default)(config, state, update.items) : {};
+      return Object.assign({}, state, update, selected);
+    }), _defineProperty(_Object$assign, 'DESTROY_' + name, function undefined(state, action) {
+      var update = {
+        isWritting: true
+      };
+      if (action.data[config.keyName]) {
+        var items = [].concat(_toConsumableArray(state.items));
+        update.destroyedItem = _lodash2.default.find(items, function (item) {
+          return item[config.keyName] == action.data[config.keyName];
+        });
+        update.destroyedItemIndex = _lodash2.default.findIndex(items, function (item) {
+          return item[config.keyName] == action.data[config.keyName];
+        });
+        items.splice(update.destroyedItemIndex, 1);
+        update.items = items;
+      }
+      return Object.assign({}, state, update);
+    }), _defineProperty(_Object$assign, 'DESTROY_' + name + '_FAILED', function undefined(state, action) {
+      var update = {
+        isWritting: false,
+        destroyError: action.error,
+        destroyedItem: null,
+        destroyedItemIndex: null
+      };
+      if (state.destroyedItem && state.destroyedItemIndex != null) {
+        var items = [].concat(_toConsumableArray(state.items));
+        items.splice(state.destroyedItemIndex, 0, state.destroyedItem);
+        update.items = items;
+      }
+      return Object.assign({}, state, update);
+    }), _defineProperty(_Object$assign, 'DESTROY_' + name + '_COMPLETED', function undefined(state, action) {
+      var selected = (0, _selectedUpdate2.default)(config, state, state.items);
+      return Object.assign({}, state, {
+        isWritting: false,
+        destroyError: null,
+        destroyedItem: null,
+        destroyedItemIndex: null
+      }, selected);
+    }), _defineProperty(_Object$assign, 'CLEAR_' + name, function undefined(state, action) {
+      return Object.assign({}, state, {
+        items: [],
+        selected: null
+      });
+    }), _defineProperty(_Object$assign, 'SELECT_' + name, function undefined(state, action) {
+      var selected = null;
+      if (_lodash2.default.isString(action.data) || _lodash2.default.isNumber(action.data)) selected = _lodash2.default.find(state.items, function (item) {
+        return item[config.keyName] == action.data;
+      });
+      if (_lodash2.default.isObject(action.data) && action.data[config.keyName]) selected = _lodash2.default.find(state.items, function (item) {
+        return item[config.keyName] == action.data[config.keyName];
+      });else selected = action.data;
+      return Object.assign({}, state, {
+        selected: selected
+      });
+    }), _defineProperty(_Object$assign, 'RESET_' + name, function undefined(state, action) {
+      return Object.assign({}, initialState);
+    }), _Object$assign));
+    if (customActions[rAction.type]) return customActions[rAction.type](rState, rAction);else if (defaultActions[rAction.type]) return defaultActions[rAction.type](rState, rAction);else return rState;
+  };
+}
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = createLocalReducers;
+
+var _lodash = __webpack_require__(1);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _selectedUpdate = __webpack_require__(4);
+
+var _selectedUpdate2 = _interopRequireDefault(_selectedUpdate);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function createLocalReducers(config, name, customState, customActions) {
+  if (!config) config = {};
+  if (!config.keyName) config.keyName = 'id';
+  if (!customState) customState = {};
+  if (!customActions) customActions = {};
+  var initialState = Object.assign({}, {
+    init: false,
+    selected: null,
+    query: null,
+    isFinding: false,
+    isSyncing: false,
+    isWritting: false,
+    syncError: null,
+    findError: null,
+    writeError: null,
+    updateError: null,
+    destroyError: null,
+    error: null,
+    updatedItem: null,
+    destroyedItem: null,
+    destroyedItemIndex: null,
+    items: []
+  }, customState);
+  name = _lodash2.default.toUpper(_lodash2.default.snakeCase(name));
+
+  return function () {
+    var _Object$assign;
+
+    var rState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+    var rAction = arguments[1];
+
+    var defaultActions = Object.assign((_Object$assign = {}, _defineProperty(_Object$assign, 'FIND_' + name, function undefined(state, action) {
+      var data = action.data;
+      if (!_lodash2.default.isArray(data)) data = [data];
+      var selected = (0, _selectedUpdate2.default)(config, state, data);
+      return Object.assign({}, state, {
+        init: true,
+        items: data
+      }, selected);
+    }), _defineProperty(_Object$assign, 'SYNC_' + name, function undefined(state, action) {
+      var data = action.data;
+      if (!_lodash2.default.isArray(data)) data = [data];
+      var items = _lodash2.default.unionBy(data, [].concat(_toConsumableArray(state.items)), config.keyName);
+      var selected = (0, _selectedUpdate2.default)(config, state, items);
+      return Object.assign({}, state, {
+        init: true,
+        items: items
+      }, selected);
+    }), _defineProperty(_Object$assign, 'RECEIVE_' + name, function undefined(state, action) {
+      var data = action.data;
+      if (!_lodash2.default.isArray(data)) data = [data];
+      var items = _lodash2.default.unionBy(data, [].concat(_toConsumableArray(state.items)), config.keyName);
+      var selected = (0, _selectedUpdate2.default)(config, state, items);
+      return Object.assign({}, state, {
+        items: items
+      }, selected);
+    }), _defineProperty(_Object$assign, 'CREATE_' + name, function undefined(state, action) {
+      return Object.assign({}, state, {
+        items: [].concat(_toConsumableArray(state.items), [action.data])
+      });
+    }), _defineProperty(_Object$assign, 'UPDATE_' + name, function undefined(state, action) {
+      var update = {};
+      if (_lodash2.default.isObject(action.data) && action.data[config.keyName]) {
+        var items = [].concat(_toConsumableArray(state.items));
+        var updatedItem = _lodash2.default.find(items, function (item) {
+          return item[config.keyName] == action.data[config.keyName];
+        });
+        items.splice(_lodash2.default.findIndex(items, function (item) {
+          return item[config.keyName] == action.data[config.keyName];
+        }), 1, Object.assign({}, updatedItem, action.data));
+        update.items = items;
+      }
+      var selected = update.items ? (0, _selectedUpdate2.default)(config, state, update.items) : {};
+      return Object.assign({}, state, update, selected);
+    }), _defineProperty(_Object$assign, 'DESTROY_' + name, function undefined(state, action) {
+      var update = {};
+      if (action.data[config.keyName]) {
+        var items = [].concat(_toConsumableArray(state.items));
+        var destroyedItem = _lodash2.default.find(items, function (item) {
+          return item[config.keyName] == action.data[config.keyName];
+        });
+        items.splice(destroyedItemIndex, 1);
+        update.items = items;
+      }
+      var selected = update.items ? (0, _selectedUpdate2.default)(config, state, update.items) : {};
+      return Object.assign({}, state, update, selected);
+    }), _defineProperty(_Object$assign, 'CLEAR_' + name, function undefined(state, action) {
+      return Object.assign({}, state, {
+        items: [],
+        selected: null
+      });
+    }), _defineProperty(_Object$assign, 'SELECT_' + name, function undefined(state, action) {
+      return Object.assign({}, state, {
+        selected: action.data
+      });
+    }), _defineProperty(_Object$assign, 'RESET_' + name, function undefined(state, action) {
+      return Object.assign({}, initialState);
+    }), _Object$assign));
+    if (customActions[rAction.type]) return customActions[rAction.type](rState, rAction);else if (defaultActions[rAction.type]) return defaultActions[rAction.type](rState, rAction);else return rState;
+  };
+}
+
+/***/ })
+/******/ ]);
+});
