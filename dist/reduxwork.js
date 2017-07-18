@@ -865,7 +865,7 @@ function createIoReducers(config, name, customState, customActions) {
       });
     }), _defineProperty(_Object$assign, 'CREATE_' + name + '_FAILED', function undefined(state, action) {
       var items = [].concat(_toConsumableArray(state.items));
-      if (action.data.reduxworkTempId) {
+      if (action.data && action.data.reduxworkTempId) {
         items = _lodash2.default.filter(items, function (item) {
           return item[config.keyName] != action.data.reduxworkTempId;
         });

@@ -105,7 +105,7 @@ export default function createIoReducers(config, name, customState, customAction
       },
       [`CREATE_${name}_FAILED`](state, action) {
       	var items = [...state.items];
-	      if(action.data.reduxworkTempId) {
+	      if(action.data && action.data.reduxworkTempId) {
 	        items = _.filter(items, (item) => item[config.keyName] != action.data.reduxworkTempId);		
 	      }
         return Object.assign({}, state, {

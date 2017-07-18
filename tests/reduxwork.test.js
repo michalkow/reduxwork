@@ -124,7 +124,7 @@ test('Create complete reducer', () => {
  expect(
     testReducers.messages(Object.assign({}, reducerDefaluts, {
 	    	isWritting: true, 
-	    	items: [{"body": "test", _temp: true}]
+	    	items: []
     	}), {
       type: 'CREATE_MESSAGES_COMPLETED',
       data: {"body": "test", id: 1}
@@ -141,7 +141,7 @@ test('Create failed reducer', () => {
  expect(
     testReducers.messages(Object.assign({}, reducerDefaluts, {
 	    	isWritting: true, 
-	    	items: [{"body": "test", _temp: true}]
+	    	items: []
     	}), {
       type: 'CREATE_MESSAGES_FAILED',
       error: "failed"
