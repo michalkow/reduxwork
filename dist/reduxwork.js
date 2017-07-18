@@ -7,7 +7,7 @@
 		exports["reduxwork"] = factory(require("lodash"));
 	else
 		root["reduxwork"] = factory(root["_"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_0__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -75,6 +75,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -84,6 +90,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = buildAction;
+
+var _lodash = __webpack_require__(0);
+
+var _lodash2 = _interopRequireDefault(_lodash);
 
 var _socketDispatcher = __webpack_require__(2);
 
@@ -99,23 +109,20 @@ function buildAction(config, action, name, data, cb) {
   return function (dispatch) {
     if (config.addKeyOnCreate && action == "CREATE") {
       var keyName = config.keyName || 'id';
-      if (!data[keyName]) data[keyName] = new Date().getTime();
+      if (!data[keyName]) {
+        data.reduxworkTempId = new Date().getTime();
+        data[keyName] = data.reduxworkTempId;
+      }
     }
     var actionData = {
       type: action ? action + '_' + name.toUpperCase() : name.toUpperCase(),
-      data: data
+      data: data.reduxworkTempId ? _lodash2.default.omit(data, 'reduxworkTempId') : data
     };
     dispatch(actionData);
 
-    if (config.type == "socket") return (0, _socketDispatcher2.default)(config, action, name.toUpperCase(), dispatch, data, cb, config);else if (config.type == "fetch") return (0, _fetchDispatcher2.default)(config, action, name.toUpperCase(), dispatch, data, cb, config);
+    if (config.type == "socket") return (0, _socketDispatcher2.default)(config, action, name.toUpperCase(), dispatch, data, cb);else if (config.type == "fetch") return (0, _fetchDispatcher2.default)(config, action, name.toUpperCase(), dispatch, data, cb);
   };
 }
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 
 /***/ }),
 /* 2 */
@@ -128,7 +135,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = socketDispatcher;
-function socketDispatcher(config, action, name, dispatch, payload, cb) {
+function socketDispatcher(config, action, name, dispatch, data, cb) {
+  var payload = data.reduxworkTempId ? _.omit(data, 'reduxworkTempId') : data;
+
   if (action) action = action.toUpperCase();
   if (!config) config = {};
   if (!config.eventName) config.eventName = "redux_action_event";
@@ -149,7 +158,7 @@ function socketDispatcher(config, action, name, dispatch, payload, cb) {
         } else {
           dispatch({
             type: (action ? action + '_' + name : name) + '_COMPLETED',
-            data: res
+            data: data.reduxworkTempId ? Object.assign({}, res, { reduxworkTempId: data.reduxworkTempId }) : res
           });
           resolve(res);
         }
@@ -186,7 +195,9 @@ var _getFetchMethod2 = _interopRequireDefault(_getFetchMethod);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function fetchDispatcher(config, action, name, dispatch, payload, cb) {
+function fetchDispatcher(config, action, name, dispatch, data, cb) {
+  var payload = data.reduxworkTempId ? _.omit(data, 'reduxworkTempId') : data;
+
   action = action.toUpperCase();
   if (!config) config = {};
   if (config.fetchFunction) {
@@ -203,7 +214,7 @@ function fetchDispatcher(config, action, name, dispatch, payload, cb) {
         } else {
           dispatch({
             type: action + '_' + name.toUpperCase() + '_COMPLETED',
-            data: json
+            data: data.reduxworkTempId ? Object.assign({}, json, { reduxworkTempId: data.reduxworkTempId }) : json
           });
           resolve(json);
         }
@@ -346,7 +357,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = createSocketAction;
 
-var _buildAction = __webpack_require__(0);
+var _buildAction = __webpack_require__(1);
 
 var _buildAction2 = _interopRequireDefault(_buildAction);
 
@@ -500,7 +511,7 @@ exports.createSocketActions = createSocketActions;
 exports.createFetchActions = createFetchActions;
 exports.createIoActions = createIoActions;
 
-var _buildAction = __webpack_require__(0);
+var _buildAction = __webpack_require__(1);
 
 var _buildAction2 = _interopRequireDefault(_buildAction);
 
@@ -599,11 +610,11 @@ exports.createSocketGetAction = createSocketGetAction;
 exports.createFetchGetAction = createFetchGetAction;
 exports.createGetAction = createGetAction;
 
-var _lodash = __webpack_require__(1);
+var _lodash = __webpack_require__(0);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _buildAction = __webpack_require__(0);
+var _buildAction = __webpack_require__(1);
 
 var _buildAction2 = _interopRequireDefault(_buildAction);
 
@@ -654,7 +665,7 @@ exports.createSocketPostAction = createSocketPostAction;
 exports.createFetchPostAction = createFetchPostAction;
 exports.createPostAction = createPostAction;
 
-var _buildAction = __webpack_require__(0);
+var _buildAction = __webpack_require__(1);
 
 var _buildAction2 = _interopRequireDefault(_buildAction);
 
@@ -703,7 +714,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = createReducer;
 
-var _lodash = __webpack_require__(1);
+var _lodash = __webpack_require__(0);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -739,7 +750,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = createIoReducers;
 
-var _lodash = __webpack_require__(1);
+var _lodash = __webpack_require__(0);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -854,7 +865,7 @@ function createIoReducers(config, name, customState, customActions) {
       });
     }), _defineProperty(_Object$assign, 'CREATE_' + name + '_FAILED', function undefined(state, action) {
       var items = state.items.filter(function (obj) {
-        return obj[config.keyName] !== action.tempId;
+        return obj[config.keyName] !== action.reduxworkTempId;
       });
       return Object.assign({}, state, {
         isWritting: false,
@@ -863,7 +874,7 @@ function createIoReducers(config, name, customState, customActions) {
       });
     }), _defineProperty(_Object$assign, 'CREATE_' + name + '_COMPLETED', function undefined(state, action) {
       var items = state.items.filter(function (obj) {
-        return obj[config.keyName] !== action.tempId;
+        return obj[config.keyName] !== action.reduxworkTempId;
       });
       return Object.assign({}, state, {
         isWritting: false,
@@ -987,7 +998,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = createLocalReducers;
 
-var _lodash = __webpack_require__(1);
+var _lodash = __webpack_require__(0);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 

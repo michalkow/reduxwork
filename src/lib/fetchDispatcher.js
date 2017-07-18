@@ -2,7 +2,8 @@ import buildFetchOptions from './buildFetchOptions';
 import buildURL from './buildURL';
 import getFetchMethod from './getFetchMethod';
 
-export default function fetchDispatcher(config, action, name, dispatch, payload, cb) {
+export default function fetchDispatcher(config, action, name, dispatch, data, cb) {
+  var payload = (data.reduxworkTempId ? _.omit(data, 'reduxworkTempId') : data);
   console.log('fetchDispatcher')
   action = action.toUpperCase();
   if(!config) config = {};
@@ -31,7 +32,7 @@ export default function fetchDispatcher(config, action, name, dispatch, payload,
         } else {
           dispatch({
             type: action+'_'+name.toUpperCase()+'_COMPLETED',
-            data: json
+            data: (data.reduxworkTempId ? Object.assign({}, json, {reduxworkTempId: data.reduxworkTempId}) : json),
           });
           resolve(json);
         }

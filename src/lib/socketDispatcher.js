@@ -1,4 +1,5 @@
-export default function socketDispatcher(config, action, name, dispatch, payload, cb) {
+export default function socketDispatcher(config, action, name, dispatch, data, cb) {
+  var payload = (data.reduxworkTempId ? _.omit(data, 'reduxworkTempId') : data);
   console.log('socketDispatcher')
   if(action) action = action.toUpperCase();
   if(!config) config = {};
@@ -21,7 +22,7 @@ export default function socketDispatcher(config, action, name, dispatch, payload
         } else { 
           dispatch({
             type: (action ? action+'_'+name : name)+'_COMPLETED',
-            data: res,
+            data: (data.reduxworkTempId ? Object.assign({}, res, {reduxworkTempId: data.reduxworkTempId}) : res),
           });
           resolve(res);
         }

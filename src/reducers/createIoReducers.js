@@ -105,7 +105,7 @@ export default function createIoReducers(config, name, customState, customAction
       },
       [`CREATE_${name}_FAILED`](state, action) {
         var items = state.items.filter(function(obj) {
-            return obj[config.keyName] !== action.tempId;
+            return obj[config.keyName] !== action.reduxworkTempId;
         });
         return Object.assign({}, state, {
           isWritting: false,
@@ -115,7 +115,7 @@ export default function createIoReducers(config, name, customState, customAction
       },
       [`CREATE_${name}_COMPLETED`](state, action) {
         var items = state.items.filter(function(obj) {
-            return obj[config.keyName] !== action.tempId;
+            return obj[config.keyName] !== action.reduxworkTempId;
         });
         return Object.assign({}, state, {
           isWritting: false,
