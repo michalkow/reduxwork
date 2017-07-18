@@ -116,7 +116,7 @@ function buildAction(config, action, name, data, cb) {
     }
     var actionData = {
       type: action ? action + '_' + name.toUpperCase() : name.toUpperCase(),
-      data: data.reduxworkTempId ? _lodash2.default.omit(data, 'reduxworkTempId') : data
+      data: data && data.reduxworkTempId ? _lodash2.default.omit(data, 'reduxworkTempId') : data
     };
     dispatch(actionData);
 
@@ -864,22 +864,30 @@ function createIoReducers(config, name, customState, customActions) {
         items: [].concat(_toConsumableArray(state.items), [item])
       });
     }), _defineProperty(_Object$assign, 'CREATE_' + name + '_FAILED', function undefined(state, action) {
-      var items = state.items.filter(function (obj) {
-        return obj[config.keyName] !== action.reduxworkTempId;
-      });
+      var items = [].concat(_toConsumableArray(state.items));
+      if (action.data.reduxworkTempId) {
+        items = _lodash2.default.filter(items, function (item) {
+          return item[config.keyName] != action.data.reduxworkTempId;
+        });
+      }
       return Object.assign({}, state, {
         isWritting: false,
         items: items,
         writeError: action.error
       });
     }), _defineProperty(_Object$assign, 'CREATE_' + name + '_COMPLETED', function undefined(state, action) {
-      var items = state.items.filter(function (obj) {
-        return obj[config.keyName] !== action.reduxworkTempId;
-      });
+      var items = [].concat(_toConsumableArray(state.items));
+      var data = action.data;
+      if (data.reduxworkTempId) {
+        items = _lodash2.default.filter(items, function (item) {
+          return item[config.keyName] != data.reduxworkTempId;
+        });
+        data = _lodash2.default.omit(data, 'reduxworkTempId');
+      }
       return Object.assign({}, state, {
         isWritting: false,
         writeError: null,
-        items: [].concat(_toConsumableArray(items), [action.data])
+        items: [].concat(_toConsumableArray(items), [data])
       });
     }), _defineProperty(_Object$assign, 'UPDATE_' + name, function undefined(state, action) {
       var update = {

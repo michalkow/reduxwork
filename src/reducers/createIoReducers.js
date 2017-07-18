@@ -104,9 +104,10 @@ export default function createIoReducers(config, name, customState, customAction
         })      
       },
       [`CREATE_${name}_FAILED`](state, action) {
-        var items = state.items.filter(function(obj) {
-            return obj[config.keyName] !== action.reduxworkTempId;
-        });
+      	var items = [...state.items];
+	      if(action.data.reduxworkTempId) {
+	        items = _.filter(items, (item) => item[config.keyName] != action.data.reduxworkTempId);		
+	      }
         return Object.assign({}, state, {
           isWritting: false,
           items: items,
@@ -114,13 +115,16 @@ export default function createIoReducers(config, name, customState, customAction
         })      
       },
       [`CREATE_${name}_COMPLETED`](state, action) {
-        var items = state.items.filter(function(obj) {
-            return obj[config.keyName] !== action.reduxworkTempId;
-        });
+      	var items = [...state.items];
+      	var data = action.data;
+      	if(data.reduxworkTempId) {
+	        items = _.filter(items, (item) => item[config.keyName] != data.reduxworkTempId);
+	        data = _.omit(data, 'reduxworkTempId');
+      	}
         return Object.assign({}, state, {
           isWritting: false,
           writeError: null,
-          items: [...items, action.data]
+          items: [...items, data]
         })      
       },
       [`UPDATE_${name}`](state, action) {

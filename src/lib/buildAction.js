@@ -14,7 +14,7 @@ export default function buildAction(config, action, name, data, cb) {
     }
     let actionData = {
       type: (action ? action+'_'+name.toUpperCase() : name.toUpperCase()),
-      data: (data.reduxworkTempId ? _.omit(data, 'reduxworkTempId') : data)
+      data: ((data && data.reduxworkTempId) ? _.omit(data, 'reduxworkTempId') : data)
     };
     dispatch(actionData)
     console.log('dispatch', actionData)
