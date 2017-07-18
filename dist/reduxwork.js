@@ -136,7 +136,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = socketDispatcher;
 function socketDispatcher(config, action, name, dispatch, data, cb) {
-  var payload = data.reduxworkTempId ? _.omit(data, 'reduxworkTempId') : data;
+  var payload = data && data.reduxworkTempId ? _.omit(data, 'reduxworkTempId') : data;
 
   if (action) action = action.toUpperCase();
   if (!config) config = {};
@@ -158,7 +158,7 @@ function socketDispatcher(config, action, name, dispatch, data, cb) {
         } else {
           dispatch({
             type: (action ? action + '_' + name : name) + '_COMPLETED',
-            data: data.reduxworkTempId ? Object.assign({}, res, { reduxworkTempId: data.reduxworkTempId }) : res
+            data: data && data.reduxworkTempId ? Object.assign({}, res, { reduxworkTempId: data.reduxworkTempId }) : res
           });
           resolve(res);
         }
@@ -196,7 +196,7 @@ var _getFetchMethod2 = _interopRequireDefault(_getFetchMethod);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function fetchDispatcher(config, action, name, dispatch, data, cb) {
-  var payload = data.reduxworkTempId ? _.omit(data, 'reduxworkTempId') : data;
+  var payload = data && data.reduxworkTempId ? _.omit(data, 'reduxworkTempId') : data;
 
   action = action.toUpperCase();
   if (!config) config = {};
@@ -214,7 +214,7 @@ function fetchDispatcher(config, action, name, dispatch, data, cb) {
         } else {
           dispatch({
             type: action + '_' + name.toUpperCase() + '_COMPLETED',
-            data: data.reduxworkTempId ? Object.assign({}, json, { reduxworkTempId: data.reduxworkTempId }) : json
+            data: data && data.reduxworkTempId ? Object.assign({}, json, { reduxworkTempId: data.reduxworkTempId }) : json
           });
           resolve(json);
         }
