@@ -38,7 +38,7 @@ export default function fetchDispatcher(config, action, name, dispatch, data, cb
             data: json,
           }
           if(data && data._tempId) completedAction._tempId = data._tempId;
-          if(data && data._rewrite) completedAction._rewrite = data._rewrite;
+          if(data && typeof data._rewrite !== "undefined") completedAction._rewrite = data._rewrite;
           dispatch(completedAction);
           resolve(json);
         }
