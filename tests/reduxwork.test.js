@@ -88,6 +88,19 @@ test('Update new message', () => {
 	});
 });
 
+test('Update new message rewrite', () => {
+  var data = {id: 2, "body": "test2", _rewrite: true};
+  var store = mockStore({ messages: {} });
+  var expectedActions = [
+    { type: 'UPDATE_MESSAGES', data: data }
+  ];
+  return store.dispatch(updateMessages(data))
+  .then((res) => {
+    expectedActions.push({ type: 'UPDATE_MESSAGES_COMPLETED', data: res, _rewrite: true})
+    expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
+  });
+});
+
 
 test('Destroy new message', () => {
 	var data = {id: 1};

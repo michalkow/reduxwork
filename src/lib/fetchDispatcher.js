@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import buildFetchOptions from './buildFetchOptions';
 import buildURL from './buildURL';
 import getFetchMethod from './getFetchMethod';

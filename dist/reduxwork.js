@@ -135,8 +135,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = socketDispatcher;
+
+var _lodash = __webpack_require__(0);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function socketDispatcher(config, action, name, dispatch, data, cb) {
-  var payload = data && (data._tempId || data._rewrite) ? _.omit(data, ['_tempId', '_rewrite']) : data;
+  var payload = data && (data._tempId || data._rewrite) ? _lodash2.default.omit(data, ['_tempId', '_rewrite']) : data;
 
   if (action) action = action.toUpperCase();
   if (!config) config = {};
@@ -186,6 +193,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = fetchDispatcher;
 
+var _lodash = __webpack_require__(0);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 var _buildFetchOptions = __webpack_require__(9);
 
 var _buildFetchOptions2 = _interopRequireDefault(_buildFetchOptions);
@@ -201,7 +212,7 @@ var _getFetchMethod2 = _interopRequireDefault(_getFetchMethod);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function fetchDispatcher(config, action, name, dispatch, data, cb) {
-  var payload = data && (data._tempId || data._rewrite) ? _.omit(data, ['_tempId', '_rewrite']) : data;
+  var payload = data && (data._tempId || data._rewrite) ? _lodash2.default.omit(data, ['_tempId', '_rewrite']) : data;
 
   action = action.toUpperCase();
   if (!config) config = {};

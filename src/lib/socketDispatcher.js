@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default function socketDispatcher(config, action, name, dispatch, data, cb) {
   var payload = data && (data._tempId || data._rewrite) ? _.omit(data, ['_tempId', '_rewrite']) : data;
   console.log('socketDispatcher')
