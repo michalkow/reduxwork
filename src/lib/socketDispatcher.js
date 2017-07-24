@@ -1,5 +1,5 @@
 export default function socketDispatcher(config, action, name, dispatch, data, cb) {
-  var payload = ((data && data.reduxworkTempId) ? _.omit(data, 'reduxworkTempId') : data);
+  var payload = data && (data._tempId || data._rewrite) ? _.omit(data, ['_tempId', '_rewrite']) : data;
   console.log('socketDispatcher')
   if(action) action = action.toUpperCase();
   if(!config) config = {};
@@ -14,16 +14,21 @@ export default function socketDispatcher(config, action, name, dispatch, data, c
       console.log(config.eventName, actionData)
       config.socketIoFunction(config.eventName, actionData, (err, res) => {
         if(err) {
-          dispatch({
+          let failedAction = {
             type: (action ? action+'_'+name : name)+'_FAILED',
             error: err,
-          });
+          }
+          if(data && data._tempId) failedAction._tempId = data._tempId;
+          dispatch(failedAction);
           reject(err);
         } else { 
-          dispatch({
+          let completedAction = {
             type: (action ? action+'_'+name : name)+'_COMPLETED',
-            data: ((data && data.reduxworkTempId) ? Object.assign({}, res, {reduxworkTempId: data.reduxworkTempId}) : res),
-          });
+            data: res,
+          }
+          if(data && data._tempId) completedAction._tempId = data._tempId;
+          if(data && data._rewrite) completedAction._rewrite = data._rewrite;
+          dispatch(completedAction);
           resolve(res);
         }
         if(cb) cb(err, res);

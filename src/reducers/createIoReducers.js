@@ -25,7 +25,6 @@ export default function createIoReducers(config, name, customState, customAction
     items: []
   }, customState);
   name = _.toUpper(_.snakeCase(name));
-  console.log('createIoReducers', name)
   return function(rState = initialState, rAction) {
     var defaultActions = Object.assign({
       [`FIND_${name}`](state, action) {
@@ -97,7 +96,6 @@ export default function createIoReducers(config, name, customState, customAction
       },
       [`CREATE_${name}`](state, action) {
         let item = Object.assign({}, action.data, {_temp: true});
-        console.log('CREATE', action)
         return Object.assign({}, state, {
           isWritting: true,
           items: [...state.items, item]
@@ -105,8 +103,8 @@ export default function createIoReducers(config, name, customState, customAction
       },
       [`CREATE_${name}_FAILED`](state, action) {
       	var items = [...state.items];
-	      if(action.data && action.data.reduxworkTempId) {
-	        items = _.filter(items, (item) => item[config.keyName] != action.data.reduxworkTempId);		
+	      if(action._tempId) {
+	        items = _.filter(items, (item) => item[config.keyName] != action._tempId);		
 	      }
         return Object.assign({}, state, {
           isWritting: false,
@@ -116,15 +114,13 @@ export default function createIoReducers(config, name, customState, customAction
       },
       [`CREATE_${name}_COMPLETED`](state, action) {
       	var items = [...state.items];
-      	var data = action.data;
-      	if(data.reduxworkTempId) {
-	        items = _.filter(items, (item) => item[config.keyName] != data.reduxworkTempId);
-	        data = _.omit(data, 'reduxworkTempId');
+      	if(action._tempId) {
+	        items = _.filter(items, (item) => item[config.keyName] != action._tempId);
       	}
         return Object.assign({}, state, {
           isWritting: false,
           writeError: null,
-          items: [...items, data]
+          items: [...items, action.data]
         })      
       },
       [`UPDATE_${name}`](state, action) {
@@ -167,13 +163,13 @@ export default function createIoReducers(config, name, customState, customAction
           updateError: null,
           updatedItem: null,
         };
-        if(action.rewrite || config.rewriteOnUpdate) {
+        if(action._rewrite || (config.rewriteOnUpdate && action._rewrite !== false)) {
         	var items = [...state.items];
           let data = action.data;
 	        if(!_.isArray(data)) data = [data];
 	        update.items = _.unionBy(data, items, config.keyName);
         }
-        console.log(update)
+        console.log(action)
         let selected = update.items ? selectedUpdate(config, state, update.items) : {};
         return Object.assign({}, state, update, selected)      
       },

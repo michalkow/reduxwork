@@ -8,13 +8,13 @@ export default function buildAction(config, action, name, data, cb) {
     if(config.addKeyOnCreate && action=="CREATE") {
       let keyName = config.keyName || 'id';
       if(!data[keyName]) {
-        data.reduxworkTempId = new Date().getTime();
-        data[keyName] = data.reduxworkTempId;
+        data._tempId = new Date().getTime();
+        data[keyName] = data._tempId;
       }
     }
     let actionData = {
       type: (action ? action+'_'+name.toUpperCase() : name.toUpperCase()),
-      data: ((data && data.reduxworkTempId) ? _.omit(data, 'reduxworkTempId') : data)
+      data: ((data && data._tempId) ? _.omit(data, '_tempId') : data)
     };
     dispatch(actionData)
     console.log('dispatch', actionData)

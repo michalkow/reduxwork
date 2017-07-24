@@ -110,13 +110,13 @@ function buildAction(config, action, name, data, cb) {
     if (config.addKeyOnCreate && action == "CREATE") {
       var keyName = config.keyName || 'id';
       if (!data[keyName]) {
-        data.reduxworkTempId = new Date().getTime();
-        data[keyName] = data.reduxworkTempId;
+        data._tempId = new Date().getTime();
+        data[keyName] = data._tempId;
       }
     }
     var actionData = {
       type: action ? action + '_' + name.toUpperCase() : name.toUpperCase(),
-      data: data && data.reduxworkTempId ? _lodash2.default.omit(data, 'reduxworkTempId') : data
+      data: data && data._tempId ? _lodash2.default.omit(data, '_tempId') : data
     };
     dispatch(actionData);
 
@@ -136,7 +136,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = socketDispatcher;
 function socketDispatcher(config, action, name, dispatch, data, cb) {
-  var payload = data && data.reduxworkTempId ? _.omit(data, 'reduxworkTempId') : data;
+  var payload = data && (data._tempId || data._rewrite) ? _.omit(data, ['_tempId', '_rewrite']) : data;
 
   if (action) action = action.toUpperCase();
   if (!config) config = {};
@@ -150,16 +150,21 @@ function socketDispatcher(config, action, name, dispatch, data, cb) {
     return new Promise(function (resolve, reject) {
       config.socketIoFunction(config.eventName, actionData, function (err, res) {
         if (err) {
-          dispatch({
+          var failedAction = {
             type: (action ? action + '_' + name : name) + '_FAILED',
             error: err
-          });
+          };
+          if (data && data._tempId) failedAction._tempId = data._tempId;
+          dispatch(failedAction);
           reject(err);
         } else {
-          dispatch({
+          var completedAction = {
             type: (action ? action + '_' + name : name) + '_COMPLETED',
-            data: data && data.reduxworkTempId ? Object.assign({}, res, { reduxworkTempId: data.reduxworkTempId }) : res
-          });
+            data: res
+          };
+          if (data && data._tempId) completedAction._tempId = data._tempId;
+          if (data && data._rewrite) completedAction._rewrite = data._rewrite;
+          dispatch(completedAction);
           resolve(res);
         }
         if (cb) cb(err, res);
@@ -196,7 +201,7 @@ var _getFetchMethod2 = _interopRequireDefault(_getFetchMethod);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function fetchDispatcher(config, action, name, dispatch, data, cb) {
-  var payload = data && data.reduxworkTempId ? _.omit(data, 'reduxworkTempId') : data;
+  var payload = data && (data._tempId || data._rewrite) ? _.omit(data, ['_tempId', '_rewrite']) : data;
 
   action = action.toUpperCase();
   if (!config) config = {};
@@ -206,16 +211,21 @@ function fetchDispatcher(config, action, name, dispatch, data, cb) {
         return response.json();
       }).then(function (json) {
         if (json.err) {
-          dispatch({
-            type: action + '_' + name.toUpperCase() + '_FAILED',
+          var failedAction = {
+            type: (action ? action + '_' + name : name) + '_FAILED',
             error: json.err
-          });
+          };
+          if (data && data._tempId) failedAction._tempId = data._tempId;
+          dispatch(failedAction);
           reject(json.err);
         } else {
-          dispatch({
-            type: action + '_' + name.toUpperCase() + '_COMPLETED',
-            data: data && data.reduxworkTempId ? Object.assign({}, json, { reduxworkTempId: data.reduxworkTempId }) : json
-          });
+          var completedAction = {
+            type: (action ? action + '_' + name : name) + '_COMPLETED',
+            data: json
+          };
+          if (data && data._tempId) completedAction._tempId = data._tempId;
+          if (data && data._rewrite) completedAction._rewrite = data._rewrite;
+          dispatch(completedAction);
           resolve(json);
         }
         if (cb) cb(json.err, json);
@@ -788,7 +798,6 @@ function createIoReducers(config, name, customState, customActions) {
     items: []
   }, customState);
   name = _lodash2.default.toUpper(_lodash2.default.snakeCase(name));
-
   return function () {
     var _Object$assign;
 
@@ -858,16 +867,15 @@ function createIoReducers(config, name, customState, customActions) {
       return Object.assign({}, state, update, selected);
     }), _defineProperty(_Object$assign, 'CREATE_' + name, function undefined(state, action) {
       var item = Object.assign({}, action.data, { _temp: true });
-
       return Object.assign({}, state, {
         isWritting: true,
         items: [].concat(_toConsumableArray(state.items), [item])
       });
     }), _defineProperty(_Object$assign, 'CREATE_' + name + '_FAILED', function undefined(state, action) {
       var items = [].concat(_toConsumableArray(state.items));
-      if (action.data && action.data.reduxworkTempId) {
+      if (action._tempId) {
         items = _lodash2.default.filter(items, function (item) {
-          return item[config.keyName] != action.data.reduxworkTempId;
+          return item[config.keyName] != action._tempId;
         });
       }
       return Object.assign({}, state, {
@@ -877,17 +885,15 @@ function createIoReducers(config, name, customState, customActions) {
       });
     }), _defineProperty(_Object$assign, 'CREATE_' + name + '_COMPLETED', function undefined(state, action) {
       var items = [].concat(_toConsumableArray(state.items));
-      var data = action.data;
-      if (data.reduxworkTempId) {
+      if (action._tempId) {
         items = _lodash2.default.filter(items, function (item) {
-          return item[config.keyName] != data.reduxworkTempId;
+          return item[config.keyName] != action._tempId;
         });
-        data = _lodash2.default.omit(data, 'reduxworkTempId');
       }
       return Object.assign({}, state, {
         isWritting: false,
         writeError: null,
-        items: [].concat(_toConsumableArray(items), [data])
+        items: [].concat(_toConsumableArray(items), [action.data])
       });
     }), _defineProperty(_Object$assign, 'UPDATE_' + name, function undefined(state, action) {
       var update = {
@@ -925,7 +931,7 @@ function createIoReducers(config, name, customState, customActions) {
         updateError: null,
         updatedItem: null
       };
-      if (action.rewrite || config.rewriteOnUpdate) {
+      if (action._rewrite || config.rewriteOnUpdate && action._rewrite !== false) {
         var items = [].concat(_toConsumableArray(state.items));
         var data = action.data;
         if (!_lodash2.default.isArray(data)) data = [data];

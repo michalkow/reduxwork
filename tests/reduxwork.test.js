@@ -266,7 +266,7 @@ test('Update complete reducer rewrite', () => {
     	}), {
       type: 'UPDATE_MESSAGES_COMPLETED',
       data: {id: 1, body: "tested", test: true},
-      rewrite: true
+      _rewrite: true
     })
   ).toEqual(
     Object.assign({}, reducerDefaluts, {
