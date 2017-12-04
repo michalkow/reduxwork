@@ -63,7 +63,7 @@ test('Find messages by id', () => {
 });
 
 test('Create new message', () => {
-	var data = {"body": "test", "localOnly": "isLocal"};
+	var data = {"body": "test", "localOnly": "isLocal", "virtualData": "some"};
 	var store = mockStore({ messages: {} });
   var expectedActions = [
     { type: 'CREATE_MESSAGES', data: data }

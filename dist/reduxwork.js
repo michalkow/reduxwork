@@ -109,9 +109,11 @@ function buildAction(config, action, name, data, cb) {
   return function (dispatch) {
     if (config.addKeyOnCreate && action == "CREATE") {
       var keyName = config.keyName || 'id';
-      if (!data[keyName]) {
+      var prefix = config.localPrefix || 'local';
+      var prefixedKeyName = prefix + _lodash2.default.upperFirst(keyName);
+      if (!data[keyName] && !data[prefixedKeyName]) {
         data._tempId = new Date().getTime();
-        data[keyName] = data._tempId;
+        data[prefixedKeyName] = data._tempId;
       }
     }
     var actionData = {

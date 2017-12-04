@@ -7,9 +7,11 @@ export default function buildAction(config, action, name, data, cb) {
   return function (dispatch) {
     if(config.addKeyOnCreate && action=="CREATE") {
       let keyName = config.keyName || 'id';
-      if(!data[keyName]) {
+      let prefix = config.localPrefix || 'local';
+      let prefixedKeyName = prefix + _.upperFirst(keyName);
+      if (!data[keyName] && !data[prefixedKeyName]) {
         data._tempId = new Date().getTime();
-        data[keyName] = data._tempId;
+        data[prefixedKeyName] = data._tempId;
       }
     }
     let actionData = {
