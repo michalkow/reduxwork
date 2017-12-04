@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import selectedUpdate from '../lib/selectedUpdate';
+import { stripVirtualParseLocalFields } from '../lib/fieldsOperations';
 
 export default function createLocalReducers(config, name, customState, customActions) {
   if(!config) config = {};
@@ -58,18 +59,19 @@ export default function createLocalReducers(config, name, customState, customAct
       },
       [`CREATE_${name}`](state, action) {
         return Object.assign({}, state, {
-          items: [...state.items, action.data]
+          items: [...state.items, stripVirtualParseLocalFields(action.data)]
         })      
       },
       [`UPDATE_${name}`](state, action) {
-      	var update = {};
-        if(_.isObject(action.data) && action.data[config.keyName]) {
+        var update = {};
+        var data = stripVirtualParseLocalFields(action.data);
+        if(_.isObject(data) && data[config.keyName]) {
           var items = [...state.items];
-          var updatedItem = _.find(items, (item) => item[config.keyName] == action.data[config.keyName]);
+          var updatedItem = _.find(items, (item) => item[config.keyName] == data[config.keyName]);
           items.splice(
-          	_.findIndex(items, (item) => item[config.keyName] == action.data[config.keyName]), 
+          	_.findIndex(items, (item) => item[config.keyName] == data[config.keyName]), 
           	1, 
-          	Object.assign({}, updatedItem, action.data)
+          	Object.assign({}, updatedItem, data)
           );
           update.items = items;
         }

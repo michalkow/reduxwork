@@ -7,7 +7,7 @@
 		exports["reduxwork"] = factory(require("lodash"));
 	else
 		root["reduxwork"] = factory(root["_"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_0__) {
+})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_0__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -95,11 +95,11 @@ var _lodash = __webpack_require__(0);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _socketDispatcher = __webpack_require__(2);
+var _socketDispatcher = __webpack_require__(3);
 
 var _socketDispatcher2 = _interopRequireDefault(_socketDispatcher);
 
-var _fetchDispatcher = __webpack_require__(3);
+var _fetchDispatcher = __webpack_require__(4);
 
 var _fetchDispatcher2 = _interopRequireDefault(_fetchDispatcher);
 
@@ -134,7 +134,13 @@ function buildAction(config, action, name, data, cb) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = socketDispatcher;
+exports.stripFields = stripFields;
+exports.parseFields = parseFields;
+exports.stripVirtualFields = stripVirtualFields;
+exports.stripLocalFields = stripLocalFields;
+exports.parseVirtualFields = parseVirtualFields;
+exports.parseLocalFields = parseLocalFields;
+exports.stripVirtualParseLocalFields = stripVirtualParseLocalFields;
 
 var _lodash = __webpack_require__(0);
 
@@ -142,8 +148,73 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function stripFields(config, data, prefix) {
+  if (!config) config = {};
+  var prefixes = {
+    local: config.localPrefix || 'local',
+    virtual: config.virtualPrefix || 'virtual'
+  };
+
+  return _lodash2.default.omitBy(data, function (val, key) {
+    return _lodash2.default.startsWith(key, prefixes[prefix]);
+  });
+}
+
+function parseFields(config, data, prefix) {
+  if (!config) config = {};
+  var prefixes = {
+    local: config.localPrefix || 'local',
+    virtual: config.virtualPrefix || 'virtual'
+  };
+
+  return _lodash2.default.mapKeys(data, function (val, key) {
+    return _lodash2.default.startsWith(key, prefixes[prefix]) ? _lodash2.default.lowerFirst(_lodash2.default.replace(key, prefixes[prefix], '')) : key;
+  });
+}
+
+function stripVirtualFields(config, data) {
+  return stripFields(config, data, 'virtual');
+}
+
+function stripLocalFields(config, data) {
+  return stripFields(config, data, 'local');
+}
+
+function parseVirtualFields(config, data) {
+  return parseFields(config, data, 'virtual');
+}
+
+function parseLocalFields(config, data) {
+  return parseFields(config, data, 'local');
+}
+
+function stripVirtualParseLocalFields(config, data) {
+  return parseFields(config, stripFields(config, data, 'virtual'), 'local');
+}
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = socketDispatcher;
+
+var _lodash = __webpack_require__(0);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _fieldsOperations = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function socketDispatcher(config, action, name, dispatch, data, cb) {
   var payload = data && (data._tempId || data._rewrite) ? _lodash2.default.omit(data, ['_tempId', '_rewrite']) : data;
+  payload = (0, _fieldsOperations.stripLocalFields)(config, payload);
 
   if (action) action = action.toUpperCase();
   if (!config) config = {};
@@ -182,7 +253,7 @@ function socketDispatcher(config, action, name, dispatch, data, cb) {
 }
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -197,22 +268,25 @@ var _lodash = __webpack_require__(0);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _buildFetchOptions = __webpack_require__(9);
+var _buildFetchOptions = __webpack_require__(10);
 
 var _buildFetchOptions2 = _interopRequireDefault(_buildFetchOptions);
 
-var _buildURL = __webpack_require__(10);
+var _buildURL = __webpack_require__(11);
 
 var _buildURL2 = _interopRequireDefault(_buildURL);
 
-var _getFetchMethod = __webpack_require__(11);
+var _getFetchMethod = __webpack_require__(12);
 
 var _getFetchMethod2 = _interopRequireDefault(_getFetchMethod);
+
+var _fieldsOperations = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function fetchDispatcher(config, action, name, dispatch, data, cb) {
   var payload = data && (data._tempId || data._rewrite) ? _lodash2.default.omit(data, ['_tempId', '_rewrite']) : data;
+  payload = (0, _fieldsOperations.stripLocalFields)(config, payload);
 
   action = action.toUpperCase();
   if (!config) config = {};
@@ -247,7 +321,7 @@ function fetchDispatcher(config, action, name, dispatch, data, cb) {
 }
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -266,46 +340,46 @@ function selectedUpdate(config, state, items) {
 }
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(6);
+module.exports = __webpack_require__(7);
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _createAction = __webpack_require__(7);
+var _createAction = __webpack_require__(8);
 
 var _createAction2 = _interopRequireDefault(_createAction);
 
-var _createSocketAction = __webpack_require__(8);
+var _createSocketAction = __webpack_require__(9);
 
 var _createSocketAction2 = _interopRequireDefault(_createSocketAction);
 
-var _createLocalActions = __webpack_require__(12);
+var _createLocalActions = __webpack_require__(13);
 
 var _createLocalActions2 = _interopRequireDefault(_createLocalActions);
 
-var _createIoActions = __webpack_require__(13);
+var _createIoActions = __webpack_require__(14);
 
-var _createGetAction = __webpack_require__(14);
+var _createGetAction = __webpack_require__(15);
 
-var _createPostAction = __webpack_require__(15);
+var _createPostAction = __webpack_require__(16);
 
-var _createReducer = __webpack_require__(16);
+var _createReducer = __webpack_require__(17);
 
 var _createReducer2 = _interopRequireDefault(_createReducer);
 
-var _createIoReducers = __webpack_require__(17);
+var _createIoReducers = __webpack_require__(18);
 
 var _createIoReducers2 = _interopRequireDefault(_createIoReducers);
 
-var _createLocalReducers = __webpack_require__(18);
+var _createLocalReducers = __webpack_require__(19);
 
 var _createLocalReducers2 = _interopRequireDefault(_createLocalReducers);
 
@@ -348,7 +422,7 @@ exports.createIoReducers = _createIoReducers2.default;
 exports.createLocalReducers = _createLocalReducers2.default;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -367,7 +441,7 @@ function createAction(name, binding) {
 }
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -393,7 +467,7 @@ function createSocketAction(config, name) {
 }
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -419,7 +493,7 @@ function buildFetchOptions(options, payload, method) {
 }
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -446,7 +520,7 @@ function buildURL(config, action, name, payload, method) {
 }
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -461,7 +535,7 @@ function getFetchMethod(config, action) {
 }
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -519,7 +593,7 @@ function createLocalActions(config, name) {
 }
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -618,7 +692,7 @@ function createIoActions(config, name) {
 }
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -639,11 +713,11 @@ var _buildAction = __webpack_require__(1);
 
 var _buildAction2 = _interopRequireDefault(_buildAction);
 
-var _socketDispatcher = __webpack_require__(2);
+var _socketDispatcher = __webpack_require__(3);
 
 var _socketDispatcher2 = _interopRequireDefault(_socketDispatcher);
 
-var _fetchDispatcher = __webpack_require__(3);
+var _fetchDispatcher = __webpack_require__(4);
 
 var _fetchDispatcher2 = _interopRequireDefault(_fetchDispatcher);
 
@@ -673,7 +747,7 @@ function createGetAction(config, name) {
 }
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -690,11 +764,11 @@ var _buildAction = __webpack_require__(1);
 
 var _buildAction2 = _interopRequireDefault(_buildAction);
 
-var _socketDispatcher = __webpack_require__(2);
+var _socketDispatcher = __webpack_require__(3);
 
 var _socketDispatcher2 = _interopRequireDefault(_socketDispatcher);
 
-var _fetchDispatcher = __webpack_require__(3);
+var _fetchDispatcher = __webpack_require__(4);
 
 var _fetchDispatcher2 = _interopRequireDefault(_fetchDispatcher);
 
@@ -724,7 +798,7 @@ function createPostAction(config, name) {
 }
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -760,7 +834,7 @@ function createReducer(name, customState, customActions) {
 }
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -775,9 +849,11 @@ var _lodash = __webpack_require__(0);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _selectedUpdate = __webpack_require__(4);
+var _selectedUpdate = __webpack_require__(5);
 
 var _selectedUpdate2 = _interopRequireDefault(_selectedUpdate);
+
+var _fieldsOperations = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -877,7 +953,7 @@ function createIoReducers(config, name, customState, customActions) {
       var selected = update.items ? (0, _selectedUpdate2.default)(config, state, update.items) : {};
       return Object.assign({}, state, update, selected);
     }), _defineProperty(_Object$assign, 'CREATE_' + name, function undefined(state, action) {
-      var item = Object.assign({}, action.data, { _temp: true });
+      var item = Object.assign({}, (0, _fieldsOperations.stripVirtualParseLocalFields)(config, action.data), { _temp: true });
       return Object.assign({}, state, {
         isWritting: true,
         items: [].concat(_toConsumableArray(state.items), [item])
@@ -910,14 +986,15 @@ function createIoReducers(config, name, customState, customActions) {
       var update = {
         isWritting: true
       };
-      if (_lodash2.default.isObject(action.data) && action.data[config.keyName]) {
+      var data = (0, _fieldsOperations.stripVirtualParseLocalFields)(config, action.data);
+      if (_lodash2.default.isObject(data) && data[config.keyName]) {
         var items = [].concat(_toConsumableArray(state.items));
         var updatedItem = _lodash2.default.find(items, function (item) {
-          return item[config.keyName] == action.data[config.keyName];
+          return item[config.keyName] == data[config.keyName];
         });
         items.splice(_lodash2.default.findIndex(items, function (item) {
-          return item[config.keyName] == action.data[config.keyName];
-        }), 1, Object.assign({}, updatedItem, action.data));
+          return item[config.keyName] == data[config.keyName];
+        }), 1, Object.assign({}, updatedItem, data));
         update.updatedItem = updatedItem;
         update.items = items;
       }
@@ -1012,7 +1089,7 @@ function createIoReducers(config, name, customState, customActions) {
 }
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1027,9 +1104,11 @@ var _lodash = __webpack_require__(0);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _selectedUpdate = __webpack_require__(4);
+var _selectedUpdate = __webpack_require__(5);
 
 var _selectedUpdate2 = _interopRequireDefault(_selectedUpdate);
+
+var _fieldsOperations = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1095,18 +1174,19 @@ function createLocalReducers(config, name, customState, customActions) {
       }, selected);
     }), _defineProperty(_Object$assign, 'CREATE_' + name, function undefined(state, action) {
       return Object.assign({}, state, {
-        items: [].concat(_toConsumableArray(state.items), [action.data])
+        items: [].concat(_toConsumableArray(state.items), [(0, _fieldsOperations.stripVirtualParseLocalFields)(action.data)])
       });
     }), _defineProperty(_Object$assign, 'UPDATE_' + name, function undefined(state, action) {
       var update = {};
-      if (_lodash2.default.isObject(action.data) && action.data[config.keyName]) {
+      var data = (0, _fieldsOperations.stripVirtualParseLocalFields)(action.data);
+      if (_lodash2.default.isObject(data) && data[config.keyName]) {
         var items = [].concat(_toConsumableArray(state.items));
         var updatedItem = _lodash2.default.find(items, function (item) {
-          return item[config.keyName] == action.data[config.keyName];
+          return item[config.keyName] == data[config.keyName];
         });
         items.splice(_lodash2.default.findIndex(items, function (item) {
-          return item[config.keyName] == action.data[config.keyName];
-        }), 1, Object.assign({}, updatedItem, action.data));
+          return item[config.keyName] == data[config.keyName];
+        }), 1, Object.assign({}, updatedItem, data));
         update.items = items;
       }
       var selected = update.items ? (0, _selectedUpdate2.default)(config, state, update.items) : {};

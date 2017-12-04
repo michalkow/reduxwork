@@ -1,6 +1,6 @@
 {
   "name": "reduxwork",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "repository": "https://github.com/michalkow/reduxwork.git",
   "description": "Framework for creating redux actions and reducers that get data from server via ajax of websockets",
   "main": "dist/reduxwork.js",
@@ -46,7 +46,7 @@
   "scripts": {
     "test": "jest tests --forceExit",
     "start": "webpack",
-    "devTest": "jest tests --watch"
+    "devTest": "jest tests --watch --verbose"
   },
   "jest": {
     "transform": {

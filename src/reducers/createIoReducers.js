@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import selectedUpdate from '../lib/selectedUpdate';
+import { stripVirtualParseLocalFields } from '../lib/fieldsOperations';
 
 export default function createIoReducers(config, name, customState, customActions) {
 	if(!config) config = {};
@@ -95,7 +96,7 @@ export default function createIoReducers(config, name, customState, customAction
         return Object.assign({}, state, update, selected)    
       },
       [`CREATE_${name}`](state, action) {
-        let item = Object.assign({}, action.data, {_temp: true});
+        let item = Object.assign({}, stripVirtualParseLocalFields(config, action.data), {_temp: true});
         return Object.assign({}, state, {
           isWritting: true,
           items: [...state.items, item]
@@ -127,13 +128,14 @@ export default function createIoReducers(config, name, customState, customAction
       	var update = {
         	isWritting: true
         };
-        if(_.isObject(action.data) && action.data[config.keyName]) {
+        var data = stripVirtualParseLocalFields(config, action.data);
+        if(_.isObject(data) && data[config.keyName]) {
           var items = [...state.items];
-          var updatedItem = _.find(items, (item) => item[config.keyName] == action.data[config.keyName]);
+          var updatedItem = _.find(items, (item) => item[config.keyName] == data[config.keyName]);
           items.splice(
-          	_.findIndex(items, (item) => item[config.keyName] == action.data[config.keyName]), 
+          	_.findIndex(items, (item) => item[config.keyName] == data[config.keyName]), 
           	1, 
-          	Object.assign({}, updatedItem, action.data)
+          	Object.assign({}, updatedItem, data)
           );
           update.updatedItem = updatedItem;
           update.items = items;

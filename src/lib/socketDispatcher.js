@@ -1,8 +1,10 @@
 import _ from 'lodash';
+import { stripLocalFields } from './fieldsOperations';
 
 export default function socketDispatcher(config, action, name, dispatch, data, cb) {
   var payload = data && (data._tempId || data._rewrite) ? _.omit(data, ['_tempId', '_rewrite']) : data;
-  console.log('socketDispatcher')
+  payload = stripLocalFields(config, payload);
+  console.log('socketDispatcher');
   if(action) action = action.toUpperCase();
   if(!config) config = {};
   if(!config.eventName) config.eventName = "redux_action_event";

@@ -2,9 +2,11 @@ import _ from 'lodash';
 import buildFetchOptions from './buildFetchOptions';
 import buildURL from './buildURL';
 import getFetchMethod from './getFetchMethod';
+import { stripLocalFields } from './fieldsOperations';
 
 export default function fetchDispatcher(config, action, name, dispatch, data, cb) {
   var payload = ((data && (data._tempId || data._rewrite)) ? _.omit(data, ['_tempId', '_rewrite']) : data);
+  payload = stripLocalFields(config, payload);
   console.log('fetchDispatcher')
   action = action.toUpperCase();
   if(!config) config = {};

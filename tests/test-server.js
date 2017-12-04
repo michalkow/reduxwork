@@ -29,6 +29,7 @@ server.listen(port, function () {
 // Actions
 var mockDB = {
   create: function(collection, data) {
+    console.log(data);
     if(!data.id) data.id = (_.maxBy(dataset[collection], 'id').id + 1);
     console.log(data.id)
     dataset[collection].push(data);

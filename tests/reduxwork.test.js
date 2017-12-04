@@ -63,7 +63,7 @@ test('Find messages by id', () => {
 });
 
 test('Create new message', () => {
-	var data = {"body": "test"};
+	var data = {"body": "test", "localOnly": "isLocal"};
 	var store = mockStore({ messages: {} });
   var expectedActions = [
     { type: 'CREATE_MESSAGES', data: data }
@@ -123,12 +123,12 @@ test('Create reducer', () => {
  expect(
     testReducers.messages(Object.assign({}, reducerDefaluts), {
       type: 'CREATE_MESSAGES',
-      data: {"body": "test"}
+      data: {"body": "test", "localOnly": "isLocal", "virtualServer": "isVirtual"}
     })
   ).toEqual(
     Object.assign({}, reducerDefaluts, {
 	    isWritting: true,
-	    items: [{"body": "test", _temp: true}]
+	    items: [{"body": "test", "only": "isLocal", _temp: true}]
 	  })
   )
 });
@@ -239,12 +239,12 @@ test('Update reducer', () => {
     	items: [{"body": "test", id: 1}]
     }), {
       type: 'UPDATE_MESSAGES',
-      data: {id: 1, body: "tested", test: true}
+       data: { id: 1, body: "tested", "localOnly": "isLocal", "virtualServer": "isVirtual", test: true}
     })
   ).toEqual(
     Object.assign({}, reducerDefaluts, {
     	isWritting: true,
-	    items: [{id: 1, body: "tested", test: true}],
+	    items: [{id: 1, body: "tested", test: true, only: 'isLocal'}],
 	    updatedItem: {"body": "test", id: 1}
 	  })
   )
