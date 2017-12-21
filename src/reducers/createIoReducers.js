@@ -220,7 +220,7 @@ export default function createIoReducers(config, name, customState, customAction
       [`SELECT_${name}`](state, action) {
         let selected = null;
         if(_.isString(action.data) || _.isNumber(action.data)) selected = _.find(state.items, (item) => item[config.keyName] == action.data);
-        if(_.isObject(action.data) && action.data[config.keyName]) selected = _.find(state.items, (item) => item[config.keyName] == action.data[config.keyName]);
+        else if (_.isObject(action.data) && action.data[config.keyName]) selected = _.find(state.items, (item) => item[config.keyName] == action.data[config.keyName]) || action.data;
         else selected = action.data;
         return Object.assign({}, state, {
           selected: selected
