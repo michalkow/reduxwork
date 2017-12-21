@@ -1076,10 +1076,9 @@ function createIoReducers(config, name, customState, customActions) {
       var selected = null;
       if (_lodash2.default.isString(action.data) || _lodash2.default.isNumber(action.data)) selected = _lodash2.default.find(state.items, function (item) {
         return item[config.keyName] == action.data;
-      });
-      if (_lodash2.default.isObject(action.data) && action.data[config.keyName]) selected = _lodash2.default.find(state.items, function (item) {
+      });else if (_lodash2.default.isObject(action.data) && action.data[config.keyName]) selected = _lodash2.default.find(state.items, function (item) {
         return item[config.keyName] == action.data[config.keyName];
-      });else selected = action.data;
+      }) || action.data;else selected = action.data;
       return Object.assign({}, state, {
         selected: selected
       });
