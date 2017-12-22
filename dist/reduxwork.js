@@ -333,9 +333,16 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.default = selectedUpdate;
+
+var _lodash = __webpack_require__(0);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function selectedUpdate(config, state, items) {
 	var update = {};
-	if (state.selected && state.selected[config.keyName]) update.selected = _.find(items, function (item) {
+	if (state.selected && state.selected[config.keyName]) update.selected = _lodash2.default.find(items, function (item) {
 		return item[config.keyName] == state.selected[config.keyName];
 	});
 	return update;
@@ -938,11 +945,13 @@ function createIoReducers(config, name, customState, customActions) {
     }), _defineProperty(_Object$assign, 'RECEIVE_' + name, function undefined(state, action) {
       var data = action.data;
       if (!_lodash2.default.isArray(data)) data = [data];
-      var existing = _lodash2.default.find(state.items, function (item) {
-        return item[config.keyName] == data[config.keyName];
+      var update = _lodash2.default.map(data, function (obj) {
+        var existing = _lodash2.default.find(state.items, function (item) {
+          return item[config.keyName] == obj[config.keyName];
+        });
+        return existing ? Object.assign({}, existing, obj) : obj;
       });
-      if (existing) data = Object.assign({}, existing, data);
-      var items = _lodash2.default.unionBy(data, [].concat(_toConsumableArray(state.items)), config.keyName);
+      var items = _lodash2.default.unionBy(update, [].concat(_toConsumableArray(state.items)), config.keyName);
       var selected = (0, _selectedUpdate2.default)(config, state, items);
       return Object.assign({}, state, {
         items: items

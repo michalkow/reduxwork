@@ -79,10 +79,11 @@ export default function createIoReducers(config, name, customState, customAction
       [`RECEIVE_${name}`](state, action) {
         let data = action.data;
         if(!_.isArray(data)) data = [data];
-        let existing = _.find(state.items, item => item[config.keyName] == data[config.keyName]);
-        if (existing) 
-          data = Object.assign({}, existing, data);
-        let items = _.unionBy(data, [...state.items], config.keyName);
+        let update = _.map(data, obj => {
+          let existing = _.find(state.items, item => item[config.keyName] == obj[config.keyName]);
+          return existing ? Object.assign({}, existing, obj) : obj;
+        });
+        let items = _.unionBy(update, [...state.items], config.keyName);
         let selected = selectedUpdate(config, state, items);
         return Object.assign({}, state, {
           items: items,

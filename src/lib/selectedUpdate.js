@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default function selectedUpdate(config, state, items) {
 	var update = {};
 	if(state.selected && state.selected[config.keyName]) 

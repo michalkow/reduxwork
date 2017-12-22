@@ -459,3 +459,21 @@ test('Select reducer', () => {
 	  })
   )
 });
+
+test('Receive reducer', () => {
+  expect(
+    testReducers.messages(Object.assign({}, reducerDefaluts, {
+      items: [{ "mark": "mark1", "body": "test1", id: 1 }, { "mark": "mark2", "body": "test2", id: 2 }],
+      selected: { "mark": "mark1", "body": "test1", id: 1 }
+    }), {
+        type: 'RECEIVE_MESSAGES',
+        data: { "body": "test3", id: 1 }
+      })
+  ).toEqual(
+    Object.assign({}, reducerDefaluts, {
+      items: [{ "mark": "mark1", "body": "test3", id: 1 }, { "mark": "mark2", "body": "test2", id: 2 }],
+      selected: { "mark": "mark1", "body": "test3", id: 1 }
+    })
+    )
+});
+
