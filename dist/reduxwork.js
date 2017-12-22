@@ -938,6 +938,10 @@ function createIoReducers(config, name, customState, customActions) {
     }), _defineProperty(_Object$assign, 'RECEIVE_' + name, function undefined(state, action) {
       var data = action.data;
       if (!_lodash2.default.isArray(data)) data = [data];
+      var existing = _lodash2.default.find(state.items, function (item) {
+        return item[config.keyName] == data[config.keyName];
+      });
+      if (existing) data = Object.assign({}, existing, data);
       var items = _lodash2.default.unionBy(data, [].concat(_toConsumableArray(state.items)), config.keyName);
       var selected = (0, _selectedUpdate2.default)(config, state, items);
       return Object.assign({}, state, {
