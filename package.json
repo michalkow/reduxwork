@@ -1,6 +1,6 @@
 {
   "name": "reduxwork",
-  "version": "1.4.9",
+  "version": "1.4.10",
   "repository": "https://github.com/michalkow/reduxwork.git",
   "description": "Framework for creating redux actions and reducers that get data from server via ajax of websockets",
   "main": "dist/reduxwork.js",

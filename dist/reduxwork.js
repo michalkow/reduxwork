@@ -120,6 +120,7 @@ function buildAction(config, action, name, data, cb) {
       type: action ? action + '_' + name.toUpperCase() : name.toUpperCase(),
       data: data && data._tempId ? _lodash2.default.omit(data, '_tempId') : data
     };
+    if (config.actionInject) actionData = config.actionInject(actionData);
     dispatch(actionData);
 
     if (config.type == "socket") return (0, _socketDispatcher2.default)(config, action, name.toUpperCase(), dispatch, data, cb);else if (config.type == "fetch") return (0, _fetchDispatcher2.default)(config, action, name.toUpperCase(), dispatch, data, cb);

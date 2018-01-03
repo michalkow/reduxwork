@@ -18,6 +18,7 @@ export default function buildAction(config, action, name, data, cb) {
       type: (action ? action+'_'+name.toUpperCase() : name.toUpperCase()),
       data: ((data && data._tempId) ? _.omit(data, '_tempId') : data)
     };
+    if (config.actionInject) actionData = config.actionInject(actionData);
     dispatch(actionData)
     console.log('dispatch', actionData)
 	  if(config.type == "socket") 
