@@ -16,6 +16,7 @@ export default function fetchDispatcher(config, action, name, dispatch, data, cb
       buildFetchOptions(config, action, payload) 
     )
     return new Promise((resolve, reject) => {
+      if (config.actionInject) payload = config.actionInject(payload);
       config.fetchFunction( 
         buildURL(config, action, name, payload, getFetchMethod(config, action)), 
         buildFetchOptions(config, payload, getFetchMethod(config, action)) 

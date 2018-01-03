@@ -120,7 +120,6 @@ function buildAction(config, action, name, data, cb) {
       type: action ? action + '_' + name.toUpperCase() : name.toUpperCase(),
       data: data && data._tempId ? _lodash2.default.omit(data, '_tempId') : data
     };
-    if (config.actionInject) actionData = config.actionInject(actionData);
     dispatch(actionData);
 
     if (config.type == "socket") return (0, _socketDispatcher2.default)(config, action, name.toUpperCase(), dispatch, data, cb);else if (config.type == "fetch") return (0, _fetchDispatcher2.default)(config, action, name.toUpperCase(), dispatch, data, cb);
@@ -227,6 +226,7 @@ function socketDispatcher(config, action, name, dispatch, data, cb) {
       type: action ? action + '_' + name : name
     };
     if (payload) actionData.data = payload;
+    if (config.actionInject) actionData = config.actionInject(actionData);
 
     return new Promise(function (resolve, reject) {
       config.socketIoFunction(config.eventName, actionData, function (err, res) {
@@ -295,6 +295,7 @@ function fetchDispatcher(config, action, name, dispatch, data, cb) {
   if (!config) config = {};
   if (config.fetchFunction) {
     return new Promise(function (resolve, reject) {
+      if (config.actionInject) payload = config.actionInject(payload);
       config.fetchFunction((0, _buildURL2.default)(config, action, name, payload, (0, _getFetchMethod2.default)(config, action)), (0, _buildFetchOptions2.default)(config, payload, (0, _getFetchMethod2.default)(config, action))).then(function (response) {
         return response.json();
       }).then(function (json) {

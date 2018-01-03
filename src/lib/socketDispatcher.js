@@ -13,6 +13,7 @@ export default function socketDispatcher(config, action, name, dispatch, data, c
       type: (action ? action+'_'+name : name)
     };
     if(payload) actionData.data = payload;
+    if (config.actionInject) actionData = config.actionInject(actionData);
     console.log('socketDispatcher config', config)
     return new Promise((resolve, reject) => {
       console.log(config.eventName, actionData)
