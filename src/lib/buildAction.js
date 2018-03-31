@@ -14,15 +14,16 @@ export default function buildAction(config, action, name, data, cb) {
         data[prefixedKeyName] = data._tempId;
       }
     }
+    let formatedName = _.snakeCase(name).toUpperCase();
     let actionData = {
-      type: (action ? action+'_'+name.toUpperCase() : name.toUpperCase()),
+      type: (action ? action+'_'+formatedName : formatedName),
       data: ((data && data._tempId) ? _.omit(data, '_tempId') : data)
     };
     dispatch(actionData)
     console.log('dispatch', actionData)
 	  if(config.type == "socket") 
-	  	return socketDispatcher(config, action, name.toUpperCase(), dispatch, data, cb);
+	  	return socketDispatcher(config, action, formatedName, dispatch, data, cb);
 	  else if(config.type == "fetch") 
-	  	return fetchDispatcher(config, action, name.toUpperCase(), dispatch, data, cb);
+	  	return fetchDispatcher(config, action, formatedName, dispatch, data, cb);
   }
 }
