@@ -116,13 +116,14 @@ function buildAction(config, action, name, data, cb) {
         data[prefixedKeyName] = data._tempId;
       }
     }
+    var formatedName = _lodash2.default.snakeCase(name).toUpperCase();
     var actionData = {
-      type: action ? action + '_' + name.toUpperCase() : name.toUpperCase(),
+      type: action ? action + '_' + formatedName : formatedName,
       data: data && data._tempId ? _lodash2.default.omit(data, '_tempId') : data
     };
     dispatch(actionData);
 
-    if (config.type == "socket") return (0, _socketDispatcher2.default)(config, action, name.toUpperCase(), dispatch, data, cb);else if (config.type == "fetch") return (0, _fetchDispatcher2.default)(config, action, name.toUpperCase(), dispatch, data, cb);
+    if (config.type == "socket") return (0, _socketDispatcher2.default)(config, action, formatedName, dispatch, data, cb);else if (config.type == "fetch") return (0, _fetchDispatcher2.default)(config, action, formatedName, dispatch, data, cb);
   };
 }
 
