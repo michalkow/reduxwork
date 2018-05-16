@@ -622,6 +622,10 @@ var _buildAction = __webpack_require__(1);
 
 var _buildAction2 = _interopRequireDefault(_buildAction);
 
+var _lodash = __webpack_require__(0);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -633,15 +637,15 @@ function createSocketActions(config, name) {
   config.type = "socket";
   return _ref = {}, _defineProperty(_ref, 'clear' + name, function undefined() {
     return {
-      type: 'CLEAR_' + name.toUpperCase()
+      type: 'CLEAR_' + _lodash2.default.snakeCase(name).toUpperCase()
     };
   }), _defineProperty(_ref, 'reset' + name, function undefined() {
     return {
-      type: 'RESET_' + name.toUpperCase()
+      type: 'RESET_' + _lodash2.default.snakeCase(name).toUpperCase()
     };
   }), _defineProperty(_ref, 'select' + name, function undefined(data) {
     return {
-      type: 'SELECT_' + name.toUpperCase(),
+      type: 'SELECT_' + _lodash2.default.snakeCase(name).toUpperCase(),
       data: data
     };
   }), _defineProperty(_ref, 'find' + name, function undefined(data, cb) {
@@ -669,15 +673,15 @@ function createFetchActions(config, name) {
   config.type = "fetch";
   return _ref2 = {}, _defineProperty(_ref2, 'clear' + name, function undefined() {
     return {
-      type: 'CLEAR_' + name.toUpperCase()
+      type: 'CLEAR_' + _lodash2.default.snakeCase(name).toUpperCase()
     };
   }), _defineProperty(_ref2, 'reset' + name, function undefined() {
     return {
-      type: 'RESET_' + name.toUpperCase()
+      type: 'RESET_' + _lodash2.default.snakeCase(name).toUpperCase()
     };
   }), _defineProperty(_ref2, 'select' + name, function undefined(data) {
     return {
-      type: 'SELECT_' + name.toUpperCase(),
+      type: 'SELECT_' + _lodash2.default.snakeCase(name).toUpperCase(),
       data: data
     };
   }), _defineProperty(_ref2, 'find' + name, function undefined(data, cb) {
