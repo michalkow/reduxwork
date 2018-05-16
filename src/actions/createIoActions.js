@@ -1,4 +1,5 @@
 import buildAction from '../lib/buildAction';
+import _ from 'lodash';
 
 export function createSocketActions(config, name) {
   if(!config) config = {};
@@ -6,17 +7,17 @@ export function createSocketActions(config, name) {
   return {
     [`clear${name}`]() {
       return {
-        type: 'CLEAR_'+ name.toUpperCase()
+        type: 'CLEAR_'+ _.snakeCase(name).toUpperCase();
       }
     },
     [`reset${name}`]() {
       return {
-        type: 'RESET_'+ name.toUpperCase()
+        type: 'RESET_'+ _.snakeCase(name).toUpperCase();
       }
     },
     [`select${name}`](data) {
       return {
-        type: 'SELECT_'+ name.toUpperCase(),
+        type: 'SELECT_'+ _.snakeCase(name).toUpperCase();,
         data
       }
     },
@@ -50,17 +51,17 @@ export function createFetchActions(config, name) {
   return {
     [`clear${name}`]() {
       return {
-        type: 'CLEAR_'+ name.toUpperCase()
+        type: 'CLEAR_'+ _.snakeCase(name).toUpperCase();
       }
     },
     [`reset${name}`]() {
       return {
-        type: 'RESET_'+ name.toUpperCase()
+        type: 'RESET_'+ _.snakeCase(name).toUpperCase();
       }
     },
     [`select${name}`](data) {
       return {
-        type: 'SELECT_'+ name.toUpperCase(),
+        type: 'SELECT_'+ _.snakeCase(name).toUpperCase();,
         data
       }
     },
