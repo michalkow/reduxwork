@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { stripLocalFields } from './fieldsOperations';
+import validationHookError from './validationHook';
 
 export default function socketDispatcher(config, action, name, dispatch, data, cb) {
   var payload = data && (data._tempId || data._rewrite) ? _.omit(data, ['_tempId', '_rewrite']) : data;
@@ -17,6 +18,17 @@ export default function socketDispatcher(config, action, name, dispatch, data, c
     console.log('socketDispatcher config', config)
     return new Promise((resolve, reject) => {
       console.log(config.eventName, actionData)
+      let validationError = validationHookError(config, action, name, actionData.data);
+      if (validationError) {
+        let failedValidationAction = {
+          type: (action ? action + '_' + name : name) + '_FAILED',
+          validationError: validationError,
+        }
+        if (data && data._tempId) failedValidationAction._tempId = data._tempId;
+        dispatch(failedValidationAction);
+        reject(err);      
+        return { err, res: null };  
+      }
       config.socketIoFunction(config.eventName, actionData, (err, res) => {
         if(err) {
           let failedAction = {

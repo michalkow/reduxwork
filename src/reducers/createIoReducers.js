@@ -19,6 +19,7 @@ export default function createIoReducers(config, name, customState, customAction
     writeError: null,
     updateError: null,
     destroyError: null,
+    validationError: null,
     error: null,
     updatedItem: null,
     destroyedItem: null,
@@ -39,7 +40,8 @@ export default function createIoReducers(config, name, customState, customAction
       },
       [`FIND_${name}_FAILED`](state, action) {
         return Object.assign({}, state, {
-          findError: action.error,
+          findError: action.error || null,
+          validationError: action.validationError || null,
           isFinding: false,
         })
       },
@@ -49,6 +51,7 @@ export default function createIoReducers(config, name, customState, customAction
           init: true,
           isFinding: false,
           findError: null,
+          validationError: null,
           items: action.data,
         }, selected)      
       },
@@ -60,7 +63,8 @@ export default function createIoReducers(config, name, customState, customAction
       },
       [`SYNC_${name}_FAILED`](state, action) {
         return Object.assign({}, state, {
-          syncError: action.error,
+          syncError: action.error || null,
+          validationError: action.validationError || null,
           isSyncing: false,
         })
       },
@@ -72,6 +76,7 @@ export default function createIoReducers(config, name, customState, customAction
         return Object.assign({}, state, {
           isSyncing: false,
           syncError: null,
+          validationError: null,
           init: true,
           items: items,
         }, selected)      
@@ -114,7 +119,8 @@ export default function createIoReducers(config, name, customState, customAction
         return Object.assign({}, state, {
           isWritting: false,
           items: items,
-          writeError: action.error
+          writeError: action.error || null,
+          validationError: action.validationError || null,
         })      
       },
       [`CREATE_${name}_COMPLETED`](state, action) {
@@ -125,6 +131,7 @@ export default function createIoReducers(config, name, customState, customAction
         return Object.assign({}, state, {
           isWritting: false,
           writeError: null,
+          validationError: null,
           items: [...items, action.data]
         })      
       },
@@ -149,7 +156,8 @@ export default function createIoReducers(config, name, customState, customAction
       [`UPDATE_${name}_FAILED`](state, action) {
       	var update = {
           isWritting: false,
-          updateError: action.error,
+          updateError: action.error || null,
+          validationError: action.validationError || null,
           updatedItem: null
         };
         if(state.updatedItem && state.updatedItem[config.keyName]) {
@@ -167,6 +175,7 @@ export default function createIoReducers(config, name, customState, customAction
        	var update = {
           isWritting: false,
           updateError: null,
+          validationError: null,
           updatedItem: null,
         };
         if(action._rewrite || (config.rewriteOnUpdate && action._rewrite !== false)) {
@@ -195,7 +204,8 @@ export default function createIoReducers(config, name, customState, customAction
       [`DESTROY_${name}_FAILED`](state, action) {
         var update = {
           isWritting: false,
-          destroyError: action.error,
+          destroyError: action.error || null,
+          validationError: action.validationError || null,
           destroyedItem: null,
           destroyedItemIndex: null,
         };
@@ -211,6 +221,7 @@ export default function createIoReducers(config, name, customState, customAction
         return Object.assign({}, state, {
           isWritting: false,
           destroyError: null,
+          validationError: null,
           destroyedItem: null,
           destroyedItemIndex: null,
         }, selected)     

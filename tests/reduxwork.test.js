@@ -5,6 +5,7 @@ import {createLogger} from 'redux-logger';
 import testReducers from './test-reducers';
 import { findMessages, createMessages, updateMessages, destroyMessages, clearMessages, selectMessages, syncMessages, receiveMessages, resetMessages } from './test-actions';
 
+
 const loggerMiddleware = createLogger();
 const mockStore = configureStore([thunk]);
 /*
@@ -26,6 +27,7 @@ const reducerDefaluts = {
   writeError: null,
   updateError: null,
   destroyError: null,
+  validationError: null,
   error: null,
   updatedItem: null,
   destroyedItem: null,

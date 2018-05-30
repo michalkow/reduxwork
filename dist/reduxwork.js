@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -213,6 +213,10 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 var _fieldsOperations = __webpack_require__(2);
 
+var _validationHook = __webpack_require__(5);
+
+var _validationHook2 = _interopRequireDefault(_validationHook);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function socketDispatcher(config, action, name, dispatch, data, cb) {
@@ -230,6 +234,17 @@ function socketDispatcher(config, action, name, dispatch, data, cb) {
     if (config.actionInject) actionData = config.actionInject(actionData);
 
     return new Promise(function (resolve, reject) {
+      var validationError = (0, _validationHook2.default)(config, action, name, actionData.data);
+      if (validationError) {
+        var failedValidationAction = {
+          type: (action ? action + '_' + name : name) + '_FAILED',
+          validationError: validationError
+        };
+        if (data && data._tempId) failedValidationAction._tempId = data._tempId;
+        dispatch(failedValidationAction);
+        reject(err);
+        return { err: err, res: null };
+      }
       config.socketIoFunction(config.eventName, actionData, function (err, res) {
         if (err) {
           var failedAction = {
@@ -272,19 +287,23 @@ var _lodash = __webpack_require__(0);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _buildFetchOptions = __webpack_require__(10);
+var _buildFetchOptions = __webpack_require__(11);
 
 var _buildFetchOptions2 = _interopRequireDefault(_buildFetchOptions);
 
-var _buildURL = __webpack_require__(11);
+var _buildURL = __webpack_require__(12);
 
 var _buildURL2 = _interopRequireDefault(_buildURL);
 
-var _getFetchMethod = __webpack_require__(12);
+var _getFetchMethod = __webpack_require__(13);
 
 var _getFetchMethod2 = _interopRequireDefault(_getFetchMethod);
 
 var _fieldsOperations = __webpack_require__(2);
+
+var _validationHook = __webpack_require__(5);
+
+var _validationHook2 = _interopRequireDefault(_validationHook);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -296,6 +315,17 @@ function fetchDispatcher(config, action, name, dispatch, data, cb) {
   if (!config) config = {};
   if (config.fetchFunction) {
     return new Promise(function (resolve, reject) {
+      var validationError = (0, _validationHook2.default)(config, action, name, payload);
+      if (validationError) {
+        var failedValidationAction = {
+          type: (action ? action + '_' + name : name) + '_FAILED',
+          validationError: validationError
+        };
+        if (data && data._tempId) failedValidationAction._tempId = data._tempId;
+        dispatch(failedValidationAction);
+        reject(err);
+        return { err: err, res: null };
+      }
       if (config.actionInject) payload = config.actionInject(payload);
       config.fetchFunction((0, _buildURL2.default)(config, action, name, payload, (0, _getFetchMethod2.default)(config, action)), (0, _buildFetchOptions2.default)(config, payload, (0, _getFetchMethod2.default)(config, action))).then(function (response) {
         return response.json();
@@ -333,6 +363,34 @@ function fetchDispatcher(config, action, name, dispatch, data, cb) {
 
 
 Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = validationHookError;
+
+var _lodash = __webpack_require__(0);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function validationHookError(config, action, name, data) {
+  action = _lodash2.default.camelCase(action);
+  name = _lodash2.default.camelCase(name);
+  if (config.validation && config.validation.hasValidation && config.validation.invalidate) {
+    if (config.validation.hasValidation(action, name)) {
+      return config.validation.invalidate(action, name, data);
+    } else return null;
+  } else return null;
+}
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.default = selectedUpdate;
@@ -352,46 +410,46 @@ function selectedUpdate(config, state, items) {
 }
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(7);
+module.exports = __webpack_require__(8);
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _createAction = __webpack_require__(8);
+var _createAction = __webpack_require__(9);
 
 var _createAction2 = _interopRequireDefault(_createAction);
 
-var _createSocketAction = __webpack_require__(9);
+var _createSocketAction = __webpack_require__(10);
 
 var _createSocketAction2 = _interopRequireDefault(_createSocketAction);
 
-var _createLocalActions = __webpack_require__(13);
+var _createLocalActions = __webpack_require__(14);
 
 var _createLocalActions2 = _interopRequireDefault(_createLocalActions);
 
-var _createIoActions = __webpack_require__(14);
+var _createIoActions = __webpack_require__(15);
 
-var _createGetAction = __webpack_require__(15);
+var _createGetAction = __webpack_require__(16);
 
-var _createPostAction = __webpack_require__(16);
+var _createPostAction = __webpack_require__(17);
 
-var _createReducer = __webpack_require__(17);
+var _createReducer = __webpack_require__(18);
 
 var _createReducer2 = _interopRequireDefault(_createReducer);
 
-var _createIoReducers = __webpack_require__(18);
+var _createIoReducers = __webpack_require__(19);
 
 var _createIoReducers2 = _interopRequireDefault(_createIoReducers);
 
-var _createLocalReducers = __webpack_require__(19);
+var _createLocalReducers = __webpack_require__(20);
 
 var _createLocalReducers2 = _interopRequireDefault(_createLocalReducers);
 
@@ -434,7 +492,7 @@ exports.createIoReducers = _createIoReducers2.default;
 exports.createLocalReducers = _createLocalReducers2.default;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -453,7 +511,7 @@ function createAction(name, binding) {
 }
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -479,7 +537,7 @@ function createSocketAction(config, name) {
 }
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -505,7 +563,7 @@ function buildFetchOptions(options, payload, method) {
 }
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -532,7 +590,7 @@ function buildURL(config, action, name, payload, method) {
 }
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -547,7 +605,7 @@ function getFetchMethod(config, action) {
 }
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -605,7 +663,7 @@ function createLocalActions(config, name) {
 }
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -708,7 +766,7 @@ function createIoActions(config, name) {
 }
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -763,7 +821,7 @@ function createGetAction(config, name) {
 }
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -814,7 +872,7 @@ function createPostAction(config, name) {
 }
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -850,7 +908,7 @@ function createReducer(name, customState, customActions) {
 }
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -865,7 +923,7 @@ var _lodash = __webpack_require__(0);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _selectedUpdate = __webpack_require__(5);
+var _selectedUpdate = __webpack_require__(6);
 
 var _selectedUpdate2 = _interopRequireDefault(_selectedUpdate);
 
@@ -894,6 +952,7 @@ function createIoReducers(config, name, customState, customActions) {
     writeError: null,
     updateError: null,
     destroyError: null,
+    validationError: null,
     error: null,
     updatedItem: null,
     destroyedItem: null,
@@ -917,7 +976,8 @@ function createIoReducers(config, name, customState, customActions) {
       return Object.assign({}, state, find);
     }), _defineProperty(_Object$assign, 'FIND_' + name + '_FAILED', function undefined(state, action) {
       return Object.assign({}, state, {
-        findError: action.error,
+        findError: action.error || null,
+        validationError: action.validationError || null,
         isFinding: false
       });
     }), _defineProperty(_Object$assign, 'FIND_' + name + '_COMPLETED', function undefined(state, action) {
@@ -926,6 +986,7 @@ function createIoReducers(config, name, customState, customActions) {
         init: true,
         isFinding: false,
         findError: null,
+        validationError: null,
         items: action.data
       }, selected);
     }), _defineProperty(_Object$assign, 'SYNC_' + name, function undefined(state, action) {
@@ -935,7 +996,8 @@ function createIoReducers(config, name, customState, customActions) {
       });
     }), _defineProperty(_Object$assign, 'SYNC_' + name + '_FAILED', function undefined(state, action) {
       return Object.assign({}, state, {
-        syncError: action.error,
+        syncError: action.error || null,
+        validationError: action.validationError || null,
         isSyncing: false
       });
     }), _defineProperty(_Object$assign, 'SYNC_' + name + '_COMPLETED', function undefined(state, action) {
@@ -946,6 +1008,7 @@ function createIoReducers(config, name, customState, customActions) {
       return Object.assign({}, state, {
         isSyncing: false,
         syncError: null,
+        validationError: null,
         init: true,
         items: items
       }, selected);
@@ -990,7 +1053,8 @@ function createIoReducers(config, name, customState, customActions) {
       return Object.assign({}, state, {
         isWritting: false,
         items: items,
-        writeError: action.error
+        writeError: action.error || null,
+        validationError: action.validationError || null
       });
     }), _defineProperty(_Object$assign, 'CREATE_' + name + '_COMPLETED', function undefined(state, action) {
       var items = [].concat(_toConsumableArray(state.items));
@@ -1002,6 +1066,7 @@ function createIoReducers(config, name, customState, customActions) {
       return Object.assign({}, state, {
         isWritting: false,
         writeError: null,
+        validationError: null,
         items: [].concat(_toConsumableArray(items), [action.data])
       });
     }), _defineProperty(_Object$assign, 'UPDATE_' + name, function undefined(state, action) {
@@ -1024,7 +1089,8 @@ function createIoReducers(config, name, customState, customActions) {
     }), _defineProperty(_Object$assign, 'UPDATE_' + name + '_FAILED', function undefined(state, action) {
       var update = {
         isWritting: false,
-        updateError: action.error,
+        updateError: action.error || null,
+        validationError: action.validationError || null,
         updatedItem: null
       };
       if (state.updatedItem && state.updatedItem[config.keyName]) {
@@ -1039,6 +1105,7 @@ function createIoReducers(config, name, customState, customActions) {
       var update = {
         isWritting: false,
         updateError: null,
+        validationError: null,
         updatedItem: null
       };
       if (action._rewrite || config.rewriteOnUpdate && action._rewrite !== false) {
@@ -1069,7 +1136,8 @@ function createIoReducers(config, name, customState, customActions) {
     }), _defineProperty(_Object$assign, 'DESTROY_' + name + '_FAILED', function undefined(state, action) {
       var update = {
         isWritting: false,
-        destroyError: action.error,
+        destroyError: action.error || null,
+        validationError: action.validationError || null,
         destroyedItem: null,
         destroyedItemIndex: null
       };
@@ -1084,6 +1152,7 @@ function createIoReducers(config, name, customState, customActions) {
       return Object.assign({}, state, {
         isWritting: false,
         destroyError: null,
+        validationError: null,
         destroyedItem: null,
         destroyedItemIndex: null
       }, selected);
@@ -1110,7 +1179,7 @@ function createIoReducers(config, name, customState, customActions) {
 }
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1125,7 +1194,7 @@ var _lodash = __webpack_require__(0);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _selectedUpdate = __webpack_require__(5);
+var _selectedUpdate = __webpack_require__(6);
 
 var _selectedUpdate2 = _interopRequireDefault(_selectedUpdate);
 
