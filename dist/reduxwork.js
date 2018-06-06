@@ -234,7 +234,7 @@ function socketDispatcher(config, action, name, dispatch, data, cb) {
     if (config.actionInject) actionData = config.actionInject(actionData);
 
     return new Promise(function (resolve, reject) {
-      var validationError = (0, _validationHook2.default)(config, action, name, actionData.data);
+      var validationError = (0, _validationHook2.default)(config, actionData);
       if (validationError) {
         var failedValidationAction = {
           type: (action ? action + '_' + name : name) + '_FAILED',
@@ -315,7 +315,9 @@ function fetchDispatcher(config, action, name, dispatch, data, cb) {
   if (!config) config = {};
   if (config.fetchFunction) {
     return new Promise(function (resolve, reject) {
-      var validationError = (0, _validationHook2.default)(config, action, name, payload);
+      if (config.actionInject) payload = config.actionInject(payload);
+      // TODO: Make logic more similar to socket dispatcher
+      var validationError = (0, _validationHook2.default)(config, { type: action + '_' + name, data: payload });
       if (validationError) {
         var failedValidationAction = {
           type: (action ? action + '_' + name : name) + '_FAILED',
@@ -326,29 +328,29 @@ function fetchDispatcher(config, action, name, dispatch, data, cb) {
         reject(err);
         return { err: err, res: null };
       }
-      if (config.actionInject) payload = config.actionInject(payload);
       config.fetchFunction((0, _buildURL2.default)(config, action, name, payload, (0, _getFetchMethod2.default)(config, action)), (0, _buildFetchOptions2.default)(config, payload, (0, _getFetchMethod2.default)(config, action))).then(function (response) {
-        return response.json();
-      }).then(function (json) {
-        if (json.err) {
+        if (response.ok) return response.json();else {
+          var error = response.json();
           var failedAction = {
             type: (action ? action + '_' + name : name) + '_FAILED',
-            error: json.err
+            error: error
           };
           if (data && data._tempId) failedAction._tempId = data._tempId;
           dispatch(failedAction);
-          reject(json.err);
-        } else {
-          var completedAction = {
-            type: (action ? action + '_' + name : name) + '_COMPLETED',
-            data: json
-          };
-          if (data && data._tempId) completedAction._tempId = data._tempId;
-          if (data && typeof data._rewrite !== "undefined") completedAction._rewrite = data._rewrite;
-          dispatch(completedAction);
-          resolve(json);
+          reject(error);
+          if (cb) cb(error, null);
+          return error;
         }
-        if (cb) cb(json.err, json);
+      }).then(function (json) {
+        var completedAction = {
+          type: (action ? action + '_' + name : name) + '_COMPLETED',
+          data: json
+        };
+        if (data && data._tempId) completedAction._tempId = data._tempId;
+        if (data && typeof data._rewrite !== "undefined") completedAction._rewrite = data._rewrite;
+        dispatch(completedAction);
+        resolve(json);
+        if (cb) cb(null, json);
         return json;
       });
     });
@@ -366,19 +368,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = validationHookError;
-
-var _lodash = __webpack_require__(0);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function validationHookError(config, action, name, data) {
-  action = _lodash2.default.camelCase(action);
-  name = _lodash2.default.camelCase(name);
+function validationHookError(config, action) {
   if (config.validation && config.validation.hasValidation && config.validation.invalidate) {
-    if (config.validation.hasValidation(action, name)) {
-      return config.validation.invalidate(action, name, data);
+    if (config.validation.hasValidation(action)) {
+      return config.validation.invalidate(action);
     } else return null;
   } else return null;
 }

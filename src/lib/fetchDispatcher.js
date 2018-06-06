@@ -17,7 +17,9 @@ export default function fetchDispatcher(config, action, name, dispatch, data, cb
       buildFetchOptions(config, action, payload) 
     )
     return new Promise((resolve, reject) => {
-      let validationError = validationHookError(config, action, name, payload);
+      if (config.actionInject) payload = config.actionInject(payload);
+      // TODO: Make logic more similar to socket dispatcher
+      let validationError = validationHookError(config, { type: action + '_' + name, data: payload });
       if (validationError) {
         let failedValidationAction = {
           type: (action ? action + '_' + name : name) + '_FAILED',
@@ -28,36 +30,38 @@ export default function fetchDispatcher(config, action, name, dispatch, data, cb
         reject(err);
         return { err, res: null };
       }
-      if (config.actionInject) payload = config.actionInject(payload);
       config.fetchFunction( 
         buildURL(config, action, name, payload, getFetchMethod(config, action)), 
         buildFetchOptions(config, payload, getFetchMethod(config, action)) 
       )
       .then(response => {
-        return response.json()
+        if (response.ok) 
+          return response.json()
+        else {
+          let error = response.json();
+          let failedAction = {
+            type: (action ? action + '_' + name : name) + '_FAILED',
+            error: error,
+          }
+          if (data && data._tempId) failedAction._tempId = data._tempId;
+          dispatch(failedAction);
+          reject(error);
+          if (cb) cb(error, null);
+          return error;
+        }
       })
       .then(json => {
         console.log('server res', json)
         console.log('cb', cb)
-        if(json.err) {
-          let failedAction = {
-            type: (action ? action+'_'+name : name)+'_FAILED',
-            error: json.err,
-          }
-          if(data && data._tempId) failedAction._tempId = data._tempId;
-          dispatch(failedAction);
-          reject(json.err);
-        } else {
-          let completedAction = {
-            type: (action ? action+'_'+name : name)+'_COMPLETED',
-            data: json,
-          }
-          if(data && data._tempId) completedAction._tempId = data._tempId;
-          if(data && typeof data._rewrite !== "undefined") completedAction._rewrite = data._rewrite;
-          dispatch(completedAction);
-          resolve(json);
+        let completedAction = {
+          type: (action ? action+'_'+name : name)+'_COMPLETED',
+          data: json,
         }
-        if(cb) cb(json.err, json);
+        if(data && data._tempId) completedAction._tempId = data._tempId;
+        if(data && typeof data._rewrite !== "undefined") completedAction._rewrite = data._rewrite;
+        dispatch(completedAction);
+        resolve(json);
+        if(cb) cb(null, json);
         return json;
       })
     });

@@ -18,7 +18,7 @@ export default function socketDispatcher(config, action, name, dispatch, data, c
     console.log('socketDispatcher config', config)
     return new Promise((resolve, reject) => {
       console.log(config.eventName, actionData)
-      let validationError = validationHookError(config, action, name, actionData.data);
+      let validationError = validationHookError(config, actionData);
       if (validationError) {
         let failedValidationAction = {
           type: (action ? action + '_' + name : name) + '_FAILED',
