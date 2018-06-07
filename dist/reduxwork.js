@@ -152,6 +152,7 @@ var _lodash2 = _interopRequireDefault(_lodash);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function stripFields(config, data, prefix) {
+  if (_lodash2.default.isArray(data)) return data;
   if (!config) config = {};
   var prefixes = {
     local: config.localPrefix || 'local',
@@ -221,7 +222,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function socketDispatcher(config, action, name, dispatch, data, cb) {
   var payload = data && (data._tempId || data._rewrite) ? _lodash2.default.omit(data, ['_tempId', '_rewrite']) : data;
-  payload = (0, _fieldsOperations.stripLocalFields)(config, payload);
 
   if (action) action = action.toUpperCase();
   if (!config) config = {};
@@ -245,6 +245,7 @@ function socketDispatcher(config, action, name, dispatch, data, cb) {
         reject(validationError);
         return { err: validationError, res: null };
       }
+      actionData.data = (0, _fieldsOperations.stripLocalFields)(config, actionData.data);
       config.socketIoFunction(config.eventName, actionData, function (err, res) {
         if (err) {
           var failedAction = {
@@ -309,7 +310,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function fetchDispatcher(config, action, name, dispatch, data, cb) {
   var payload = data && (data._tempId || data._rewrite) ? _lodash2.default.omit(data, ['_tempId', '_rewrite']) : data;
-  payload = (0, _fieldsOperations.stripLocalFields)(config, payload);
 
   action = action.toUpperCase();
   if (!config) config = {};
@@ -328,6 +328,7 @@ function fetchDispatcher(config, action, name, dispatch, data, cb) {
         reject(validationError);
         return { err: validationError, res: null };
       }
+      payload = (0, _fieldsOperations.stripLocalFields)(config, payload);
       config.fetchFunction((0, _buildURL2.default)(config, action, name, payload, (0, _getFetchMethod2.default)(config, action)), (0, _buildFetchOptions2.default)(config, payload, (0, _getFetchMethod2.default)(config, action))).then(function (response) {
         if (response.ok) return response.json();else {
           var error = response.json();

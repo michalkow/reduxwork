@@ -4,7 +4,6 @@ import validationHookError from './validationHook';
 
 export default function socketDispatcher(config, action, name, dispatch, data, cb) {
   var payload = data && (data._tempId || data._rewrite) ? _.omit(data, ['_tempId', '_rewrite']) : data;
-  payload = stripLocalFields(config, payload);
   console.log('socketDispatcher');
   if(action) action = action.toUpperCase();
   if(!config) config = {};
@@ -29,6 +28,7 @@ export default function socketDispatcher(config, action, name, dispatch, data, c
         reject(validationError);      
         return { err: validationError, res: null };  
       }
+      actionData.data = stripLocalFields(config, actionData.data);
       config.socketIoFunction(config.eventName, actionData, (err, res) => {
         if(err) {
           let failedAction = {

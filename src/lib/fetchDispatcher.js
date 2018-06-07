@@ -7,7 +7,6 @@ import validationHookError from './validationHook';
 
 export default function fetchDispatcher(config, action, name, dispatch, data, cb) {
   var payload = ((data && (data._tempId || data._rewrite)) ? _.omit(data, ['_tempId', '_rewrite']) : data);
-  payload = stripLocalFields(config, payload);
   console.log('fetchDispatcher')
   action = action.toUpperCase();
   if(!config) config = {};
@@ -30,6 +29,7 @@ export default function fetchDispatcher(config, action, name, dispatch, data, cb
         reject(validationError);
         return { err: validationError, res: null };
       }
+      payload = stripLocalFields(config, payload);
       config.fetchFunction( 
         buildURL(config, action, name, payload, getFetchMethod(config, action)), 
         buildFetchOptions(config, payload, getFetchMethod(config, action)) 
