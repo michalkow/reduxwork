@@ -242,8 +242,8 @@ function socketDispatcher(config, action, name, dispatch, data, cb) {
         };
         if (data && data._tempId) failedValidationAction._tempId = data._tempId;
         dispatch(failedValidationAction);
-        reject(err);
-        return { err: err, res: null };
+        reject(validationError);
+        return { err: validationError, res: null };
       }
       config.socketIoFunction(config.eventName, actionData, function (err, res) {
         if (err) {
@@ -325,8 +325,8 @@ function fetchDispatcher(config, action, name, dispatch, data, cb) {
         };
         if (data && data._tempId) failedValidationAction._tempId = data._tempId;
         dispatch(failedValidationAction);
-        reject(err);
-        return { err: err, res: null };
+        reject(validationError);
+        return { err: validationError, res: null };
       }
       config.fetchFunction((0, _buildURL2.default)(config, action, name, payload, (0, _getFetchMethod2.default)(config, action)), (0, _buildFetchOptions2.default)(config, payload, (0, _getFetchMethod2.default)(config, action))).then(function (response) {
         if (response.ok) return response.json();else {

@@ -27,8 +27,8 @@ export default function fetchDispatcher(config, action, name, dispatch, data, cb
         }
         if (data && data._tempId) failedValidationAction._tempId = data._tempId;
         dispatch(failedValidationAction);
-        reject(err);
-        return { err, res: null };
+        reject(validationError);
+        return { err: validationError, res: null };
       }
       config.fetchFunction( 
         buildURL(config, action, name, payload, getFetchMethod(config, action)), 

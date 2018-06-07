@@ -26,8 +26,8 @@ export default function socketDispatcher(config, action, name, dispatch, data, c
         }
         if (data && data._tempId) failedValidationAction._tempId = data._tempId;
         dispatch(failedValidationAction);
-        reject(err);      
-        return { err, res: null };  
+        reject(validationError);      
+        return { err: validationError, res: null };  
       }
       config.socketIoFunction(config.eventName, actionData, (err, res) => {
         if(err) {
