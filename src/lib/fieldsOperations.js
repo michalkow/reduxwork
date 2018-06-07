@@ -1,6 +1,8 @@
 import _ from 'lodash';
 
 export function stripFields(config, data, prefix) {
+  if (_.isArray(data))
+    return data;
   if(!config) config = {};  
   var prefixes = {
     local: config.localPrefix || 'local',
