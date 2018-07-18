@@ -95,12 +95,15 @@ export default function createIoReducers(config, name, customState, customAction
         }, selected)     
       },
       [`REMOVE_${name}`](state, action) {
-        var update = {};
-        if(action.data[config.keyName]) {
-          var items = [...state.items];
-          items.splice(_.findIndex(items, (item) => item[config.keyName] == action.data[config.keyName]), 1);
-          update.items = items;
-        }
+        let update = {};
+        let data = action.data;
+        let items = [...state.items];
+        if (!_.isArray(data)) data = [data];
+        _.each(data, (obj) => {
+          if (obj[config.keyName]) 
+            items.splice(_.findIndex(items, (item) => item[config.keyName] == obj[config.keyName]), 1);
+        });
+        update.items = items;
         let selected = update.items ? selectedUpdate(config, state, update.items) : {};
         return Object.assign({}, state, update, selected)    
       },

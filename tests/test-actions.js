@@ -22,6 +22,7 @@ export var {
   selectMessages,
   syncMessages,
   receiveMessages,
+  removeMessages,
   resetMessages
 } = createIoActions(config, 'Messages');
 

@@ -399,7 +399,7 @@ function selectedUpdate(config, state, items) {
 	var update = {};
 	if (state.selected && state.selected[config.keyName]) update.selected = _lodash2.default.find(items, function (item) {
 		return item[config.keyName] == state.selected[config.keyName];
-	});
+	}) || {};
 	return update;
 }
 
@@ -1022,13 +1022,15 @@ function createIoReducers(config, name, customState, customActions) {
       }, selected);
     }), _defineProperty(_Object$assign, 'REMOVE_' + name, function undefined(state, action) {
       var update = {};
-      if (action.data[config.keyName]) {
-        var items = [].concat(_toConsumableArray(state.items));
-        items.splice(_lodash2.default.findIndex(items, function (item) {
-          return item[config.keyName] == action.data[config.keyName];
+      var data = action.data;
+      var items = [].concat(_toConsumableArray(state.items));
+      if (!_lodash2.default.isArray(data)) data = [data];
+      _lodash2.default.each(data, function (obj) {
+        if (obj[config.keyName]) items.splice(_lodash2.default.findIndex(items, function (item) {
+          return item[config.keyName] == obj[config.keyName];
         }), 1);
-        update.items = items;
-      }
+      });
+      update.items = items;
       var selected = update.items ? (0, _selectedUpdate2.default)(config, state, update.items) : {};
       return Object.assign({}, state, update, selected);
     }), _defineProperty(_Object$assign, 'CREATE_' + name, function undefined(state, action) {

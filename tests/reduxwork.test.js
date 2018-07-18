@@ -3,7 +3,7 @@ import configureStore from 'redux-mock-store'
 import thunk from 'redux-thunk';
 import {createLogger} from 'redux-logger';
 import testReducers from './test-reducers';
-import { findMessages, createMessages, updateMessages, destroyMessages, clearMessages, selectMessages, syncMessages, receiveMessages, resetMessages } from './test-actions';
+import { findMessages, createMessages, updateMessages, destroyMessages, clearMessages, selectMessages, syncMessages, receiveMessages, removeMessages, resetMessages } from './test-actions';
 
 
 const loggerMiddleware = createLogger();
@@ -478,4 +478,39 @@ test('Receive reducer', () => {
     })
     )
 });
+
+test('Remove reducer', () => {
+  expect(
+    testReducers.messages(Object.assign({}, reducerDefaluts, {
+      items: [{ "mark": "mark1", "body": "test1", id: 1 }, { "mark": "mark2", "body": "test2", id: 2 }, { "mark": "mark3", "body": "test3", id: 3 }],
+      selected: { "mark": "mark2", "body": "test2", id: 2 }
+    }), {
+        type: 'REMOVE_MESSAGES',
+        data: [{id: 3 }, {id: 2}]
+      })
+  ).toEqual(
+    Object.assign({}, reducerDefaluts, {
+      items: [{ "mark": "mark1", "body": "test1", id: 1 }],
+      selected: {}
+    })
+  )
+});
+
+test('Remove reducer single', () => {
+  expect(
+    testReducers.messages(Object.assign({}, reducerDefaluts, {
+      items: [{ "mark": "mark1", "body": "test1", id: 1 }, { "mark": "mark2", "body": "test2", id: 2 }, { "mark": "mark3", "body": "test3", id: 3 }],
+      selected: { "mark": "mark2", "body": "test2", id: 2 }
+    }), {
+        type: 'REMOVE_MESSAGES',
+        data: [{ id: 3 }]
+      })
+  ).toEqual(
+    Object.assign({}, reducerDefaluts, {
+      items: [{ "mark": "mark1", "body": "test1", id: 1 }, { "mark": "mark2", "body": "test2", id: 2 }],
+      selected: { "mark": "mark2", "body": "test2", id: 2 }
+    })
+  )
+});
+
 
