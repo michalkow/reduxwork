@@ -152,12 +152,16 @@ var _lodash2 = _interopRequireDefault(_lodash);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function stripFields(config, data, prefix) {
-  if (_lodash2.default.isArray(data)) return data;
   if (!config) config = {};
   var prefixes = {
     local: config.localPrefix || 'local',
     virtual: config.virtualPrefix || 'virtual'
   };
+  if (_lodash2.default.isArray(data)) return _lodash2.default.map(data, function (value) {
+    return _lodash2.default.omitBy(value, function (val, key) {
+      return _lodash2.default.startsWith(key, prefixes[prefix]);
+    });
+  });
 
   return _lodash2.default.omitBy(data, function (val, key) {
     return _lodash2.default.startsWith(key, prefixes[prefix]);

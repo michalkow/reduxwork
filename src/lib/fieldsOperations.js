@@ -1,13 +1,13 @@
 import _ from 'lodash';
 
 export function stripFields(config, data, prefix) {
-  if (_.isArray(data))
-    return data;
-  if(!config) config = {};  
+  if (!config) config = {};
   var prefixes = {
     local: config.localPrefix || 'local',
     virtual: config.virtualPrefix || 'virtual',
   }
+  if (_.isArray(data))
+    return _.map(data, (value) => _.omitBy(value, (val, key) => _.startsWith(key, prefixes[prefix])));
 
   return _.omitBy(data, (val, key) => _.startsWith(key, prefixes[prefix]));
 }
