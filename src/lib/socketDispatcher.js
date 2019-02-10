@@ -1,56 +1,52 @@
-import _ from 'lodash';
+import { omit } from 'lodash';
 import { stripLocalFields } from './fieldsOperations';
 import validationHookError from './validationHook';
 
-export default function socketDispatcher(config, action, name, dispatch, data, cb) {
-  var payload = data && (data._tempId || data._rewrite) ? _.omit(data, ['_tempId', '_rewrite']) : data;
-  console.log('socketDispatcher');
-  if(action) action = action.toUpperCase();
-  if(!config) config = {};
-  if(!config.eventName) config.eventName = "redux_action_event";
-  if(config.socketIoFunction) {
+export default function socketDispatcher(config = {}, actionName, name, dispatch, data, cb) {
+  const payload = data && (data._tempId || data._rewrite) ? omit(data, ['_tempId', '_rewrite']) : data;
+  const action = actionName.toUpperCase();
+  if (!config.eventName) config.eventName = 'redux_action_event';
+  if (config.socketIoFunction) {
     let actionData = {
-      type: (action ? action+'_'+name : name)
+      type: (action ? action + '_' + name : name)
     };
-    if(payload) actionData.data = payload;
+    if (payload) actionData.data = payload;
     if (config.actionInject) actionData = config.actionInject(actionData);
-    console.log('socketDispatcher config', config)
     return new Promise((resolve, reject) => {
-      console.log(config.eventName, actionData)
       let validationError = validationHookError(config, actionData);
       if (validationError) {
         let failedValidationAction = {
           type: (action ? action + '_' + name : name) + '_FAILED',
-          validationError: validationError,
-        }
+          validationError: validationError
+        };
         if (data && data._tempId) failedValidationAction._tempId = data._tempId;
         dispatch(failedValidationAction);
-        reject(validationError);      
-        return { err: validationError, res: null };  
+        reject(validationError);
+        return { err: validationError, res: null };
       }
       actionData.data = stripLocalFields(config, actionData.data);
       config.socketIoFunction(config.eventName, actionData, (err, res) => {
-        if(err) {
+        if (err) {
           let failedAction = {
-            type: (action ? action+'_'+name : name)+'_FAILED',
-            error: err,
-          }
-          if(data && data._tempId) failedAction._tempId = data._tempId;
+            type: (action ? action + '_' + name : name) + '_FAILED',
+            error: err
+          };
+          if (data && data._tempId) failedAction._tempId = data._tempId;
           dispatch(failedAction);
           reject(err);
-        } else { 
+        } else {
           let completedAction = {
-            type: (action ? action+'_'+name : name)+'_COMPLETED',
-            data: res,
-          }
-          if(data && data._tempId) completedAction._tempId = data._tempId;
-          if(data && typeof data._rewrite !== "undefined") completedAction._rewrite = data._rewrite;
+            type: (action ? action + '_' + name : name) + '_COMPLETED',
+            data: res
+          };
+          if (data && data._tempId) completedAction._tempId = data._tempId;
+          if (data && typeof data._rewrite !== 'undefined') completedAction._rewrite = data._rewrite;
           dispatch(completedAction);
           resolve(res);
         }
-        if(cb) cb(err, res);
-        return {err, res};
+        if (cb) cb(err, res);
+        return { err, res };
       });
     });
-  } 
+  }
 }

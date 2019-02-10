@@ -1,25 +1,30 @@
-import _ from 'lodash';
+import {
+  isArray,
+  map,
+  omitBy,
+  startsWith,
+  mapKeys,
+  lowerFirst,
+  replace
+} from 'lodash';
 
-export function stripFields(config, data, prefix) {
-  if (!config) config = {};
-  var prefixes = {
+export function stripFields(config = {}, data, prefix) {
+  const prefixes = {
     local: config.localPrefix || 'local',
-    virtual: config.virtualPrefix || 'virtual',
-  }
-  if (_.isArray(data))
-    return _.map(data, (value) => _.omitBy(value, (val, key) => _.startsWith(key, prefixes[prefix])));
+    virtual: config.virtualPrefix || 'virtual'
+  };
+  if (isArray(data))
+    return map(data, (value) => omitBy(value, (val, key) => startsWith(key, prefixes[prefix])));
 
-  return _.omitBy(data, (val, key) => _.startsWith(key, prefixes[prefix]));
+  return omitBy(data, (val, key) => startsWith(key, prefixes[prefix]));
 }
 
-export function parseFields(config, data, prefix) {
-  if(!config) config = {};  
-  var prefixes = {
+export function parseFields(config = {}, data, prefix) {
+  const prefixes = {
     local: config.localPrefix || 'local',
-    virtual: config.virtualPrefix || 'virtual',
-  }
-
-  return _.mapKeys(data, (val, key) => _.startsWith(key, prefixes[prefix]) ? _.lowerFirst(_.replace(key, prefixes[prefix], '')) : key);
+    virtual: config.virtualPrefix || 'virtual'
+  };
+  return mapKeys(data, (val, key) => startsWith(key, prefixes[prefix]) ? lowerFirst(replace(key, prefixes[prefix], '')) : key);
 }
 
 export function stripVirtualFields(config, data) {
@@ -39,6 +44,5 @@ export function parseLocalFields(config, data) {
 }
 
 export function stripVirtualParseLocalFields(config, data) {
-  console.log('parseFields', parseFields(config, stripFields(config, data, 'virtual'), 'local'));
   return parseFields(config, stripFields(config, data, 'virtual'), 'local');
 }

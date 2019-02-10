@@ -1,50 +1,50 @@
 export default function createLocalActions(config, name) {
   return {
-    [`find${name}`](data, cb) {
+    [`find${name}`](data) {
       return {
-        type: 'FIND_'+name.toUpperCase(),
+        type: 'FIND_' + name.toUpperCase(),
         data
-      }
+      };
     },
-    [`sync${name}`](data, cb) {
+    [`sync${name}`](data) {
       return {
-        type: 'SYNC_'+name.toUpperCase(),
+        type: 'SYNC_' + name.toUpperCase(),
         data
-      }
+      };
     },
     [`clear${name}`]() {
       return {
-        type: 'CLEAR_'+name.toUpperCase()
-      }
+        type: 'CLEAR_' + name.toUpperCase()
+      };
     },
     [`reset${name}`]() {
       return {
-        type: 'RESET_'+name.toUpperCase()
-      }
+        type: 'RESET_' + name.toUpperCase()
+      };
     },
     [`select${name}`](data) {
       return {
-        type: 'SELECT_'+name.toUpperCase(),
+        type: 'SELECT_' + name.toUpperCase(),
         data
-      }
+      };
     },
     [`create${name}`](data) {
       return {
-        type: 'CREATE_'+name.toUpperCase(),
+        type: 'CREATE_' + name.toUpperCase(),
         data
-      }
+      };
     },
     [`update${name}`](data) {
       return {
-        type: 'UPDATE_'+name.toUpperCase(),
+        type: 'UPDATE_' + name.toUpperCase(),
         data
-      }
-    },    
+      };
+    },
     [`destroy${name}`](data) {
       return {
-        type: 'DESTROY_'+name.toUpperCase(),
+        type: 'DESTROY_' + name.toUpperCase(),
         data
-      }
+      };
     }
-  }
+  };
 }

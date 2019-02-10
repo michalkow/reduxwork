@@ -1,12 +1,18 @@
-import _ from 'lodash';
+import {
+  toUpper,
+  snakeCase,
+  isArray,
+  unionBy,
+  find,
+  findIndex,
+  isObject,
+  reject
+} from 'lodash';
 import selectedUpdate from '../lib/selectedUpdate';
 import { stripVirtualParseLocalFields } from '../lib/fieldsOperations';
 
-export default function createLocalReducers(config, name, customState, customActions) {
-  if(!config) config = {};
-  if(!config.keyName) config.keyName = 'id';
-  if(!customState) customState = {};
-  if(!customActions) customActions = {};
+export default function createLocalReducers(config = {}, reducerName, customState = {}, customActions = {}) {
+  if (!config.keyName) config.keyName = 'id';
   let initialState = Object.assign({}, {
     init: false,
     selected: null,
@@ -25,87 +31,84 @@ export default function createLocalReducers(config, name, customState, customAct
     destroyedItemIndex: null,
     items: []
   }, customState);
-  name = _.toUpper(_.snakeCase(name));
-  console.log('createLocalReducers', name)
+  const name = toUpper(snakeCase(reducerName));
   return function(rState = initialState, rAction) {
     var defaultActions = Object.assign({
       [`FIND_${name}`](state, action) {
-        let data = action.data;
-        if(!_.isArray(data)) data = [data];
+        let { data } = action;
+        if (!isArray(data)) data = [data];
         let selected = selectedUpdate(config, state, data);
         return Object.assign({}, state, {
           init: true,
-          items: data,
-        }, selected);  
+          items: data
+        }, selected);
       },
       [`SYNC_${name}`](state, action) {
-        let data = action.data;
-        if(!_.isArray(data)) data = [data];
-        let items = _.unionBy(data, [...state.items], config.keyName);
+        let { data } = action;
+        if (!isArray(data)) data = [data];
+        let items = unionBy(data, [...state.items], config.keyName);
         let selected = selectedUpdate(config, state, items);
         return Object.assign({}, state, {
           init: true,
-          items: items,
-        }, selected);  
+          items: items
+        }, selected);
       },
       [`RECEIVE_${name}`](state, action) {
-        let data = action.data;
-        if(!_.isArray(data)) data = [data];
-        let items = _.unionBy(data, [...state.items], config.keyName);
+        let { data } = action;
+        if (!isArray(data)) data = [data];
+        let items = unionBy(data, [...state.items], config.keyName);
         let selected = selectedUpdate(config, state, items);
         return Object.assign({}, state, {
-          items: items,
-        }, selected)      
+          items: items
+        }, selected);
       },
       [`CREATE_${name}`](state, action) {
         return Object.assign({}, state, {
           items: [...state.items, stripVirtualParseLocalFields(action.data)]
-        })      
+        });
       },
       [`UPDATE_${name}`](state, action) {
         var update = {};
         var data = stripVirtualParseLocalFields(action.data);
-        if(_.isObject(data) && data[config.keyName]) {
+        if (isObject(data) && data[config.keyName]) {
           var items = [...state.items];
-          var updatedItem = _.find(items, (item) => item[config.keyName] == data[config.keyName]);
+          var updatedItem = find(items, (item) => item[config.keyName] == data[config.keyName]);
           items.splice(
-          	_.findIndex(items, (item) => item[config.keyName] == data[config.keyName]), 
-          	1, 
-          	Object.assign({}, updatedItem, data)
+            findIndex(items, (item) => item[config.keyName] == data[config.keyName]),
+            1,
+            Object.assign({}, updatedItem, data)
           );
           update.items = items;
         }
         let selected = update.items ? selectedUpdate(config, state, update.items) : {};
-        return Object.assign({}, state, update, selected)      
+        return Object.assign({}, state, update, selected);
       },
       [`DESTROY_${name}`](state, action) {
         var update = {};
-        if(action.data[config.keyName]) {
+        if (action.data[config.keyName]) {
           var items = [...state.items];
-          let destroyedItem = _.find(items, (item) => item[config.keyName] == action.data[config.keyName]);
-          items.splice(destroyedItemIndex, 1);
-          update.items = items;
+          update.items = reject(items, (item) => item[config.keyName] == action.data[config.keyName]);
         }
         let selected = update.items ? selectedUpdate(config, state, update.items) : {};
-        return Object.assign({}, state, update, selected)      
+        return Object.assign({}, state, update, selected);
       },
-      [`CLEAR_${name}`](state, action) {
+      [`CLEAR_${name}`](state) {
         return Object.assign({}, state, {
           items: [],
           selected: null
-        })     
+        });
       },
       [`SELECT_${name}`](state, action) {
         return Object.assign({}, state, {
           selected: action.data
-        })  
+        });
       },
-      [`RESET_${name}`](state, action) {
+      [`RESET_${name}`]() {
         return Object.assign({}, initialState);
       }
     });
-    if(customActions[rAction.type]) return customActions[rAction.type](rState, rAction);
-    else if(defaultActions[rAction.type]) return defaultActions[rAction.type](rState, rAction);
+    if (customActions[rAction.type]) return customActions[rAction.type](rState, rAction);
+    else if (defaultActions[rAction.type]) return defaultActions[rAction.type](rState, rAction);
     else return rState;
-  }
+  };
 }

@@ -1,9 +1,8 @@
-import _ from 'lodash';
-import { createIoReducers } from '../dist/reduxwork.js'
+import { createIoReducers } from '../dist';
 
 export default {
   messages: createIoReducers({}, 'messages', {
- 
+
   }, {
 
   })

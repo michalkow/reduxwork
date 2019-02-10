@@ -1,29 +1,24 @@
-import _ from 'lodash';
 import buildAction from '../lib/buildAction';
-import socketDispatcher from '../lib/socketDispatcher';
-import fetchDispatcher from '../lib/fetchDispatcher';
 
-export function createSocketGetAction(config, name) {
-  var action = "GET";
-  if(!config) config = {};
-  config.type = "socket";
+export function createSocketGetAction(config = {}, name) {
+  const action = 'GET';
+  config.type = 'socket';
   return function (data, cb) {
-    return buildAction(config, action, name, data, cb)
-  }
+    return buildAction(config, action, name, data, cb);
+  };
 }
 
-export function createFetchGetAction(config, name) {
-  var action = "GET";
-  if(!config) config = {};
-  config.type = "fetch";
-  return function (parama, query, cb) {
-    return buildAction(config, action, name, data, cb)
-  }
+export function createFetchGetAction(config = {}, name) {
+  const action = 'GET';
+  config.type = 'fetch';
+  return function (data, cb) {
+    return buildAction(config, action, name, data, cb);
+  };
 }
 
 export function createGetAction(config, name) {
-  if(config.type == "socket") 
+  if (config.type == 'socket')
     return createSocketGetAction(config, name);
-  if(config.type == "fetch") 
+  if (config.type == 'fetch')
     return createFetchGetAction(config, name);
 }
