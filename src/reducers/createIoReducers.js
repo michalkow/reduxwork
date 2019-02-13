@@ -25,7 +25,7 @@ export default function createIoReducers(config = {}, reducerName, customState =
     query: null,
     isFinding: false,
     isSyncing: false,
-    isWritting: false,
+    isWriting: false,
     syncError: null,
     findError: null,
     writeError: null,
@@ -130,7 +130,7 @@ export default function createIoReducers(config = {}, reducerName, customState =
       [`CREATE_${name}`](state, action) {
         let item = Object.assign({}, stripVirtualParseLocalFields(config, action.data), { _temp: true });
         return Object.assign({}, state, {
-          isWritting: true,
+          isWriting: true,
           items: [...state.items, item]
         });
       },
@@ -141,7 +141,7 @@ export default function createIoReducers(config = {}, reducerName, customState =
           items = filter(items, (item) => item[config.keyName] != action._tempId);
         }
         return Object.assign({}, state, {
-          isWritting: false,
+          isWriting: false,
           items: items,
           writeError: action.error || null,
           validationError: action.validationError || null
@@ -154,7 +154,7 @@ export default function createIoReducers(config = {}, reducerName, customState =
           items = filter(items, (item) => item[config.keyName] != action._tempId);
         }
         return Object.assign({}, state, {
-          isWritting: false,
+          isWriting: false,
           writeError: null,
           validationError: null,
           items: [...items, action.data]
@@ -163,7 +163,7 @@ export default function createIoReducers(config = {}, reducerName, customState =
 
       [`UPDATE_${name}`](state, action) {
         var update = {
-          isWritting: true
+          isWriting: true
         };
         var data = stripVirtualParseLocalFields(config, action.data);
         if (isObject(data) && data[config.keyName]) {
@@ -182,7 +182,7 @@ export default function createIoReducers(config = {}, reducerName, customState =
 
       [`UPDATE_${name}_FAILED`](state, action) {
         var update = {
-          isWritting: false,
+          isWriting: false,
           updateError: action.error || null,
           validationError: action.validationError || null,
           updatedItem: null
@@ -201,7 +201,7 @@ export default function createIoReducers(config = {}, reducerName, customState =
 
       [`UPDATE_${name}_COMPLETED`](state, action) {
         var update = {
-          isWritting: false,
+          isWriting: false,
           updateError: null,
           validationError: null,
           updatedItem: null
@@ -218,7 +218,7 @@ export default function createIoReducers(config = {}, reducerName, customState =
 
       [`DESTROY_${name}`](state, action) {
         var update = {
-          isWritting: true
+          isWriting: true
         };
         if (action.data[config.keyName]) {
           var items = [...state.items];
@@ -232,7 +232,7 @@ export default function createIoReducers(config = {}, reducerName, customState =
 
       [`DESTROY_${name}_FAILED`](state, action) {
         var update = {
-          isWritting: false,
+          isWriting: false,
           destroyError: action.error || null,
           validationError: action.validationError || null,
           destroyedItem: null,
@@ -249,7 +249,7 @@ export default function createIoReducers(config = {}, reducerName, customState =
       [`DESTROY_${name}_COMPLETED`](state) {
         let selected = selectedUpdate(config, state, state.items);
         return Object.assign({}, state, {
-          isWritting: false,
+          isWriting: false,
           destroyError: null,
           validationError: null,
           destroyedItem: null,

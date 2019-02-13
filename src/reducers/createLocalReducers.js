@@ -19,7 +19,7 @@ export default function createLocalReducers(config = {}, reducerName, customStat
     query: null,
     isFinding: false,
     isSyncing: false,
-    isWritting: false,
+    isWriting: false,
     syncError: null,
     findError: null,
     writeError: null,
