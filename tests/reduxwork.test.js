@@ -11,7 +11,7 @@ const reducerDefaluts = {
   query: null,
   isFinding: false,
   isSyncing: false,
-  isWritting: false,
+  isWriting: false,
   syncError: null,
   findError: null,
   writeError: null,
@@ -114,7 +114,7 @@ test('Create reducer', () => {
     })
   ).toEqual(
     Object.assign({}, reducerDefaluts, {
-      isWritting: true,
+      isWriting: true,
       items: [{ body: 'test', only: 'isLocal', _temp: true }]
     })
   );
@@ -123,7 +123,7 @@ test('Create reducer', () => {
 test('Create complete reducer', () => {
   expect(
     testReducers.messages(Object.assign({}, reducerDefaluts, {
-      isWritting: true,
+      isWriting: true,
       items: []
     }), {
       type: 'CREATE_MESSAGES_COMPLETED',
@@ -131,7 +131,7 @@ test('Create complete reducer', () => {
     })
   ).toEqual(
     Object.assign({}, reducerDefaluts, {
-      isWritting: false,
+      isWriting: false,
       items: [{ body: 'test', id: 1 }]
     })
   );
@@ -140,7 +140,7 @@ test('Create complete reducer', () => {
 test('Create failed reducer', () => {
   expect(
     testReducers.messages(Object.assign({}, reducerDefaluts, {
-      isWritting: true,
+      isWriting: true,
       items: []
     }), {
       type: 'CREATE_MESSAGES_FAILED',
@@ -148,7 +148,7 @@ test('Create failed reducer', () => {
     })
   ).toEqual(
     Object.assign({}, reducerDefaluts, {
-      isWritting: false,
+      isWriting: false,
       writeError: 'failed',
       items: []
     })
@@ -165,7 +165,7 @@ test('Destroy reducer', () => {
     })
   ).toEqual(
     Object.assign({}, reducerDefaluts, {
-      isWritting: true,
+      isWriting: true,
       destroyedItem: { body: 'test', id: 1 },
       destroyedItemIndex: 0,
       items: [{ body: 'test2', id: 2 }, { body: 'test3', id: 3 }]
@@ -176,7 +176,7 @@ test('Destroy reducer', () => {
 test('Destroy complete reducer', () => {
   expect(
     testReducers.messages(Object.assign({}, reducerDefaluts, {
-      isWritting: true,
+      isWriting: true,
       destroyError: null,
       destroyedItem: { body: 'test', id: 1 },
       destroyedItemIndex: 0,
@@ -187,7 +187,7 @@ test('Destroy complete reducer', () => {
     })
   ).toEqual(
     Object.assign({}, reducerDefaluts, {
-      isWritting: false,
+      isWriting: false,
       destroyError: null,
       destroyedItem: null,
       destroyedItemIndex: null,
@@ -199,7 +199,7 @@ test('Destroy complete reducer', () => {
 test('Destroy failed reducer', () => {
   expect(
     testReducers.messages(Object.assign({}, reducerDefaluts, {
-      isWritting: true,
+      isWriting: true,
       destroyError: null,
       destroyedItem: { body: 'test', id: 1 },
       destroyedItemIndex: 0,
@@ -210,7 +210,7 @@ test('Destroy failed reducer', () => {
     })
   ).toEqual(
     Object.assign({}, reducerDefaluts, {
-      isWritting: false,
+      isWriting: false,
       destroyError: 'failed',
       destroyedItem: null,
       destroyedItemIndex: null,
@@ -229,7 +229,7 @@ test('Update reducer', () => {
     })
   ).toEqual(
     Object.assign({}, reducerDefaluts, {
-      isWritting: true,
+      isWriting: true,
       items: [{ id: 1, body: 'tested', test: true, only: 'isLocal' }],
       updatedItem: { body: 'test', id: 1 }
     })
@@ -239,7 +239,7 @@ test('Update reducer', () => {
 test('Update complete reducer', () => {
   expect(
     testReducers.messages(Object.assign({}, reducerDefaluts, {
-      isWritting: true,
+      isWriting: true,
       updatedItem: { body: 'test', id: 1 },
       items: [{ id: 1, body: 'tested', test: true }]
     }), {
@@ -248,7 +248,7 @@ test('Update complete reducer', () => {
     })
   ).toEqual(
     Object.assign({}, reducerDefaluts, {
-      isWritting: false,
+      isWriting: false,
       updateError: null,
       updatedItem: null,
       items: [{ id: 1, body: 'tested', test: true }]
@@ -259,7 +259,7 @@ test('Update complete reducer', () => {
 test('Update complete reducer rewrite', () => {
   expect(
     testReducers.messages(Object.assign({}, reducerDefaluts, {
-      isWritting: true,
+      isWriting: true,
       updatedItem: { body: 'test', id: 1 },
       items: [{ body: 'test2', id: 1 }]
     }), {
@@ -269,7 +269,7 @@ test('Update complete reducer rewrite', () => {
     })
   ).toEqual(
     Object.assign({}, reducerDefaluts, {
-      isWritting: false,
+      isWriting: false,
       updateError: null,
       updatedItem: null,
       items: [{ id: 1, body: 'tested', test: true }]
@@ -280,7 +280,7 @@ test('Update complete reducer rewrite', () => {
 test('Update failed reducer', () => {
   expect(
     testReducers.messages(Object.assign({}, reducerDefaluts, {
-      isWritting: true,
+      isWriting: true,
       updatedItem: { body: 'test', id: 1 }
     }), {
       type: 'UPDATE_MESSAGES_FAILED',
@@ -288,7 +288,7 @@ test('Update failed reducer', () => {
     })
   ).toEqual(
     Object.assign({}, reducerDefaluts, {
-      isWritting: false,
+      isWriting: false,
       updateError: 'failed',
       updatedItem: null,
       items: [{ body: 'test', id: 1 }]

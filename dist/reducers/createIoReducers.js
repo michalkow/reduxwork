@@ -35,7 +35,7 @@ function createIoReducers() {
     query: null,
     isFinding: false,
     isSyncing: false,
-    isWritting: false,
+    isWriting: false,
     syncError: null,
     findError: null,
     writeError: null,
@@ -134,7 +134,7 @@ function createIoReducers() {
         _temp: true
       });
       return Object.assign({}, state, {
-        isWritting: true,
+        isWriting: true,
         items: [].concat(_toConsumableArray(state.items), [item])
       });
     }), _defineProperty(_Object$assign, "CREATE_".concat(name, "_FAILED"), function CREATE__FAILED(state, action) {
@@ -147,7 +147,7 @@ function createIoReducers() {
       }
 
       return Object.assign({}, state, {
-        isWritting: false,
+        isWriting: false,
         items: items,
         writeError: action.error || null,
         validationError: action.validationError || null
@@ -162,14 +162,14 @@ function createIoReducers() {
       }
 
       return Object.assign({}, state, {
-        isWritting: false,
+        isWriting: false,
         writeError: null,
         validationError: null,
         items: [].concat(_toConsumableArray(items), [action.data])
       });
     }), _defineProperty(_Object$assign, "UPDATE_".concat(name), function UPDATE_(state, action) {
       var update = {
-        isWritting: true
+        isWriting: true
       };
       var data = (0, _fieldsOperations.stripVirtualParseLocalFields)(config, action.data);
 
@@ -189,7 +189,7 @@ function createIoReducers() {
       return Object.assign({}, state, update);
     }), _defineProperty(_Object$assign, "UPDATE_".concat(name, "_FAILED"), function UPDATE__FAILED(state, action) {
       var update = {
-        isWritting: false,
+        isWriting: false,
         updateError: action.error || null,
         validationError: action.validationError || null,
         updatedItem: null
@@ -207,7 +207,7 @@ function createIoReducers() {
       return Object.assign({}, state, update);
     }), _defineProperty(_Object$assign, "UPDATE_".concat(name, "_COMPLETED"), function UPDATE__COMPLETED(state, action) {
       var update = {
-        isWritting: false,
+        isWriting: false,
         updateError: null,
         validationError: null,
         updatedItem: null
@@ -225,7 +225,7 @@ function createIoReducers() {
       return Object.assign({}, state, update, selected);
     }), _defineProperty(_Object$assign, "DESTROY_".concat(name), function DESTROY_(state, action) {
       var update = {
-        isWritting: true
+        isWriting: true
       };
 
       if (action.data[config.keyName]) {
@@ -244,7 +244,7 @@ function createIoReducers() {
       return Object.assign({}, state, update);
     }), _defineProperty(_Object$assign, "DESTROY_".concat(name, "_FAILED"), function DESTROY__FAILED(state, action) {
       var update = {
-        isWritting: false,
+        isWriting: false,
         destroyError: action.error || null,
         validationError: action.validationError || null,
         destroyedItem: null,
@@ -262,7 +262,7 @@ function createIoReducers() {
     }), _defineProperty(_Object$assign, "DESTROY_".concat(name, "_COMPLETED"), function DESTROY__COMPLETED(state) {
       var selected = (0, _selectedUpdate.default)(config, state, state.items);
       return Object.assign({}, state, {
-        isWritting: false,
+        isWriting: false,
         destroyError: null,
         validationError: null,
         destroyedItem: null,
