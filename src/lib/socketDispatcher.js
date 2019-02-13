@@ -4,7 +4,7 @@ import validationHookError from './validationHook';
 
 export default function socketDispatcher(config = {}, actionName, name, dispatch, data, cb) {
   const payload = data && (data._tempId || data._rewrite) ? omit(data, ['_tempId', '_rewrite']) : data;
-  const action = actionName.toUpperCase();
+  const action = actionName ? actionName.toUpperCase() : null;
   if (!config.eventName) config.eventName = 'redux_action_event';
   if (config.socketIoFunction) {
     let actionData = {

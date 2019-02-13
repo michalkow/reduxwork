@@ -7,7 +7,7 @@ import validationHookError from './validationHook';
 
 export default function fetchDispatcher(config = {}, actionName, name, dispatch, data, cb) {
   var payload = ((data && (data._tempId || data._rewrite)) ? omit(data, ['_tempId', '_rewrite']) : data);
-  const action = actionName.toUpperCase();
+  const action = actionName ? actionName.toUpperCase() : null;
   if (config.fetchFunction) {
     return new Promise((resolve, reject) => {
       if (config.actionInject) payload = config.actionInject(payload);

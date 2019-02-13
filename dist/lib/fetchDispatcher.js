@@ -29,7 +29,7 @@ function fetchDispatcher() {
   var data = arguments.length > 4 ? arguments[4] : undefined;
   var cb = arguments.length > 5 ? arguments[5] : undefined;
   var payload = data && (data._tempId || data._rewrite) ? (0, _lodash.omit)(data, ['_tempId', '_rewrite']) : data;
-  var action = actionName.toUpperCase();
+  var action = actionName ? actionName.toUpperCase() : null;
 
   if (config.fetchFunction) {
     return new _bluebird.default(function (resolve, reject) {
