@@ -15,10 +15,9 @@ import {
   isNumber
 } from 'lodash';
 import selectedUpdate from '../lib/selectedUpdate';
-import { stripVirtualParseLocalFields } from '../lib/fieldsOperations';
+import { omitVirtualFields } from '../lib/fieldsOperations';
 
-export default function createIoReducers(config = {}, reducerName, customState = {}, customActions = {}) {
-  if (!config.keyName) config.keyName = 'id';
+export default function createIoReducers(reducerName, customState = {}, customActions = {}, options = {}) {
   const initialState = Object.assign({}, {
     init: false,
     selected: null,
@@ -60,7 +59,7 @@ export default function createIoReducers(config = {}, reducerName, customState =
       },
 
       [`FIND_${name}_COMPLETED`](state, action) {
-        let selected = selectedUpdate(config, state, action.data);
+        let selected = selectedUpdate(options, state, action.data);
         return Object.assign({}, state, {
           init: true,
           isFinding: false,
@@ -88,8 +87,8 @@ export default function createIoReducers(config = {}, reducerName, customState =
       [`SYNC_${name}_COMPLETED`](state, action) {
         let { data } = action;
         if (!isArray(data)) data = [data];
-        let items = unionBy(data, [...state.items], config.keyName);
-        let selected = selectedUpdate(config, state, items);
+        let items = unionBy(data, [...state.items], options.keyName);
+        let selected = selectedUpdate(options, state, items);
         return Object.assign({}, state, {
           isSyncing: false,
           syncError: null,
@@ -103,11 +102,11 @@ export default function createIoReducers(config = {}, reducerName, customState =
         let { data } = action;
         if (!isArray(data)) data = [data];
         let update = map(data, obj => {
-          let existing = find(state.items, item => item[config.keyName] == obj[config.keyName]);
+          let existing = find(state.items, item => item[options.keyName] == obj[options.keyName]);
           return existing ? Object.assign({}, existing, obj) : obj;
         });
-        let items = unionBy(update, [...state.items], config.keyName);
-        let selected = selectedUpdate(config, state, items);
+        let items = unionBy(update, [...state.items], options.keyName);
+        let selected = selectedUpdate(options, state, items);
         return Object.assign({}, state, {
           items: items
         }, selected);
@@ -119,16 +118,16 @@ export default function createIoReducers(config = {}, reducerName, customState =
         let items = [...state.items];
         if (!isArray(data)) data = [data];
         each(data, (obj) => {
-          if (obj[config.keyName])
-            items.splice(findIndex(items, (item) => item[config.keyName] == obj[config.keyName]), 1);
+          if (obj[options.keyName])
+            items.splice(findIndex(items, (item) => item[options.keyName] == obj[options.keyName]), 1);
         });
         update.items = items;
-        let selected = update.items ? selectedUpdate(config, state, update.items) : {};
+        let selected = update.items ? selectedUpdate(options, state, update.items) : {};
         return Object.assign({}, state, update, selected);
       },
 
       [`CREATE_${name}`](state, action) {
-        let item = Object.assign({}, stripVirtualParseLocalFields(config, action.data), { _temp: true });
+        let item = Object.assign({}, omitVirtualFields(options, action.data), { _temp: true });
         return Object.assign({}, state, {
           isWriting: true,
           items: [...state.items, item]
@@ -138,7 +137,7 @@ export default function createIoReducers(config = {}, reducerName, customState =
       [`CREATE_${name}_FAILED`](state, action) {
         var items = [...state.items];
         if (action._tempId) {
-          items = filter(items, (item) => item[config.keyName] != action._tempId);
+          items = filter(items, (item) => item[options.keyName] != action._tempId);
         }
         return Object.assign({}, state, {
           isWriting: false,
@@ -151,7 +150,7 @@ export default function createIoReducers(config = {}, reducerName, customState =
       [`CREATE_${name}_COMPLETED`](state, action) {
         var items = [...state.items];
         if (action._tempId) {
-          items = filter(items, (item) => item[config.keyName] != action._tempId);
+          items = filter(items, (item) => item[options.keyName] != action._tempId);
         }
         return Object.assign({}, state, {
           isWriting: false,
@@ -165,12 +164,12 @@ export default function createIoReducers(config = {}, reducerName, customState =
         var update = {
           isWriting: true
         };
-        var data = stripVirtualParseLocalFields(config, action.data);
-        if (isObject(data) && data[config.keyName]) {
+        var data = omitVirtualFields(options, action.data);
+        if (isObject(data) && data[options.keyName]) {
           var items = [...state.items];
-          var updatedItem = find(items, (item) => item[config.keyName] == data[config.keyName]);
+          var updatedItem = find(items, (item) => item[options.keyName] == data[options.keyName]);
           items.splice(
-            findIndex(items, (item) => item[config.keyName] == data[config.keyName]),
+            findIndex(items, (item) => item[options.keyName] == data[options.keyName]),
             1,
             Object.assign({}, updatedItem, data)
           );
@@ -187,10 +186,10 @@ export default function createIoReducers(config = {}, reducerName, customState =
           validationError: action.validationError || null,
           updatedItem: null
         };
-        if (state.updatedItem && state.updatedItem[config.keyName]) {
+        if (state.updatedItem && state.updatedItem[options.keyName]) {
           var items = [...state.items];
           items.splice(
-            findIndex(items, (item) => item[config.keyName] == state.updatedItem[config.keyName]),
+            findIndex(items, (item) => item[options.keyName] == state.updatedItem[options.keyName]),
             1,
             state.updatedItem
           );
@@ -206,13 +205,13 @@ export default function createIoReducers(config = {}, reducerName, customState =
           validationError: null,
           updatedItem: null
         };
-        if (action._rewrite || (config.rewriteOnUpdate && action._rewrite !== false)) {
+        if (action._rewrite || (options.rewriteOnUpdate && action._rewrite !== false)) {
           var items = [...state.items];
           let { data } = action;
           if (!isArray(data)) data = [data];
-          update.items = unionBy(data, items, config.keyName);
+          update.items = unionBy(data, items, options.keyName);
         }
-        let selected = update.items ? selectedUpdate(config, state, update.items) : {};
+        let selected = update.items ? selectedUpdate(options, state, update.items) : {};
         return Object.assign({}, state, update, selected);
       },
 
@@ -220,10 +219,10 @@ export default function createIoReducers(config = {}, reducerName, customState =
         var update = {
           isWriting: true
         };
-        if (action.data[config.keyName]) {
+        if (action.data[options.keyName]) {
           var items = [...state.items];
-          update.destroyedItem = find(items, (item) => item[config.keyName] == action.data[config.keyName]);
-          update.destroyedItemIndex = findIndex(items, (item) => item[config.keyName] == action.data[config.keyName]);
+          update.destroyedItem = find(items, (item) => item[options.keyName] == action.data[options.keyName]);
+          update.destroyedItemIndex = findIndex(items, (item) => item[options.keyName] == action.data[options.keyName]);
           items.splice(update.destroyedItemIndex, 1);
           update.items = items;
         }
@@ -247,7 +246,7 @@ export default function createIoReducers(config = {}, reducerName, customState =
       },
 
       [`DESTROY_${name}_COMPLETED`](state) {
-        let selected = selectedUpdate(config, state, state.items);
+        let selected = selectedUpdate(options, state, state.items);
         return Object.assign({}, state, {
           isWriting: false,
           destroyError: null,
@@ -266,8 +265,8 @@ export default function createIoReducers(config = {}, reducerName, customState =
 
       [`SELECT_${name}`](state, action) {
         let selected = null;
-        if (isString(action.data) || isNumber(action.data)) selected = find(state.items, (item) => item[config.keyName] == action.data);
-        else if (isObject(action.data) && action.data[config.keyName]) selected = find(state.items, (item) => item[config.keyName] == action.data[config.keyName]) || action.data;
+        if (isString(action.data) || isNumber(action.data)) selected = find(state.items, (item) => item[options.keyName] == action.data);
+        else if (isObject(action.data) && action.data[options.keyName]) selected = find(state.items, (item) => item[options.keyName] == action.data[options.keyName]) || action.data;
         else selected = action.data;
         return Object.assign({}, state, {
           selected: selected

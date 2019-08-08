@@ -1,18 +1,7 @@
-import { createIoActions } from '../dist';
-import io from 'socket.io-client';
+import reduxwork from './test-reduxwork';
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
-
-var serverAdress = 'http://127.0.0.1:1234';
-const socket = io(serverAdress);
-
-const config = {
-  baseURL: serverAdress + '/api',
-  type: 'fetch',
-  socketIoFunction: function(action, data, cb) { socket.emit(action, data, cb); },
-  fetchFunction: fetch
-};
 
 export var {
   findMessages,
@@ -25,4 +14,4 @@ export var {
   receiveMessages,
   removeMessages,
   resetMessages
-} = createIoActions(config, 'Messages');
+} = reduxwork.createIoActions('Messages');

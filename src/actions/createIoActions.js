@@ -1,8 +1,7 @@
-import buildAction from '../lib/buildAction';
+import buildAction from '../lib/createAction';
 import { snakeCase } from 'lodash';
 
-export function createSocketActions(config = {}, name) {
-  config.type = 'socket';
+export default function createIoActions(name, options) {
   return {
     [`clear${name}`]() {
       return {
@@ -20,76 +19,26 @@ export function createSocketActions(config = {}, name) {
         data
       };
     },
-    [`find${name}`](data, cb) {
+    [`find${name}`](data) {
       var action = 'FIND';
-      return buildAction(config, action, name, data, cb);
+      return buildAction(options, action, name, data);
     },
-    [`sync${name}`](data, cb) {
+    [`sync${name}`](data) {
       var action = 'SYNC';
-      return buildAction(config, action, name, data, cb);
+      return buildAction(options, action, name, data);
 
     },
-    [`create${name}`](data, cb) {
+    [`create${name}`](data) {
       var action = 'CREATE';
-      return buildAction(config, action, name, data, cb);
+      return buildAction(options, action, name, data);
     },
-    [`update${name}`](data, cb) {
+    [`update${name}`](data) {
       var action = 'UPDATE';
-      return buildAction(config, action, name, data, cb);
+      return buildAction(options, action, name, data);
     },
-    [`destroy${name}`](data, cb) {
+    [`destroy${name}`](data) {
       var action = 'DESTROY';
-      return buildAction(config, action, name, data, cb);
+      return buildAction(options, action, name, data);
     }
   };
-}
-
-export function createFetchActions(config = {}, name) {
-  config.type = 'fetch';
-  return {
-    [`clear${name}`]() {
-      return {
-        type: 'CLEAR_' + snakeCase(name).toUpperCase()
-      };
-    },
-    [`reset${name}`]() {
-      return {
-        type: 'RESET_' + snakeCase(name).toUpperCase()
-      };
-    },
-    [`select${name}`](data) {
-      return {
-        type: 'SELECT_' + snakeCase(name).toUpperCase(),
-        data
-      };
-    },
-    [`find${name}`](data, cb) {
-      var action = 'FIND';
-      return buildAction(config, action, name, data, cb);
-    },
-    [`sync${name}`](data, cb) {
-      var action = 'SYNC';
-      return buildAction(config, action, name, data, cb);
-
-    },
-    [`create${name}`](data, cb) {
-      var action = 'CREATE';
-      return buildAction(config, action, name, data, cb);
-    },
-    [`update${name}`](data, cb) {
-      var action = 'UPDATE';
-      return buildAction(config, action, name, data, cb);
-    },
-    [`destroy${name}`](data, cb) {
-      var action = 'DESTROY';
-      return buildAction(config, action, name, data, cb);
-    }
-  };
-}
-
-export function createIoActions(config, name) {
-  if (config.type == 'socket')
-    return createSocketActions(config, name);
-  if (config.type == 'fetch')
-    return createFetchActions(config, name);
 }

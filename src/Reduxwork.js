@@ -1,5 +1,7 @@
-import dispatchToSocket from "./lib/dispatchToSocket";
-import fetchDispatcher from "./lib/fetchDispatcher";
+import dispatchToSocket from './lib/dispatchToSocket';
+//import dispatchToFetch from './lib/dispatchToFetch';
+import createIoActions from './actions/createIoActions';
+import createIoReducers from './reducers/createIoReducers';
 
 export default class Reduxwork {
 
@@ -8,7 +10,8 @@ export default class Reduxwork {
       keyName: 'id',
       prefix: 'rw',
       socketEventName: 'redux_action_event',
-      socketEmitFunction: null,
+      socket: null,
+      transport: options.socket ? 'socket' : 'fetch',
       virtualFieldsName: 'virtualFields',
       localFieldsName: 'localFields',
       actionInject: (action) => action
@@ -31,6 +34,12 @@ export default class Reduxwork {
 
   };
 
+  createIoActions = (name, options = {}) =>
+    createIoActions(name, this.mergeOptions(options));
+
+  createIoReducers = (name, customState = {}, customActions = {}, options = {}) =>
+    createIoReducers(name, customState, customActions, this.mergeOptions(options));
+
   isLocalAction = (action) => {
     return !!action.local;
   };
@@ -39,7 +48,7 @@ export default class Reduxwork {
     if (action.transport == 'socket')
       return dispatchToSocket(this.options, state, action, next);
     if (action.transport == 'fetch')
-      return fetchDispatcher(this.options, state, action, next);
+      return dispatchToFetch(this.options, state, action, next);
   };
 
   executeAction = (state, action, next) => {
@@ -56,7 +65,7 @@ export default class Reduxwork {
     return this.executAction(state, action, next);
   };
 
-  createMiddleware = state => next => action => {
+  middleware = state => next => action => {
     if (action.reduxwork)
       return this.handleReduxworkAction(state, action, next);
     return next(action);

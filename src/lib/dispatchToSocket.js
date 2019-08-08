@@ -1,12 +1,10 @@
-import { omit } from 'lodash';
 import { omitVirtualFields, omitLocalFields } from './fieldsOperations';
-import validationHookError from './validationHook';
 
-export const dispatchToSocket = (state, action, next) => {
-  const { socketEmitFunction, socketEventName, validation, actionInject } = this.options;
+const dispatchToSocket = (state, action, next) => {
+  const { socket, socketEventName, validation, actionInject } = this.options;
 
-  if (!socketEmitFunction)
-    throw new Error('Reduxwork: socketEmitFunction is not configured.');
+  if (!socket)
+    throw new Error('Reduxwork: socket is not configured.');
 
   return next((dispatch) => {
     // Dispatch Local Action
@@ -27,7 +25,7 @@ export const dispatchToSocket = (state, action, next) => {
         }
       }
 
-      socketEmitFunction(socketEventName, serverAction, (error, data) => {
+      socket.emit(socketEventName, serverAction, (error, data) => {
         if (error) {
           let failedAction = {
             type: action.type + '_FAILED',
@@ -47,3 +45,5 @@ export const dispatchToSocket = (state, action, next) => {
     });
   });
 };
+
+export default dispatchToSocket;

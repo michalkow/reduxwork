@@ -2,8 +2,9 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import testReducers from './test-reducers';
 import { findMessages, createMessages, updateMessages, destroyMessages } from './test-actions';
+import reduxwork from './test-reduxwork';
 
-const mockStore = configureStore([thunk]);
+const mockStore = configureStore([thunk, reduxwork.middleware]);
 
 const reducerDefaluts = {
   init: false,

@@ -1,9 +1,5 @@
-import { createIoReducers } from '../dist';
+import reduxwork from './test-reduxwork';
 
 export default {
-  messages: createIoReducers({}, 'messages', {
-
-  }, {
-
-  })
+  messages: reduxwork.createIoReducers('messages')
 };
