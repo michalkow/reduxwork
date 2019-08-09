@@ -3,63 +3,26 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.stripFields = stripFields;
-exports.parseFields = parseFields;
-exports.stripVirtualFields = stripVirtualFields;
-exports.stripLocalFields = stripLocalFields;
-exports.parseVirtualFields = parseVirtualFields;
-exports.parseLocalFields = parseLocalFields;
-exports.stripVirtualParseLocalFields = stripVirtualParseLocalFields;
+exports.omitLocalFields = exports.omitVirtualFields = exports.omitFields = void 0;
 
 var _lodash = require("lodash");
 
-function stripFields() {
-  var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var data = arguments.length > 1 ? arguments[1] : undefined;
-  var prefix = arguments.length > 2 ? arguments[2] : undefined;
-  var prefixes = {
-    local: config.localPrefix || 'local',
-    virtual: config.virtualPrefix || 'virtual'
-  };
-  if ((0, _lodash.isArray)(data)) return (0, _lodash.map)(data, function (value) {
-    return (0, _lodash.omitBy)(value, function (val, key) {
-      return (0, _lodash.startsWith)(key, prefixes[prefix]);
-    });
+var omitFields = function omitFields(action, fieldsType) {
+  return Object.assign({}, action, {
+    data: (0, _lodash.omit)(action.data, action[fieldsType])
   });
-  return (0, _lodash.omitBy)(data, function (val, key) {
-    return (0, _lodash.startsWith)(key, prefixes[prefix]);
-  });
-}
+};
 
-function parseFields() {
-  var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var data = arguments.length > 1 ? arguments[1] : undefined;
-  var prefix = arguments.length > 2 ? arguments[2] : undefined;
-  var prefixes = {
-    local: config.localPrefix || 'local',
-    virtual: config.virtualPrefix || 'virtual'
-  };
-  return (0, _lodash.mapKeys)(data, function (val, key) {
-    return (0, _lodash.startsWith)(key, prefixes[prefix]) ? (0, _lodash.lowerFirst)((0, _lodash.replace)(key, prefixes[prefix], '')) : key;
-  });
-}
+exports.omitFields = omitFields;
 
-function stripVirtualFields(config, data) {
-  return stripFields(config, data, 'virtual');
-}
+var omitVirtualFields = function omitVirtualFields(options, action) {
+  return omitFields(action, options.virtualFieldsName);
+};
 
-function stripLocalFields(config, data) {
-  return stripFields(config, data, 'local');
-}
+exports.omitVirtualFields = omitVirtualFields;
 
-function parseVirtualFields(config, data) {
-  return parseFields(config, data, 'virtual');
-}
+var omitLocalFields = function omitLocalFields(options, action) {
+  return omitFields(action, options.localFieldsName);
+};
 
-function parseLocalFields(config, data) {
-  return parseFields(config, data, 'local');
-}
-
-function stripVirtualParseLocalFields(config, data) {
-  return parseFields(config, stripFields(config, data, 'virtual'), 'local');
-}
+exports.omitLocalFields = omitLocalFields;

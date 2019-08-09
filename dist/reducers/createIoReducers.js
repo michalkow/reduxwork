@@ -23,12 +23,10 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-function createIoReducers() {
-  var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var reducerName = arguments.length > 1 ? arguments[1] : undefined;
-  var customState = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var customActions = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  if (!config.keyName) config.keyName = 'id';
+function createIoReducers(reducerName) {
+  var customState = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var customActions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
   var initialState = Object.assign({}, {
     init: false,
     selected: null,
@@ -69,7 +67,7 @@ function createIoReducers() {
         isFinding: false
       });
     }), _defineProperty(_Object$assign, "FIND_".concat(name, "_COMPLETED"), function FIND__COMPLETED(state, action) {
-      var selected = (0, _selectedUpdate.default)(config, state, action.data);
+      var selected = (0, _selectedUpdate.default)(options, state, action.data);
       return Object.assign({}, state, {
         init: true,
         isFinding: false,
@@ -91,8 +89,8 @@ function createIoReducers() {
     }), _defineProperty(_Object$assign, "SYNC_".concat(name, "_COMPLETED"), function SYNC__COMPLETED(state, action) {
       var data = action.data;
       if (!(0, _lodash.isArray)(data)) data = [data];
-      var items = (0, _lodash.unionBy)(data, _toConsumableArray(state.items), config.keyName);
-      var selected = (0, _selectedUpdate.default)(config, state, items);
+      var items = (0, _lodash.unionBy)(data, _toConsumableArray(state.items), options.keyName);
+      var selected = (0, _selectedUpdate.default)(options, state, items);
       return Object.assign({}, state, {
         isSyncing: false,
         syncError: null,
@@ -105,12 +103,12 @@ function createIoReducers() {
       if (!(0, _lodash.isArray)(data)) data = [data];
       var update = (0, _lodash.map)(data, function (obj) {
         var existing = (0, _lodash.find)(state.items, function (item) {
-          return item[config.keyName] == obj[config.keyName];
+          return item[options.keyName] == obj[options.keyName];
         });
         return existing ? Object.assign({}, existing, obj) : obj;
       });
-      var items = (0, _lodash.unionBy)(update, _toConsumableArray(state.items), config.keyName);
-      var selected = (0, _selectedUpdate.default)(config, state, items);
+      var items = (0, _lodash.unionBy)(update, _toConsumableArray(state.items), options.keyName);
+      var selected = (0, _selectedUpdate.default)(options, state, items);
       return Object.assign({}, state, {
         items: items
       }, selected);
@@ -122,15 +120,15 @@ function createIoReducers() {
 
       if (!(0, _lodash.isArray)(data)) data = [data];
       (0, _lodash.each)(data, function (obj) {
-        if (obj[config.keyName]) items.splice((0, _lodash.findIndex)(items, function (item) {
-          return item[config.keyName] == obj[config.keyName];
+        if (obj[options.keyName]) items.splice((0, _lodash.findIndex)(items, function (item) {
+          return item[options.keyName] == obj[options.keyName];
         }), 1);
       });
       update.items = items;
-      var selected = update.items ? (0, _selectedUpdate.default)(config, state, update.items) : {};
+      var selected = update.items ? (0, _selectedUpdate.default)(options, state, update.items) : {};
       return Object.assign({}, state, update, selected);
     }), _defineProperty(_Object$assign, "CREATE_".concat(name), function CREATE_(state, action) {
-      var item = Object.assign({}, (0, _fieldsOperations.stripVirtualParseLocalFields)(config, action.data), {
+      var item = Object.assign({}, (0, _fieldsOperations.omitVirtualFields)(options, action.data), {
         _temp: true
       });
       return Object.assign({}, state, {
@@ -142,7 +140,7 @@ function createIoReducers() {
 
       if (action._tempId) {
         items = (0, _lodash.filter)(items, function (item) {
-          return item[config.keyName] != action._tempId;
+          return item[options.keyName] != action._tempId;
         });
       }
 
@@ -157,7 +155,7 @@ function createIoReducers() {
 
       if (action._tempId) {
         items = (0, _lodash.filter)(items, function (item) {
-          return item[config.keyName] != action._tempId;
+          return item[options.keyName] != action._tempId;
         });
       }
 
@@ -171,16 +169,16 @@ function createIoReducers() {
       var update = {
         isWriting: true
       };
-      var data = (0, _fieldsOperations.stripVirtualParseLocalFields)(config, action.data);
+      var data = (0, _fieldsOperations.omitVirtualFields)(options, action.data);
 
-      if ((0, _lodash.isObject)(data) && data[config.keyName]) {
+      if ((0, _lodash.isObject)(data) && data[options.keyName]) {
         var items = _toConsumableArray(state.items);
 
         var updatedItem = (0, _lodash.find)(items, function (item) {
-          return item[config.keyName] == data[config.keyName];
+          return item[options.keyName] == data[options.keyName];
         });
         items.splice((0, _lodash.findIndex)(items, function (item) {
-          return item[config.keyName] == data[config.keyName];
+          return item[options.keyName] == data[options.keyName];
         }), 1, Object.assign({}, updatedItem, data));
         update.updatedItem = updatedItem;
         update.items = items;
@@ -195,11 +193,11 @@ function createIoReducers() {
         updatedItem: null
       };
 
-      if (state.updatedItem && state.updatedItem[config.keyName]) {
+      if (state.updatedItem && state.updatedItem[options.keyName]) {
         var items = _toConsumableArray(state.items);
 
         items.splice((0, _lodash.findIndex)(items, function (item) {
-          return item[config.keyName] == state.updatedItem[config.keyName];
+          return item[options.keyName] == state.updatedItem[options.keyName];
         }), 1, state.updatedItem);
         update.items = items;
       }
@@ -213,29 +211,29 @@ function createIoReducers() {
         updatedItem: null
       };
 
-      if (action._rewrite || config.rewriteOnUpdate && action._rewrite !== false) {
+      if (action._rewrite || options.rewriteOnUpdate && action._rewrite !== false) {
         var items = _toConsumableArray(state.items);
 
         var data = action.data;
         if (!(0, _lodash.isArray)(data)) data = [data];
-        update.items = (0, _lodash.unionBy)(data, items, config.keyName);
+        update.items = (0, _lodash.unionBy)(data, items, options.keyName);
       }
 
-      var selected = update.items ? (0, _selectedUpdate.default)(config, state, update.items) : {};
+      var selected = update.items ? (0, _selectedUpdate.default)(options, state, update.items) : {};
       return Object.assign({}, state, update, selected);
     }), _defineProperty(_Object$assign, "DESTROY_".concat(name), function DESTROY_(state, action) {
       var update = {
         isWriting: true
       };
 
-      if (action.data[config.keyName]) {
+      if (action.data[options.keyName]) {
         var items = _toConsumableArray(state.items);
 
         update.destroyedItem = (0, _lodash.find)(items, function (item) {
-          return item[config.keyName] == action.data[config.keyName];
+          return item[options.keyName] == action.data[options.keyName];
         });
         update.destroyedItemIndex = (0, _lodash.findIndex)(items, function (item) {
-          return item[config.keyName] == action.data[config.keyName];
+          return item[options.keyName] == action.data[options.keyName];
         });
         items.splice(update.destroyedItemIndex, 1);
         update.items = items;
@@ -260,7 +258,7 @@ function createIoReducers() {
 
       return Object.assign({}, state, update);
     }), _defineProperty(_Object$assign, "DESTROY_".concat(name, "_COMPLETED"), function DESTROY__COMPLETED(state) {
-      var selected = (0, _selectedUpdate.default)(config, state, state.items);
+      var selected = (0, _selectedUpdate.default)(options, state, state.items);
       return Object.assign({}, state, {
         isWriting: false,
         destroyError: null,
@@ -276,9 +274,9 @@ function createIoReducers() {
     }), _defineProperty(_Object$assign, "SELECT_".concat(name), function SELECT_(state, action) {
       var selected = null;
       if ((0, _lodash.isString)(action.data) || (0, _lodash.isNumber)(action.data)) selected = (0, _lodash.find)(state.items, function (item) {
-        return item[config.keyName] == action.data;
-      });else if ((0, _lodash.isObject)(action.data) && action.data[config.keyName]) selected = (0, _lodash.find)(state.items, function (item) {
-        return item[config.keyName] == action.data[config.keyName];
+        return item[options.keyName] == action.data;
+      });else if ((0, _lodash.isObject)(action.data) && action.data[options.keyName]) selected = (0, _lodash.find)(state.items, function (item) {
+        return item[options.keyName] == action.data[options.keyName];
       }) || action.data;else selected = action.data;
       return Object.assign({}, state, {
         selected: selected

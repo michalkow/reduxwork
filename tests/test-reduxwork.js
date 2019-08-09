@@ -1,4 +1,4 @@
-import { Reduxwork } from '../dist/Reduxwork';
+import Reduxwork from '../src/Reduxwork';
 import io from 'socket.io-client';
 
 const serverAdress = 'http://127.0.0.1:1234';

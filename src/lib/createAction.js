@@ -3,12 +3,13 @@ import { ActionOperationEnum } from './constants';
 
 export const parseData = (options, operation, payload) => {
   const { keyName } = options;
+  const data = Object.assign({}, payload);
   if (options.addKeyOnCreate && operation == ActionOperationEnum.CREATE && !payload[keyName]) {
     let now = new Date().getTime();
-    payload._tempId = now;
-    payload[keyName] = now;
+    data._tempId = now;
+    data[keyName] = now;
   }
-  return payload;
+  return data;
 };
 
 export const getActionType = (options, operation, name) =>
@@ -17,7 +18,7 @@ export const getActionType = (options, operation, name) =>
 export const mergeLocalFields = (options) =>
   union(['_tempId', '_rewrite'], options);
 
-export default (options, operation, name, payload) => {
+export default (options, operation, name, payload = {}) => {
   const { local, transport, validationScheme, localFieldsName, virtualFieldsName } = options;
   const data = parseData(options, operation, payload);
 

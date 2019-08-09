@@ -1,17 +1,17 @@
 import { omitVirtualFields, omitLocalFields } from './fieldsOperations';
 
-const dispatchToSocket = (state, action, next) => {
-  const { socket, socketEventName, validation, actionInject } = this.options;
+const dispatchToSocket = (options, action, next) => {
+  const { socket, socketEventName, validation, actionInject } = options;
 
   if (!socket)
     throw new Error('Reduxwork: socket is not configured.');
 
   return next((dispatch) => {
     // Dispatch Local Action
-    dispatch(omitVirtualFields(action));
+    dispatch(omitVirtualFields(action, options));
 
     return new Promise((resolve, reject) => {
-      const serverAction = omitLocalFields(actionInject(action));
+      const serverAction = omitLocalFields(actionInject(action), options);
 
       if (validation && action.validationScheme) {
         let validationError = validation(serverAction.data, action.validationScheme);

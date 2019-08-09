@@ -17,7 +17,8 @@ export default class Reduxwork {
       actionInject: (action) => action
     }, options);
     this.schemas = schemas;
-    this.online = false;
+    this.dispatch = null;
+    this.online = true;
   }
 
   mergeOptions = (options) =>
@@ -40,35 +41,40 @@ export default class Reduxwork {
   createIoReducers = (name, customState = {}, customActions = {}, options = {}) =>
     createIoReducers(name, customState, customActions, this.mergeOptions(options));
 
-  isLocalAction = (action) => {
-    return !!action.local;
-  };
+  isLocalAction = (action) =>
+    !!action.local;
 
-  sendAction = (state, action, next) => {
+  sendAction = (action, next) => {
+    console.log(action);
     if (action.transport == 'socket')
-      return dispatchToSocket(this.options, state, action, next);
+      return dispatchToSocket(this.options, action, next);
     if (action.transport == 'fetch')
-      return dispatchToFetch(this.options, state, action, next);
+      return dispatchToFetch(this.options, action);
   };
 
-  executeAction = (state, action, next) => {
+  executeAction = (action, next) => {
     if (this.isLocalAction(action))
-      this.updateQueue(state, action);
-    else
-      this.sendAction(state, action, next);
-    return next(action);
+      return next(action);
+    return this.sendAction(action, next);
   };
 
-  handleReduxworkAction = (state, action, next) => {
+  addActionToQueue = (action) => {
+    console.log(action);
+  }
+
+  handleReduxworkAction = (action, next) => {
     if (!this.online && !this.isLocalAction(action))
       return this.addActionToQueue(action);
-    return this.executAction(state, action, next);
+    return this.executeAction(action, next);
   };
 
-  middleware = state => next => action => {
+  middleware = store => next => action => {
+    if (!this.dispatch)
+      this.dispatch = store.dispatch;
     if (action.reduxwork)
-      return this.handleReduxworkAction(state, action, next);
-    return next(action);
+      return this.handleReduxworkAction(action, next);
+    else
+      return next(action);
   };
 
 }

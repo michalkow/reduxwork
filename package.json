@@ -35,17 +35,17 @@
     "morgan": "1.8.2",
     "redux": "4.0.1",
     "redux-logger": "3.0.6",
-    "redux-mock-store": "1.2.3",
+    "redux-mock-store": "1.5.3",
     "redux-thunk": "2.3.0",
-    "socket.io": "2.0.3",
-    "socket.io-client": "2.0.3"
+    "socket.io": "2.2.0",
+    "socket.io-client": "2.2.0"
   },
   "scripts": {
     "test": "jest tests --detectOpenHandles --forceExit",
     "test-server": "node tests/test-server.js",
     "build": "babel src -d dist",
     "prepublish": "babel src -d dist",
-    "devTest": "jest tests --watch --verbose"
+    "devTest": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand"
   },
   "keywords": [
     "redux",

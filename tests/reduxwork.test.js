@@ -4,8 +4,10 @@ import testReducers from './test-reducers';
 import { findMessages, createMessages, updateMessages, destroyMessages } from './test-actions';
 import reduxwork from './test-reduxwork';
 
-const mockStore = configureStore([thunk, reduxwork.middleware]);
-
+const mockStore = configureStore([reduxwork.middleware, thunk]);
+console.log('ok');
+console.log('ok');
+console.log('eaten up');
 const reducerDefaluts = {
   init: false,
   selected: null,

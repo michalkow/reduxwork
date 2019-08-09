@@ -1,4 +1,5 @@
 import buildAction from '../lib/createAction';
+import { ActionOperationEnum } from '../lib/constants';
 import { snakeCase } from 'lodash';
 
 export default function createIoActions(name, options) {
@@ -20,25 +21,25 @@ export default function createIoActions(name, options) {
       };
     },
     [`find${name}`](data) {
-      var action = 'FIND';
-      return buildAction(options, action, name, data);
+      const operation = 'FIND';
+      return buildAction(options, operation, name, data);
     },
     [`sync${name}`](data) {
-      var action = 'SYNC';
-      return buildAction(options, action, name, data);
+      const operation = 'SYNC';
+      return buildAction(options, operation, name, data);
 
     },
     [`create${name}`](data) {
-      var action = 'CREATE';
-      return buildAction(options, action, name, data);
+      const operation = ActionOperationEnum.CREATE;
+      return buildAction(options, operation, name, data);
     },
     [`update${name}`](data) {
-      var action = 'UPDATE';
-      return buildAction(options, action, name, data);
+      const operation = 'UPDATE';
+      return buildAction(options, operation, name, data);
     },
     [`destroy${name}`](data) {
-      var action = 'DESTROY';
-      return buildAction(options, action, name, data);
+      const operation = 'DESTROY';
+      return buildAction(options, operation, name, data);
     }
   };
 }
