@@ -1,14 +1,14 @@
 import { omitVirtualFields, omitLocalFields } from './fieldsOperations';
 
-const dispatchToSocket = (options, action, next) => {
+const dispatchToSocket = (options, action) => {
   const { socket, socketEventName, validation, actionInject } = options;
 
   if (!socket)
     throw new Error('Reduxwork: socket is not configured.');
 
-  return next((dispatch) => {
+  return (dispatch) => {
     // Dispatch Local Action
-    dispatch(omitVirtualFields(action, options));
+    //dispatch(Object.assign({}, omitVirtualFields(action, options)), { clientAction: true });
 
     return new Promise((resolve, reject) => {
       const serverAction = omitLocalFields(actionInject(action), options);
@@ -17,6 +17,8 @@ const dispatchToSocket = (options, action, next) => {
         let validationError = validation(serverAction.data, action.validationScheme);
         if (validationError) {
           let failedValidationAction = {
+            reduxwork: true,
+            clientAction: true,
             type: action.type + '_FAILED',
             validationError: validationError
           };
@@ -28,6 +30,8 @@ const dispatchToSocket = (options, action, next) => {
       socket.emit(socketEventName, serverAction, (error, data) => {
         if (error) {
           let failedAction = {
+            reduxwork: true,
+            clientAction: true,
             type: action.type + '_FAILED',
             error
           };
@@ -36,6 +40,8 @@ const dispatchToSocket = (options, action, next) => {
         }
 
         let completedAction = {
+          reduxwork: true,
+          clientAction: true,
           type: action.type + '_COMPLETED',
           data
         };
@@ -43,7 +49,7 @@ const dispatchToSocket = (options, action, next) => {
         return resolve(data);
       });
     });
-  });
+  };
 };
 
 export default dispatchToSocket;

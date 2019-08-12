@@ -13,20 +13,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var parseData = function parseData(options, operation, payload) {
   var keyName = options.keyName;
+  var data = Object.assign({}, payload);
 
   if (options.addKeyOnCreate && operation == _constants.ActionOperationEnum.CREATE && !payload[keyName]) {
     var now = new Date().getTime();
-    payload._tempId = now;
-    payload[keyName] = now;
+    data._tempId = now;
+    data[keyName] = now;
   }
 
-  return payload;
+  return data;
 };
 
 exports.parseData = parseData;
 
 var getActionType = function getActionType(options, operation, name) {
-  return (options.prefix + (operation ? (0, _lodash.snakeCase)(operation) + '_' + (0, _lodash.snakeCase)(name) : (0, _lodash.snakeCase)(name))).toUpperCase();
+  return ((options.prefix ? options.prefix + '_' : '') + (operation ? (0, _lodash.snakeCase)(operation) + '_' + (0, _lodash.snakeCase)(name) : (0, _lodash.snakeCase)(name))).toUpperCase();
 };
 
 exports.getActionType = getActionType;
@@ -37,9 +38,10 @@ var mergeLocalFields = function mergeLocalFields(options) {
 
 exports.mergeLocalFields = mergeLocalFields;
 
-var _default = function _default(options, operation, name, payload) {
+var _default = function _default(options, operation, name) {
   var _ref;
 
+  var payload = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
   var local = options.local,
       transport = options.transport,
       validationScheme = options.validationScheme,

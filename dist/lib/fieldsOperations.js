@@ -8,6 +8,7 @@ exports.omitLocalFields = exports.omitVirtualFields = exports.omitFields = void 
 var _lodash = require("lodash");
 
 var omitFields = function omitFields(action, fieldsType) {
+  if (!action[fieldsType]) return action;
   return Object.assign({}, action, {
     data: (0, _lodash.omit)(action.data, action[fieldsType])
   });

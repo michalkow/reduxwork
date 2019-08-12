@@ -13,7 +13,7 @@ export const parseData = (options, operation, payload) => {
 };
 
 export const getActionType = (options, operation, name) =>
-  (options.prefix + (operation ? snakeCase(operation) + '_' + snakeCase(name) : snakeCase(name))).toUpperCase();
+  ((options.prefix ? (options.prefix + '_') : '') + (operation ? snakeCase(operation) + '_' + snakeCase(name) : snakeCase(name))).toUpperCase();
 
 export const mergeLocalFields = (options) =>
   union(['_tempId', '_rewrite'], options);

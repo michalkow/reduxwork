@@ -51,13 +51,13 @@ var Reduxwork = function Reduxwork(_options, schemas) {
   });
 
   _defineProperty(this, "sendAction", function (action, next) {
-    if (action.transport == 'socket') return (0, _dispatchToSocket.default)(_this.options, action, next);
-    if (action.transport == 'fetch') return dispatchToFetch(_this.options, action, next);
+    if (action.transport == 'socket') return next((0, _dispatchToSocket.default)(_this.options, action));
+    if (action.transport == 'fetch') return dispatchToFetch(_this.options, action);
   });
 
   _defineProperty(this, "executeAction", function (action, next) {
-    if (_this.isLocalAction(action)) _this.updateQueue(action);else _this.sendAction(action, next);
-    return next(action);
+    if (_this.isLocalAction(action)) return next(action);
+    return _this.sendAction(action, next);
   });
 
   _defineProperty(this, "addActionToQueue", function (action) {});
@@ -70,9 +70,15 @@ var Reduxwork = function Reduxwork(_options, schemas) {
   _defineProperty(this, "middleware", function (store) {
     return function (next) {
       return function (action) {
-        _this.store = store;
-        if (action.reduxwork) return _this.handleReduxworkAction(action, next);
-        return next(action);
+        /*
+        if (!this.dispatch)
+        this.dispatch = store.dispatch;
+        const jasonify = JSON.stringify(action);
+        console.log(jasonify);
+        */
+        //if (action.reduxwork)
+        return _this.handleReduxworkAction(action, next); // else
+        // return next(action);
       };
     };
   });
@@ -90,7 +96,7 @@ var Reduxwork = function Reduxwork(_options, schemas) {
     }
   }, _options);
   this.schemas = schemas;
-  this.store = null;
+  this.dispatch = null;
   this.online = true;
 };
 

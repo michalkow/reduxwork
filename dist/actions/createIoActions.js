@@ -7,6 +7,8 @@ exports.default = createIoActions;
 
 var _createAction = _interopRequireDefault(require("../lib/createAction"));
 
+var _constants = require("../lib/constants");
+
 var _lodash = require("lodash");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -30,19 +32,19 @@ function createIoActions(name, options) {
       data: data
     };
   }), _defineProperty(_ref, "find".concat(name), function find(data) {
-    var action = 'FIND';
-    return (0, _createAction.default)(options, action, name, data);
+    var operation = 'FIND';
+    return (0, _createAction.default)(options, operation, name, data);
   }), _defineProperty(_ref, "sync".concat(name), function sync(data) {
-    var action = 'SYNC';
-    return (0, _createAction.default)(options, action, name, data);
+    var operation = 'SYNC';
+    return (0, _createAction.default)(options, operation, name, data);
   }), _defineProperty(_ref, "create".concat(name), function create(data) {
-    var action = 'CREATE';
-    return (0, _createAction.default)(options, action, name, data);
+    var operation = _constants.ActionOperationEnum.CREATE;
+    return (0, _createAction.default)(options, operation, name, data);
   }), _defineProperty(_ref, "update".concat(name), function update(data) {
-    var action = 'UPDATE';
-    return (0, _createAction.default)(options, action, name, data);
+    var operation = 'UPDATE';
+    return (0, _createAction.default)(options, operation, name, data);
   }), _defineProperty(_ref, "destroy".concat(name), function destroy(data) {
-    var action = 'DESTROY';
-    return (0, _createAction.default)(options, action, name, data);
+    var operation = 'DESTROY';
+    return (0, _createAction.default)(options, operation, name, data);
   }), _ref;
 }

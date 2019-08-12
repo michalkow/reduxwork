@@ -41,19 +41,16 @@ export default class Reduxwork {
   createIoReducers = (name, customState = {}, customActions = {}, options = {}) =>
     createIoReducers(name, customState, customActions, this.mergeOptions(options));
 
-  isLocalAction = (action) =>
-    !!action.local;
-
   sendAction = (action, next) => {
     console.log(action);
     if (action.transport == 'socket')
-      return dispatchToSocket(this.options, action, next);
+      return next(dispatchToSocket(this.options, action));
     if (action.transport == 'fetch')
       return dispatchToFetch(this.options, action);
   };
 
   executeAction = (action, next) => {
-    if (this.isLocalAction(action))
+    if (action.clientAction)
       return next(action);
     return this.sendAction(action, next);
   };
@@ -63,18 +60,22 @@ export default class Reduxwork {
   }
 
   handleReduxworkAction = (action, next) => {
-    if (!this.online && !this.isLocalAction(action))
+    if (!this.online && !action.clientAction)
       return this.addActionToQueue(action);
     return this.executeAction(action, next);
   };
 
-  middleware = store => next => action => {
+  middleware = store => next => action => {/*
     if (!this.dispatch)
       this.dispatch = store.dispatch;
-    if (action.reduxwork)
+
+    const jasonify = JSON.stringify(action);
+    console.log(jasonify);
+    */
+    //if (action.reduxwork)
       return this.handleReduxworkAction(action, next);
-    else
-      return next(action);
+   // else
+     // return next(action);
   };
 
 }

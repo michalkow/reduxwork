@@ -11,17 +11,17 @@ var _fieldsOperations = require("./fieldsOperations");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var dispatchToSocket = function dispatchToSocket(options, action, next) {
+var dispatchToSocket = function dispatchToSocket(options, action) {
   var socket = options.socket,
       socketEventName = options.socketEventName,
       validation = options.validation,
       actionInject = options.actionInject;
   if (!socket) throw new Error('Reduxwork: socket is not configured.');
-  return next(function (dispatch) {
+  return function (dispatch) {
     // Dispatch Local Action
-    dispatch((0, _fieldsOperations.omitVirtualFields)(action));
+    dispatch((0, _fieldsOperations.omitVirtualFields)(action, options));
     return new _bluebird.default(function (resolve, reject) {
-      var serverAction = (0, _fieldsOperations.omitLocalFields)(actionInject(action));
+      var serverAction = (0, _fieldsOperations.omitLocalFields)(actionInject(action), options);
 
       if (validation && action.validationScheme) {
         var validationError = validation(serverAction.data, action.validationScheme);
@@ -54,7 +54,7 @@ var dispatchToSocket = function dispatchToSocket(options, action, next) {
         return resolve(data);
       });
     });
-  });
+  };
 };
 
 var _default = dispatchToSocket;

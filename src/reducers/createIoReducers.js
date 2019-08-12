@@ -127,7 +127,7 @@ export default function createIoReducers(reducerName, customState = {}, customAc
       },
 
       [`CREATE_${name}`](state, action) {
-        let item = Object.assign({}, omitVirtualFields(options, action.data), { _temp: true });
+        let item = Object.assign({}, omitVirtualFields(action.data, options), { _temp: true });
         return Object.assign({}, state, {
           isWriting: true,
           items: [...state.items, item]
@@ -164,7 +164,7 @@ export default function createIoReducers(reducerName, customState = {}, customAc
         var update = {
           isWriting: true
         };
-        var data = omitVirtualFields(options, action.data);
+        var data = omitVirtualFields(action.data, options);
         if (isObject(data) && data[options.keyName]) {
           var items = [...state.items];
           var updatedItem = find(items, (item) => item[options.keyName] == data[options.keyName]);

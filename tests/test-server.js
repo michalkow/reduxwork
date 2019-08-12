@@ -74,10 +74,8 @@ io.on('connection', (socket) => {
   console.log('Socket connected: ' + socket.id);
 
   socket.on('redux_action_event', (action, callback) => {
-    console.log('Socket action: ' + action);
-    var actionType = action.type.toLowerCase();
-    var actionType = actionType.split('_');
-    callback(null, mockDB[actionType[0]](actionType[1], action.data));
+    console.log('Socket action: ' + JSON.stringify(action));
+    callback(null, mockDB[action.operation.toLowerCase()](action.name.toLowerCase(), action.data));
   });
 
   socket.on('disconnect', () => {
