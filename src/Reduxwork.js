@@ -17,8 +17,10 @@ export default class Reduxwork {
       actionInject: (action) => action
     }, options);
     this.schemas = schemas;
-    this.dispatch = null;
+    this.queue = [];
+    this.store = null;
     this.online = true;
+    this.waitQueueAction = null;
   }
 
   mergeOptions = (options) =>
@@ -55,9 +57,22 @@ export default class Reduxwork {
     return this.sendAction(action, next);
   };
 
-  addActionToQueue = (action) => {
-    console.log(action);
+  addActionToQueue = (action) =>
+    this.queue.push(action);
+
+  returnActionToQueue = (action) =>
+    this.queue.unshift(action);
+
+  sendQueueAction = () => {
+    const time = new Date().getTime();
+    const action = Object.assign({}, this.queue[0], { queueAction: time });
+    this.waitQueueAction = time;
+    this.store.dispatch(action);
   }
+
+  runQueue = () => {
+
+  };
 
   handleReduxworkAction = (action, next) => {
     if (!this.online && !action.clientAction)
@@ -66,8 +81,8 @@ export default class Reduxwork {
   };
 
   middleware = store => next => action => {/*
-    if (!this.dispatch)
-      this.dispatch = store.dispatch;
+    if (!this.store)
+      this.store = store;
 
     const jasonify = JSON.stringify(action);
     console.log(jasonify);

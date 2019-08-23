@@ -5,9 +5,6 @@ import { findMessages, createMessages, updateMessages, destroyMessages } from '.
 import reduxwork from './test-reduxwork';
 
 const mockStore = configureStore([reduxwork.middleware, thunk]);
-console.log('ok');
-console.log('ok');
-console.log('eaten up');
 const reducerDefaluts = {
   init: false,
   selected: null,
@@ -33,11 +30,11 @@ const reducerDefaluts = {
 test('Find messages', () => {
   var store = mockStore({ messages: {}});
   var expectedActions = [
-    { type: 'FIND_MESSAGES' }
+    { type: 'RW_FIND_MESSAGES' }
   ];
   return store.dispatch(findMessages())
     .then((res) => {
-      expectedActions.push({ type: 'FIND_MESSAGES_COMPLETED', data: res });
+      expectedActions.push({ type: 'RW_FIND_MESSAGES_COMPLETED', data: res });
       expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions));
     });
 });
@@ -46,11 +43,11 @@ test('Find messages by id', () => {
   var data = { id: 4 };
   var store = mockStore({ messages: {}});
   var expectedActions = [
-    { type: 'FIND_MESSAGES', data: data }
+    { type: 'RW_FIND_MESSAGES', data: data }
   ];
   return store.dispatch(findMessages(data))
     .then((res) => {
-      expectedActions.push({ type: 'FIND_MESSAGES_COMPLETED', data: res });
+      expectedActions.push({ type: 'RW_FIND_MESSAGES_COMPLETED', data: res });
       expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions));
     });
 });
@@ -59,11 +56,11 @@ test('Create new message', () => {
   var data = { body: 'test', localOnly: 'isLocal', virtualData: 'some' };
   var store = mockStore({ messages: {}});
   var expectedActions = [
-    { type: 'CREATE_MESSAGES', data: data }
+    { type: 'RW_CREATE_MESSAGES', data: data }
   ];
   return store.dispatch(createMessages(data))
     .then((res) => {
-      expectedActions.push({ type: 'CREATE_MESSAGES_COMPLETED', data: res });
+      expectedActions.push({ type: 'RW_CREATE_MESSAGES_COMPLETED', data: res });
       expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions));
     });
 });
@@ -72,11 +69,11 @@ test('Update new message', () => {
   var data = { id: 2, body: 'test2' };
   var store = mockStore({ messages: {}});
   var expectedActions = [
-    { type: 'UPDATE_MESSAGES', data: data }
+    { type: 'RW_UPDATE_MESSAGES', data: data }
   ];
   return store.dispatch(updateMessages(data))
     .then((res) => {
-      expectedActions.push({ type: 'UPDATE_MESSAGES_COMPLETED', data: res });
+      expectedActions.push({ type: 'RW_UPDATE_MESSAGES_COMPLETED', data: res });
       expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions));
     });
 });
@@ -85,11 +82,11 @@ test('Update new message rewrite', () => {
   var data = { id: 2, body: 'test2', _rewrite: true };
   var store = mockStore({ messages: {}});
   var expectedActions = [
-    { type: 'UPDATE_MESSAGES', data: data }
+    { type: 'RW_UPDATE_MESSAGES', data: data }
   ];
   return store.dispatch(updateMessages(data))
     .then((res) => {
-      expectedActions.push({ type: 'UPDATE_MESSAGES_COMPLETED', data: res, _rewrite: true });
+      expectedActions.push({ type: 'RW_UPDATE_MESSAGES_COMPLETED', data: res, _rewrite: true });
       expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions));
     });
 });
@@ -98,11 +95,11 @@ test('Destroy new message', () => {
   var data = { id: 1 };
   var store = mockStore({ messages: {}});
   var expectedActions = [
-    { type: 'DESTROY_MESSAGES', data: data }
+    { type: 'RW_DESTROY_MESSAGES', data: data }
   ];
   return store.dispatch(destroyMessages(data))
     .then((res) => {
-      expectedActions.push({ type: 'DESTROY_MESSAGES_COMPLETED', data: res });
+      expectedActions.push({ type: 'RW_DESTROY_MESSAGES_COMPLETED', data: res });
       expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions));
     });
 });
