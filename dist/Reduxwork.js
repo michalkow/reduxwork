@@ -46,24 +46,38 @@ var Reduxwork = function Reduxwork(_options, schemas) {
     return (0, _createIoReducers.default)(name, customState, customActions, _this.mergeOptions(options));
   });
 
-  _defineProperty(this, "isLocalAction", function (action) {
-    return !!action.local;
-  });
-
   _defineProperty(this, "sendAction", function (action, next) {
     if (action.transport == 'socket') return next((0, _dispatchToSocket.default)(_this.options, action));
     if (action.transport == 'fetch') return dispatchToFetch(_this.options, action);
   });
 
   _defineProperty(this, "executeAction", function (action, next) {
-    if (_this.isLocalAction(action)) return next(action);
+    if (action.clientAction) return next(action);
     return _this.sendAction(action, next);
   });
 
-  _defineProperty(this, "addActionToQueue", function (action) {});
+  _defineProperty(this, "addActionToQueue", function (action) {
+    return _this.queue.push(action);
+  });
+
+  _defineProperty(this, "returnActionToQueue", function (action) {
+    return _this.queue.unshift(action);
+  });
+
+  _defineProperty(this, "sendQueueAction", function () {
+    var time = new Date().getTime();
+    var action = Object.assign({}, _this.queue[0], {
+      queueAction: time
+    });
+    _this.waitQueueAction = time;
+
+    _this.store.dispatch(action);
+  });
+
+  _defineProperty(this, "runQueue", function () {});
 
   _defineProperty(this, "handleReduxworkAction", function (action, next) {
-    if (!_this.online && !_this.isLocalAction(action)) return _this.addActionToQueue(action);
+    if (!_this.online && !action.clientAction) return _this.addActionToQueue(action);
     return _this.executeAction(action, next);
   });
 
@@ -71,8 +85,8 @@ var Reduxwork = function Reduxwork(_options, schemas) {
     return function (next) {
       return function (action) {
         /*
-        if (!this.dispatch)
-        this.dispatch = store.dispatch;
+        if (!this.store)
+        this.store = store;
         const jasonify = JSON.stringify(action);
         console.log(jasonify);
         */
@@ -96,8 +110,10 @@ var Reduxwork = function Reduxwork(_options, schemas) {
     }
   }, _options);
   this.schemas = schemas;
-  this.dispatch = null;
+  this.queue = [];
+  this.store = null;
   this.online = true;
+  this.waitQueueAction = null;
 };
 
 exports.default = Reduxwork;

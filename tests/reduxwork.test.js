@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 import testReducers from './test-reducers';
 import { findMessages, createMessages, updateMessages, destroyMessages } from './test-actions';
 import reduxwork from './test-reduxwork';
+import { normalize } from 'normalizr';
 
 const mockStore = configureStore([reduxwork.middleware, thunk]);
 const reducerDefaluts = {
@@ -29,13 +30,15 @@ const reducerDefaluts = {
 
 test('Find messages', () => {
   var store = mockStore({ messages: {}});
-  var expectedActions = [
-    { type: 'RW_FIND_MESSAGES' }
-  ];
+
   return store.dispatch(findMessages())
     .then((res) => {
-      expectedActions.push({ type: 'RW_FIND_MESSAGES_COMPLETED', data: res });
-      expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions));
+      var expectedActions = [
+        { type: 'RW_FIND_MESSAGES' },
+        { type: 'RW_FIND_MESSAGES_COMPLETED', data: res, clientAction: true, reduxwork: true }
+      ];
+      var actions = store.getActions();
+      expect(actions).toEqual(expect.arrayContaining(expectedActions));
     });
 });
 

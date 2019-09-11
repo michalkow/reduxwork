@@ -8,7 +8,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var _ = require('lodash');
 var socket_io = require('socket.io');
-var dataset = require('./test-data.js');
+var dataset = require('./test-data.js').data;
 
 var io = socket_io();
 var app = express();
@@ -75,6 +75,7 @@ io.on('connection', (socket) => {
 
   socket.on('redux_action_event', (action, callback) => {
     console.log('Socket action: ' + JSON.stringify(action));
+    console.log('Sending data: ' + JSON.stringify(mockDB[action.operation.toLowerCase()](action.name.toLowerCase(), action.data)));
     callback(null, mockDB[action.operation.toLowerCase()](action.name.toLowerCase(), action.data));
   });
 

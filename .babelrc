@@ -9,5 +9,7 @@
     "@babel/plugin-transform-regenerator",
     "transform-promise-to-bluebird",
     "transform-remove-console"
-  ]
+  ],
+  "sourceMaps": "inline",
+  "retainLines": true
 }

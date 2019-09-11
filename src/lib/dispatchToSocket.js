@@ -8,8 +8,8 @@ const dispatchToSocket = (options, action) => {
 
   return (dispatch) => {
     // Dispatch Local Action
-    //if (!action.queueAction)
-    //  dispatch(Object.assign({}, omitVirtualFields(action, options)), { clientAction: true });
+    if (!action.queueAction)
+      dispatch(Object.assign({}, omitVirtualFields(action, options), { clientAction: true }));
 
     return new Promise((resolve, reject) => {
       const serverAction = omitLocalFields(actionInject(action), options);

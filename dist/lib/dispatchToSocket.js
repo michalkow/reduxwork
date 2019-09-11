@@ -19,7 +19,8 @@ var dispatchToSocket = function dispatchToSocket(options, action) {
   if (!socket) throw new Error('Reduxwork: socket is not configured.');
   return function (dispatch) {
     // Dispatch Local Action
-    dispatch((0, _fieldsOperations.omitVirtualFields)(action, options));
+    //if (!action.queueAction)
+    //  dispatch(Object.assign({}, omitVirtualFields(action, options)), { clientAction: true });
     return new _bluebird.default(function (resolve, reject) {
       var serverAction = (0, _fieldsOperations.omitLocalFields)(actionInject(action), options);
 
@@ -28,6 +29,8 @@ var dispatchToSocket = function dispatchToSocket(options, action) {
 
         if (validationError) {
           var failedValidationAction = {
+            reduxwork: true,
+            clientAction: true,
             type: action.type + '_FAILED',
             validationError: validationError
           };
@@ -39,6 +42,8 @@ var dispatchToSocket = function dispatchToSocket(options, action) {
       socket.emit(socketEventName, serverAction, function (error, data) {
         if (error) {
           var failedAction = {
+            reduxwork: true,
+            clientAction: true,
             type: action.type + '_FAILED',
             error: error
           };
@@ -47,6 +52,8 @@ var dispatchToSocket = function dispatchToSocket(options, action) {
         }
 
         var completedAction = {
+          reduxwork: true,
+          clientAction: true,
           type: action.type + '_COMPLETED',
           data: data
         };

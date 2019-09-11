@@ -16,13 +16,13 @@ var omitFields = function omitFields(action, fieldsType) {
 
 exports.omitFields = omitFields;
 
-var omitVirtualFields = function omitVirtualFields(options, action) {
+var omitVirtualFields = function omitVirtualFields(action, options) {
   return omitFields(action, options.virtualFieldsName);
 };
 
 exports.omitVirtualFields = omitVirtualFields;
 
-var omitLocalFields = function omitLocalFields(options, action) {
+var omitLocalFields = function omitLocalFields(action, options) {
   return omitFields(action, options.localFieldsName);
 };
 

@@ -29,7 +29,7 @@ export const getAffectedEntities = (state, entities = {}) =>
 
 export const normalizeToEntities = (data, name, options) => {
   let datasets = isArray(data) ? data : [data];
-  let normalizedDatasets = datasets.map(data => normalize(data, options.schema[name]));
+  let normalizedDatasets = datasets.map(data => normalize(data, options.schemas[name]));
   let entities = {};
   normalizedDatasets.forEach(data =>
     data.entities.forEach((value, key) =>
@@ -115,7 +115,7 @@ export default function createIoReducer(name, customState = {}, customActions = 
   }, customState);
   const actionName = toUpper(snakeCase(name));
 
-  if (!options.schema && !options.schema[name])
+  if (!options.schemas || !options.schemas[name])
     throw new Error('Missing normalize scheme');
 
   return Object.assign({
@@ -173,7 +173,7 @@ export default function createIoReducer(name, customState = {}, customActions = 
 
     [`RW_CREATE_${actionName}`](state, action) {
       let item = Object.assign({}, omitVirtualFields(action.data, options), { _temp: true });
-      const normalizedData = normalize(item, options.schema[name]);
+      const normalizedData = normalize(item, options.schemas[name]);
       const entities = mapValues(normalizedData.entities, entity => ({ items: flatMap(entity) }));
       const statuses = {
         isWriting: true
