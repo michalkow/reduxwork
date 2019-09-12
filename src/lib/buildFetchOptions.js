@@ -1,3 +1,5 @@
+import { FetchMethodEnum } from './constants';
+
 const fetchDefaults = {
   credentials: 'same-origin',
   headers: {
@@ -6,9 +8,10 @@ const fetchDefaults = {
   }
 };
 
-export default function buildFetchOptions(options, payload, method) {
+export default function buildFetchOptions(options, action, method) {
   let fetchOptions = options.fetchOptions || fetchDefaults;
   fetchOptions.method = method;
-  if (fetchOptions.method != 'GET') fetchOptions.body = JSON.stringify(payload);
+  if (fetchOptions.method != FetchMethodEnum.GET)
+    fetchOptions.body = JSON.stringify(action.data);
   return fetchOptions;
 }

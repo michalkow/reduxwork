@@ -1,9 +1,23 @@
-export default function getFetchMethod(config, action) {
-  if (config.fetchMethod) return config.fetchMethod;
-  else if (config.fetchOptions && config.fetchOptions.method) return config.fetchOptions.method;
-  else if (action == 'GET' || action == 'FIND' || action == 'SYNC') return 'GET';
-  else if (action == 'POST' || action == 'CREATE') return 'POST';
-  else if (action == 'UPDATE') return 'PUT';
-  else if (action == 'DESTROY') return 'DELETE';
-  else return 'POST';
+import { ActionOperationEnum, FetchMethodEnum } from './constants';
+
+const operationFeatchMethod = {
+  [ActionOperationEnum.POST]: FetchMethodEnum.POST,
+  [ActionOperationEnum.CREATE]: FetchMethodEnum.POST,
+  [ActionOperationEnum.GET]: FetchMethodEnum.GET,
+  [ActionOperationEnum.FIND]: FetchMethodEnum.GET,
+  [ActionOperationEnum.SYNC]: FetchMethodEnum.GET,
+  [ActionOperationEnum.PUT]: FetchMethodEnum.PUT,
+  [ActionOperationEnum.UPDATE]: FetchMethodEnum.PUT,
+  [ActionOperationEnum.DELETE]: FetchMethodEnum.DELETE,
+  [ActionOperationEnum.DESTROY]: FetchMethodEnum.DESTROY
+};
+
+export default function getFetchMethod(operation, options = {}) {
+  if (options.fetchMethod)
+    return options.fetchMethod;
+
+  if (operationFeatchMethod[operation])
+    return operationFeatchMethod[operation];
+
+  return FetchMethodEnum.POST;
 }

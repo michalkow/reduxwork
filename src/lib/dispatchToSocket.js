@@ -1,56 +1,23 @@
-import { omitVirtualFields, omitLocalFields } from './fieldsOperations';
+import dispatchAction from './dispatchAction';
+import { extendActionFailed, extendActionCompleted } from './createAction';
 
 const dispatchToSocket = (options, action) => {
-  const { socket, socketEventName, validation, actionInject } = options;
+  const { socket, socketEventName } = options;
 
   if (!socket)
     throw new Error('Reduxwork: socket is not configured.');
 
-  return (dispatch) => {
-    // Dispatch Local Action
-    if (!action.queueAction)
-      dispatch(Object.assign({}, omitVirtualFields(action, options), { clientAction: true }));
-
-    return new Promise((resolve, reject) => {
-      const serverAction = omitLocalFields(actionInject(action), options);
-
-      if (validation && action.validationScheme) {
-        let validationError = validation(serverAction.data, action.validationScheme);
-        if (validationError) {
-          let failedValidationAction = {
-            reduxwork: true,
-            clientAction: true,
-            type: action.type + '_FAILED',
-            validationError: validationError
-          };
-          dispatch(failedValidationAction);
-          return reject(validationError);
-        }
+  return dispatchAction(options, action, (serverAction, dispatch, resolve, reject) => {
+    socket.emit(socketEventName, serverAction, (error, data) => {
+      if (error) {
+        dispatch(extendActionFailed(action, error));
+        return reject(error);
       }
 
-      socket.emit(socketEventName, serverAction, (error, data) => {
-        if (error) {
-          let failedAction = {
-            reduxwork: true,
-            clientAction: true,
-            type: action.type + '_FAILED',
-            error
-          };
-          dispatch(failedAction);
-          return reject(error);
-        }
-
-        let completedAction = {
-          reduxwork: true,
-          clientAction: true,
-          type: action.type + '_COMPLETED',
-          data
-        };
-        dispatch(completedAction);
-        return resolve(data);
-      });
+      dispatch(extendActionCompleted(action, data));
+      return resolve(data);
     });
-  };
+  });
 };
 
 export default dispatchToSocket;

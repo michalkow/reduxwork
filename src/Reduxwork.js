@@ -1,7 +1,9 @@
+import dispatchToRedux from './lib/dispatchToRedux';
 import dispatchToSocket from './lib/dispatchToSocket';
-//import dispatchToFetch from './lib/dispatchToFetch';
+import dispatchToFetch from './lib/dispatchToFetch';
 import createIoActions from './actions/createIoActions';
 import createIoReducers from './reducers/createIoReducers';
+import { TransportMethodEnum } from './lib/constants';
 
 export default class Reduxwork {
 
@@ -43,20 +45,6 @@ export default class Reduxwork {
   createIoReducers = (name, customState = {}, customActions = {}, options = {}) =>
     createIoReducers(name, customState, customActions, this.mergeOptions(options));
 
-  sendAction = (action, next) => {
-    console.log(action);
-    if (action.transport == 'socket')
-      return next(dispatchToSocket(this.options, action));
-    if (action.transport == 'fetch')
-      return dispatchToFetch(this.options, action);
-  };
-
-  executeAction = (action, next) => {
-    if (action.clientAction)
-      return next(action);
-    return this.sendAction(action, next);
-  };
-
   addActionToQueue = (action) =>
     this.queue.push(action);
 
@@ -74,8 +62,19 @@ export default class Reduxwork {
 
   };
 
+  executeAction = (action, next) => {
+    switch (action.reduxwork.transport) {
+      case TransportMethodEnum.REDUX:
+        return next(dispatchToRedux(this.options, action));
+      case TransportMethodEnum.SOCKET:
+        return next(dispatchToSocket(this.options, action));
+      case TransportMethodEnum.FETCH:
+        return next(dispatchToFetch(this.options, action));
+    }
+  };
+
   handleReduxworkAction = (action, next) => {
-    if (!this.online && !action.clientAction)
+    if (!this.online && !action.reduxwork.transport != TransportMethodEnum.REDUX)
       return this.addActionToQueue(action);
     return this.executeAction(action, next);
   };
