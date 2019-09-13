@@ -1,25 +1,17 @@
-"use strict";
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.default = createReducer;var _lodash = require("lodash");function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = createReducer;
-
-var _lodash = require("lodash");
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function createReducer(reducerName) {
-  var customState = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var customActions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+function createReducer(reducerName) {var customState = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};var customActions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   var initialState = Object.assign({}, customState);
   var name = (0, _lodash.toUpper)((0, _lodash.snakeCase)(reducerName));
-  return function () {
-    var rState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
-    var rAction = arguments.length > 1 ? arguments[1] : undefined;
-    var defaultActions = Object.assign(_defineProperty({}, "RESET_".concat(name), function RESET_() {
+  return function () {var rState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;var rAction = arguments.length > 1 ? arguments[1] : undefined;
+    var defaultActions = Object.assign(_defineProperty({}, "RESET_".concat(
+    name), function RESET_() {
       return Object.assign({}, initialState);
     }));
-    if (customActions[rAction.type]) return customActions[rAction.type](rState, rAction);else if (defaultActions[rAction.type]) return defaultActions[rAction.type](rState, rAction);else return rState;
+
+    if (customActions[rAction.type]) return customActions[rAction.type](rState, rAction);else
+    if (defaultActions[rAction.type]) return defaultActions[rAction.type](rState, rAction);else
+    return rState;
   };
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9yZWR1Y2Vycy9jcmVhdGVSZWR1Y2VyLmpzIl0sIm5hbWVzIjpbImNyZWF0ZVJlZHVjZXIiLCJyZWR1Y2VyTmFtZSIsImN1c3RvbVN0YXRlIiwiY3VzdG9tQWN0aW9ucyIsImluaXRpYWxTdGF0ZSIsIk9iamVjdCIsImFzc2lnbiIsIm5hbWUiLCJyU3RhdGUiLCJyQWN0aW9uIiwiZGVmYXVsdEFjdGlvbnMiLCJ0eXBlIl0sIm1hcHBpbmdzIjoiMkdBQUEsZ0M7O0FBRWUsU0FBU0EsYUFBVCxDQUF1QkMsV0FBdkIsRUFBMEUsS0FBdENDLFdBQXNDLHVFQUF4QixFQUF3QixLQUFwQkMsYUFBb0IsdUVBQUosRUFBSTtBQUN2RixNQUFJQyxZQUFZLEdBQUdDLE1BQU0sQ0FBQ0MsTUFBUCxDQUFjLEVBQWQsRUFBa0JKLFdBQWxCLENBQW5CO0FBQ0EsTUFBTUssSUFBSSxHQUFHLHFCQUFRLHVCQUFVTixXQUFWLENBQVIsQ0FBYjtBQUNBLFNBQU8sWUFBeUMsS0FBaENPLE1BQWdDLHVFQUF2QkosWUFBdUIsS0FBVEssT0FBUztBQUM5QyxRQUFJQyxjQUFjLEdBQUdMLE1BQU0sQ0FBQ0MsTUFBUDtBQUNUQyxJQUFBQSxJQURTLHFCQUNDO0FBQ2xCLGFBQU9GLE1BQU0sQ0FBQ0MsTUFBUCxDQUFjLEVBQWQsRUFBa0JGLFlBQWxCLENBQVA7QUFDRCxLQUhrQixFQUFyQjs7QUFLQSxRQUFJRCxhQUFhLENBQUNNLE9BQU8sQ0FBQ0UsSUFBVCxDQUFqQixFQUFpQyxPQUFPUixhQUFhLENBQUNNLE9BQU8sQ0FBQ0UsSUFBVCxDQUFiLENBQTRCSCxNQUE1QixFQUFvQ0MsT0FBcEMsQ0FBUCxDQUFqQztBQUNLLFFBQUlDLGNBQWMsQ0FBQ0QsT0FBTyxDQUFDRSxJQUFULENBQWxCLEVBQWtDLE9BQU9ELGNBQWMsQ0FBQ0QsT0FBTyxDQUFDRSxJQUFULENBQWQsQ0FBNkJILE1BQTdCLEVBQXFDQyxPQUFyQyxDQUFQLENBQWxDO0FBQ0EsV0FBT0QsTUFBUDtBQUNOLEdBVEQ7QUFVRCIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IHRvVXBwZXIsIHNuYWtlQ2FzZSB9IGZyb20gJ2xvZGFzaCc7XHJcblxyXG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBjcmVhdGVSZWR1Y2VyKHJlZHVjZXJOYW1lLCBjdXN0b21TdGF0ZSA9IHt9LCBjdXN0b21BY3Rpb25zID0ge30pIHtcclxuICBsZXQgaW5pdGlhbFN0YXRlID0gT2JqZWN0LmFzc2lnbih7fSwgY3VzdG9tU3RhdGUpO1xyXG4gIGNvbnN0IG5hbWUgPSB0b1VwcGVyKHNuYWtlQ2FzZShyZWR1Y2VyTmFtZSkpO1xyXG4gIHJldHVybiBmdW5jdGlvbihyU3RhdGUgPSBpbml0aWFsU3RhdGUsIHJBY3Rpb24pIHtcclxuICAgIHZhciBkZWZhdWx0QWN0aW9ucyA9IE9iamVjdC5hc3NpZ24oe1xyXG4gICAgICBbYFJFU0VUXyR7bmFtZX1gXSgpIHtcclxuICAgICAgICByZXR1cm4gT2JqZWN0LmFzc2lnbih7fSwgaW5pdGlhbFN0YXRlKTtcclxuICAgICAgfVxyXG4gICAgfSk7XHJcbiAgICBpZiAoY3VzdG9tQWN0aW9uc1tyQWN0aW9uLnR5cGVdKSByZXR1cm4gY3VzdG9tQWN0aW9uc1tyQWN0aW9uLnR5cGVdKHJTdGF0ZSwgckFjdGlvbik7XHJcbiAgICBlbHNlIGlmIChkZWZhdWx0QWN0aW9uc1tyQWN0aW9uLnR5cGVdKSByZXR1cm4gZGVmYXVsdEFjdGlvbnNbckFjdGlvbi50eXBlXShyU3RhdGUsIHJBY3Rpb24pO1xyXG4gICAgZWxzZSByZXR1cm4gclN0YXRlO1xyXG4gIH07XHJcbn0iXX0=

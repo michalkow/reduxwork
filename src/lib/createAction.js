@@ -1,19 +1,21 @@
 import { snakeCase, camelCase, union } from 'lodash';
 import { ActionOperationEnum, ActionStageEnum, TransportMethodEnum } from './constants';
+import uuid from 'uuid';
 
 export const parseData = (options, operation, payload) => {
-  const { keyName } = options;
+  const { keyName, uuidVersion, uuidOptions } = options;
   const data = Object.assign({}, payload);
   if (options.addKeyOnCreate && operation == ActionOperationEnum.CREATE && !payload[keyName]) {
-    let now = new Date().getTime();
-    data._tempId = now;
-    data[keyName] = now;
+    data._tempId = uuid[uuidVersion](uuidOptions);
+    data[keyName] = new Date().getTime();
   }
   return data;
 };
 
-export const getActionType = (options, operation, name) =>
-  ((options.prefix ? (options.prefix + '_') : '') + (operation ? snakeCase(operation) + '_' + snakeCase(name) : snakeCase(name))).toUpperCase();
+export const buildActionType = (options, operation, name) => (
+  (options.prefix ? (options.prefix + '_') : '') +
+  (operation ? snakeCase(operation) + '_' + snakeCase(name) : snakeCase(name))
+).toUpperCase();
 
 export const mergeLocalFields = (options) =>
   union(['_tempId', '_rewrite'], options);
@@ -22,7 +24,7 @@ export const createAction = (options, operation, name, payload = {}) => {
   const { transport, validationScheme, localFieldsName, virtualFieldsName } = options;
   const data = parseData(options, operation, payload);
 
-  return {
+  const action = {
     reduxwork: {
       name: camelCase(name),
       stage: null,
@@ -32,9 +34,11 @@ export const createAction = (options, operation, name, payload = {}) => {
       [localFieldsName]: options[localFieldsName],
       [virtualFieldsName]: options[virtualFieldsName]
     },
-    type: getActionType(options, operation, name),
+    type: buildActionType(options, operation, name),
     data
   };
+
+  return action;
 };
 
 export const extendActionRedux = action =>

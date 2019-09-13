@@ -10,12 +10,16 @@ export default class Reduxwork {
   constructor(options, schemas) {
     this.options = Object.assign({}, {
       keyName: 'id',
+      addKeyOnCreate: false,
+      rewriteOnUpdate: true,
       prefix: 'rw',
       socketEventName: 'redux_action_event',
       socket: null,
       transport: options.socket ? 'socket' : 'fetch',
       virtualFieldsName: 'virtualFields',
       localFieldsName: 'localFields',
+      uuidOptions: {},
+      uuidVersion: 'v4',
       actionInject: (action) => action
     }, options);
     this.schemas = schemas;

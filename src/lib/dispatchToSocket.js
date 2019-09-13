@@ -8,6 +8,7 @@ const dispatchToSocket = (options, action) => {
     throw new Error('Reduxwork: socket is not configured.');
 
   return dispatchAction(options, action, (serverAction, dispatch, resolve, reject) => {
+    delete serverAction.reduxwork;
     socket.emit(socketEventName, serverAction, (error, data) => {
       if (error) {
         dispatch(extendActionFailed(action, error));

@@ -1,68 +1,25 @@
-"use strict";
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _dispatchAction = _interopRequireDefault(require("./dispatchAction"));
+var _createAction = require("./createAction");function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
+var dispatchToSocket = function dispatchToSocket(options, action) {var
+  socket = options.socket,socketEventName = options.socketEventName;
 
-var _bluebird = _interopRequireDefault(require("bluebird"));
+  if (!socket)
+  throw new Error('Reduxwork: socket is not configured.');
 
-var _fieldsOperations = require("./fieldsOperations");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var dispatchToSocket = function dispatchToSocket(options, action) {
-  var socket = options.socket,
-      socketEventName = options.socketEventName,
-      validation = options.validation,
-      actionInject = options.actionInject;
-  if (!socket) throw new Error('Reduxwork: socket is not configured.');
-  return function (dispatch) {
-    // Dispatch Local Action
-    //if (!action.queueAction)
-    //  dispatch(Object.assign({}, omitVirtualFields(action, options)), { clientAction: true });
-    return new _bluebird.default(function (resolve, reject) {
-      var serverAction = (0, _fieldsOperations.omitLocalFields)(actionInject(action), options);
-
-      if (validation && action.validationScheme) {
-        var validationError = validation(serverAction.data, action.validationScheme);
-
-        if (validationError) {
-          var failedValidationAction = {
-            reduxwork: true,
-            clientAction: true,
-            type: action.type + '_FAILED',
-            validationError: validationError
-          };
-          dispatch(failedValidationAction);
-          return reject(validationError);
-        }
+  return (0, _dispatchAction.default)(options, action, function (serverAction, dispatch, resolve, reject) {
+    delete serverAction.reduxwork;
+    socket.emit(socketEventName, serverAction, function (error, data) {
+      if (error) {
+        dispatch((0, _createAction.extendActionFailed)(action, error));
+        return reject(error);
       }
 
-      socket.emit(socketEventName, serverAction, function (error, data) {
-        if (error) {
-          var failedAction = {
-            reduxwork: true,
-            clientAction: true,
-            type: action.type + '_FAILED',
-            error: error
-          };
-          dispatch(failedAction);
-          return reject(error);
-        }
-
-        var completedAction = {
-          reduxwork: true,
-          clientAction: true,
-          type: action.type + '_COMPLETED',
-          data: data
-        };
-        dispatch(completedAction);
-        return resolve(data);
-      });
+      dispatch((0, _createAction.extendActionCompleted)(action, data));
+      return resolve(data);
     });
-  };
-};
+  });
+};var _default =
 
-var _default = dispatchToSocket;
-exports.default = _default;
+dispatchToSocket;exports.default = _default;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9saWIvZGlzcGF0Y2hUb1NvY2tldC5qcyJdLCJuYW1lcyI6WyJkaXNwYXRjaFRvU29ja2V0Iiwib3B0aW9ucyIsImFjdGlvbiIsInNvY2tldCIsInNvY2tldEV2ZW50TmFtZSIsIkVycm9yIiwic2VydmVyQWN0aW9uIiwiZGlzcGF0Y2giLCJyZXNvbHZlIiwicmVqZWN0IiwicmVkdXh3b3JrIiwiZW1pdCIsImVycm9yIiwiZGF0YSJdLCJtYXBwaW5ncyI6Im9HQUFBO0FBQ0EsOEM7O0FBRUEsSUFBTUEsZ0JBQWdCLEdBQUcsU0FBbkJBLGdCQUFtQixDQUFDQyxPQUFELEVBQVVDLE1BQVYsRUFBcUI7QUFDcENDLEVBQUFBLE1BRG9DLEdBQ1JGLE9BRFEsQ0FDcENFLE1BRG9DLENBQzVCQyxlQUQ0QixHQUNSSCxPQURRLENBQzVCRyxlQUQ0Qjs7QUFHNUMsTUFBSSxDQUFDRCxNQUFMO0FBQ0UsUUFBTSxJQUFJRSxLQUFKLENBQVUsc0NBQVYsQ0FBTjs7QUFFRixTQUFPLDZCQUFlSixPQUFmLEVBQXdCQyxNQUF4QixFQUFnQyxVQUFDSSxZQUFELEVBQWVDLFFBQWYsRUFBeUJDLE9BQXpCLEVBQWtDQyxNQUFsQyxFQUE2QztBQUNsRixXQUFPSCxZQUFZLENBQUNJLFNBQXBCO0FBQ0FQLElBQUFBLE1BQU0sQ0FBQ1EsSUFBUCxDQUFZUCxlQUFaLEVBQTZCRSxZQUE3QixFQUEyQyxVQUFDTSxLQUFELEVBQVFDLElBQVIsRUFBaUI7QUFDMUQsVUFBSUQsS0FBSixFQUFXO0FBQ1RMLFFBQUFBLFFBQVEsQ0FBQyxzQ0FBbUJMLE1BQW5CLEVBQTJCVSxLQUEzQixDQUFELENBQVI7QUFDQSxlQUFPSCxNQUFNLENBQUNHLEtBQUQsQ0FBYjtBQUNEOztBQUVETCxNQUFBQSxRQUFRLENBQUMseUNBQXNCTCxNQUF0QixFQUE4QlcsSUFBOUIsQ0FBRCxDQUFSO0FBQ0EsYUFBT0wsT0FBTyxDQUFDSyxJQUFELENBQWQ7QUFDRCxLQVJEO0FBU0QsR0FYTSxDQUFQO0FBWUQsQ0FsQkQsQzs7QUFvQmViLGdCIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IGRpc3BhdGNoQWN0aW9uIGZyb20gJy4vZGlzcGF0Y2hBY3Rpb24nO1xyXG5pbXBvcnQgeyBleHRlbmRBY3Rpb25GYWlsZWQsIGV4dGVuZEFjdGlvbkNvbXBsZXRlZCB9IGZyb20gJy4vY3JlYXRlQWN0aW9uJztcclxuXHJcbmNvbnN0IGRpc3BhdGNoVG9Tb2NrZXQgPSAob3B0aW9ucywgYWN0aW9uKSA9PiB7XHJcbiAgY29uc3QgeyBzb2NrZXQsIHNvY2tldEV2ZW50TmFtZSB9ID0gb3B0aW9ucztcclxuXHJcbiAgaWYgKCFzb2NrZXQpXHJcbiAgICB0aHJvdyBuZXcgRXJyb3IoJ1JlZHV4d29yazogc29ja2V0IGlzIG5vdCBjb25maWd1cmVkLicpO1xyXG5cclxuICByZXR1cm4gZGlzcGF0Y2hBY3Rpb24ob3B0aW9ucywgYWN0aW9uLCAoc2VydmVyQWN0aW9uLCBkaXNwYXRjaCwgcmVzb2x2ZSwgcmVqZWN0KSA9PiB7XHJcbiAgICBkZWxldGUgc2VydmVyQWN0aW9uLnJlZHV4d29yaztcclxuICAgIHNvY2tldC5lbWl0KHNvY2tldEV2ZW50TmFtZSwgc2VydmVyQWN0aW9uLCAoZXJyb3IsIGRhdGEpID0+IHtcclxuICAgICAgaWYgKGVycm9yKSB7XHJcbiAgICAgICAgZGlzcGF0Y2goZXh0ZW5kQWN0aW9uRmFpbGVkKGFjdGlvbiwgZXJyb3IpKTtcclxuICAgICAgICByZXR1cm4gcmVqZWN0KGVycm9yKTtcclxuICAgICAgfVxyXG5cclxuICAgICAgZGlzcGF0Y2goZXh0ZW5kQWN0aW9uQ29tcGxldGVkKGFjdGlvbiwgZGF0YSkpO1xyXG4gICAgICByZXR1cm4gcmVzb2x2ZShkYXRhKTtcclxuICAgIH0pO1xyXG4gIH0pO1xyXG59O1xyXG5cclxuZXhwb3J0IGRlZmF1bHQgZGlzcGF0Y2hUb1NvY2tldDsiXX0=

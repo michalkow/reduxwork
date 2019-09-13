@@ -7,7 +7,10 @@ export const ActionOperationEnum = {
   SYNC: 'sync',
   CREATE: 'create',
   UPDATE: 'update',
-  DESTROY: 'destroy'
+  DESTROY: 'destroy',
+  CLEAR: 'clear',
+  RESET: 'reset',
+  SELECT: 'select'
 };
 
 export const FetchMethodEnum = {

@@ -1,45 +1,70 @@
 import { createAction } from '../lib/createAction';
-import { ActionOperationEnum } from '../lib/constants';
-import { snakeCase } from 'lodash';
+import { ActionOperationEnum, TransportMethodEnum } from '../lib/constants';
 
 export default function createIoActions(name, options) {
   return {
     [`clear${name}`]() {
-      return {
-        type: 'CLEAR_' + snakeCase(name).toUpperCase()
-      };
+      return createAction(
+        Object.assign({}, options, { transport: TransportMethodEnum.REDUX }),
+        ActionOperationEnum.CLEAR,
+        name
+      );
     },
     [`reset${name}`]() {
-      return {
-        type: 'RESET_' + snakeCase(name).toUpperCase()
-      };
+      return createAction(
+        Object.assign({}, options, { transport: TransportMethodEnum.REDUX }),
+        ActionOperationEnum.RESET,
+        name
+      );
     },
     [`select${name}`](data) {
-      return {
-        type: 'SELECT_' + snakeCase(name).toUpperCase(),
+      return createAction(
+        Object.assign({}, options, { transport: TransportMethodEnum.REDUX }),
+        ActionOperationEnum.SELECT,
+        name,
         data
-      };
+      );
     },
     [`find${name}`](data) {
-      const operation = ActionOperationEnum.FIND;
-      return createAction(options, operation, name, data);
+      return createAction(
+        options,
+        ActionOperationEnum.FIND,
+        name,
+        data
+      );
     },
     [`sync${name}`](data) {
-      const operation = 'SYNC';
-      return createAction(options, operation, name, data);
+      return createAction(
+        options,
+        ActionOperationEnum.SYNC,
+        name,
+        data
+      );
 
     },
     [`create${name}`](data) {
-      const operation = ActionOperationEnum.CREATE;
-      return createAction(options, operation, name, data);
+      return createAction(
+        options,
+        ActionOperationEnum.CREATE,
+        name,
+        data
+      );
     },
     [`update${name}`](data) {
-      const operation = 'UPDATE';
-      return createAction(options, operation, name, data);
+      return createAction(
+        options,
+        ActionOperationEnum.UPDATE,
+        name,
+        data
+      );
     },
     [`destroy${name}`](data) {
-      const operation = 'DESTROY';
-      return createAction(options, operation, name, data);
+      return createAction(
+        options,
+        ActionOperationEnum.DESTROY,
+        name,
+        data
+      );
     }
   };
 }

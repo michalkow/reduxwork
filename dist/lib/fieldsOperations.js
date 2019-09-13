@@ -1,29 +1,16 @@
-"use strict";
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.omitLocalFields = exports.omitVirtualFields = exports.omitFields = void 0;var _lodash = require("lodash");
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.omitLocalFields = exports.omitVirtualFields = exports.omitFields = void 0;
 
-var _lodash = require("lodash");
 
 var omitFields = function omitFields(action, fieldsType) {
-  if (!action[fieldsType]) return action;
-  return Object.assign({}, action, {
-    data: (0, _lodash.omit)(action.data, action[fieldsType])
-  });
-};
+  if (!action[fieldsType])
+  return action;
+  return Object.assign({}, action, { data: (0, _lodash.omit)(action.data, action[fieldsType]) });
+};exports.omitFields = omitFields;
 
-exports.omitFields = omitFields;
+var omitVirtualFields = function omitVirtualFields(action, options) {return (
+    omitFields(action, options.virtualFieldsName));};exports.omitVirtualFields = omitVirtualFields;
 
-var omitVirtualFields = function omitVirtualFields(action, options) {
-  return omitFields(action, options.virtualFieldsName);
-};
-
-exports.omitVirtualFields = omitVirtualFields;
-
-var omitLocalFields = function omitLocalFields(action, options) {
-  return omitFields(action, options.localFieldsName);
-};
-
-exports.omitLocalFields = omitLocalFields;
+var omitLocalFields = function omitLocalFields(action, options) {return (
+    omitFields(action, options.localFieldsName));};exports.omitLocalFields = omitLocalFields;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9saWIvZmllbGRzT3BlcmF0aW9ucy5qcyJdLCJuYW1lcyI6WyJvbWl0RmllbGRzIiwiYWN0aW9uIiwiZmllbGRzVHlwZSIsIk9iamVjdCIsImFzc2lnbiIsImRhdGEiLCJvbWl0VmlydHVhbEZpZWxkcyIsIm9wdGlvbnMiLCJ2aXJ0dWFsRmllbGRzTmFtZSIsIm9taXRMb2NhbEZpZWxkcyIsImxvY2FsRmllbGRzTmFtZSJdLCJtYXBwaW5ncyI6IjZKQUFBOzs7O0FBSU8sSUFBTUEsVUFBVSxHQUFHLFNBQWJBLFVBQWEsQ0FBQ0MsTUFBRCxFQUFTQyxVQUFULEVBQXdCO0FBQ2hELE1BQUksQ0FBQ0QsTUFBTSxDQUFDQyxVQUFELENBQVg7QUFDRSxTQUFPRCxNQUFQO0FBQ0YsU0FBT0UsTUFBTSxDQUFDQyxNQUFQLENBQWMsRUFBZCxFQUFrQkgsTUFBbEIsRUFBMEIsRUFBRUksSUFBSSxFQUFFLGtCQUFLSixNQUFNLENBQUNJLElBQVosRUFBa0JKLE1BQU0sQ0FBQ0MsVUFBRCxDQUF4QixDQUFSLEVBQTFCLENBQVA7QUFDRCxDQUpNLEM7O0FBTUEsSUFBTUksaUJBQWlCLEdBQUcsU0FBcEJBLGlCQUFvQixDQUFDTCxNQUFELEVBQVNNLE9BQVQ7QUFDL0JQLElBQUFBLFVBQVUsQ0FBQ0MsTUFBRCxFQUFTTSxPQUFPLENBQUNDLGlCQUFqQixDQURxQixHQUExQixDOztBQUdBLElBQU1DLGVBQWUsR0FBRyxTQUFsQkEsZUFBa0IsQ0FBQ1IsTUFBRCxFQUFTTSxPQUFUO0FBQzdCUCxJQUFBQSxVQUFVLENBQUNDLE1BQUQsRUFBU00sT0FBTyxDQUFDRyxlQUFqQixDQURtQixHQUF4QixDIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHtcclxuICBvbWl0XHJcbn0gZnJvbSAnbG9kYXNoJztcclxuXHJcbmV4cG9ydCBjb25zdCBvbWl0RmllbGRzID0gKGFjdGlvbiwgZmllbGRzVHlwZSkgPT4ge1xyXG4gIGlmICghYWN0aW9uW2ZpZWxkc1R5cGVdKVxyXG4gICAgcmV0dXJuIGFjdGlvbjtcclxuICByZXR1cm4gT2JqZWN0LmFzc2lnbih7fSwgYWN0aW9uLCB7IGRhdGE6IG9taXQoYWN0aW9uLmRhdGEsIGFjdGlvbltmaWVsZHNUeXBlXSkgfSk7XHJcbn07XHJcblxyXG5leHBvcnQgY29uc3Qgb21pdFZpcnR1YWxGaWVsZHMgPSAoYWN0aW9uLCBvcHRpb25zKSA9PlxyXG4gIG9taXRGaWVsZHMoYWN0aW9uLCBvcHRpb25zLnZpcnR1YWxGaWVsZHNOYW1lKTtcclxuXHJcbmV4cG9ydCBjb25zdCBvbWl0TG9jYWxGaWVsZHMgPSAoYWN0aW9uLCBvcHRpb25zKSA9PlxyXG4gIG9taXRGaWVsZHMoYWN0aW9uLCBvcHRpb25zLmxvY2FsRmllbGRzTmFtZSk7Il19

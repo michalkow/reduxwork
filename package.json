@@ -8,7 +8,8 @@
     "babel-plugin-transform-remove-console": "^6.9.4",
     "bluebird": "^3.5.3",
     "lodash": "4.17.11",
-    "normalizr": "^3.4.1"
+    "normalizr": "^3.4.1",
+    "uuid": "^3.3.3"
   },
   "peerDependencies": {
     "redux": "4.0.1",
