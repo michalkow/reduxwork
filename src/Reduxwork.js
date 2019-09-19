@@ -4,6 +4,7 @@ import dispatchToFetch from './lib/dispatchToFetch';
 import createIoActions from './actions/createIoActions';
 import createIoReducers from './reducers/createIoReducers';
 import { TransportMethodEnum } from './lib/constants';
+import PQueue from 'p-queue';
 
 export default class Reduxwork {
 
@@ -23,7 +24,7 @@ export default class Reduxwork {
       actionInject: (action) => action
     }, options);
     this.schemas = schemas;
-    this.queue = [];
+    this.queue = new PQueue({ concurrency: 1 });
     this.store = null;
     this.online = true;
     this.waitQueueAction = null;
@@ -68,6 +69,8 @@ export default class Reduxwork {
 
   executeAction = (action, next) => {
     switch (action.reduxwork.transport) {
+      case TransportMethodEnum.LOCAL:
+        return next(action);
       case TransportMethodEnum.REDUX:
         return next(dispatchToRedux(this.options, action));
       case TransportMethodEnum.SOCKET:

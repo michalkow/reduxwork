@@ -8,7 +8,7 @@
     "@babel/plugin-transform-async-to-generator",
     "@babel/plugin-transform-regenerator",
     "transform-promise-to-bluebird",
-    "transform-remove-console"
+    //"transform-remove-console"
   ],
   "sourceMaps": "inline",
   "retainLines": true

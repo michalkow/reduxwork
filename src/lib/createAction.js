@@ -41,10 +41,10 @@ export const createAction = (options, operation, name, payload = {}) => {
   return action;
 };
 
-export const extendActionRedux = action =>
+export const extendActionLocal = action =>
   Object.assign({}, action, {
     reduxwork: Object.assign({}, action.reduxwork, {
-      transport: TransportMethodEnum.REDUX,
+      transport: TransportMethodEnum.LOCAL,
       stage: ActionStageEnum.REDUX
     })
   });
@@ -54,7 +54,7 @@ export const extendActionCompleted = (action, data) =>
     type: action.type + '_' + ActionStageEnum.COMPLETED,
     data,
     reduxwork: Object.assign({}, action.reduxwork, {
-      transport: TransportMethodEnum.REDUX,
+      transport: TransportMethodEnum.LOCAL,
       stage: ActionStageEnum.COMPLETED
     })
   });
@@ -64,7 +64,7 @@ export const extendActionFailed = (action, error) =>
     type: action.type + '_' + ActionStageEnum.FAILED,
     error,
     reduxwork: Object.assign({}, action.reduxwork, {
-      transport: TransportMethodEnum.REDUX,
+      transport: TransportMethodEnum.LOCAL,
       stage: ActionStageEnum.FAILED
     })
   });
@@ -74,7 +74,7 @@ export const extendActionFailedValidation = (action, validationError) =>
     type: action.type + '_' + ActionStageEnum.FAILED,
     validationError,
     reduxwork: Object.assign({}, action.reduxwork, {
-      transport: TransportMethodEnum.REDUX,
+      transport: TransportMethodEnum.LOCAL,
       stage: ActionStageEnum.FAILED_VALIDATION
     })
   });

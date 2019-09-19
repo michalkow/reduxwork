@@ -9,6 +9,7 @@
     "bluebird": "^3.5.3",
     "lodash": "4.17.11",
     "normalizr": "^3.4.1",
+    "p-queue": "^6.1.1",
     "uuid": "^3.3.3"
   },
   "peerDependencies": {
@@ -45,6 +46,7 @@
   "scripts": {
     "test": "jest tests --detectOpenHandles --forceExit",
     "test-server": "node tests/test-server.js",
+    "qtest": "babel-node tests/qtest.js",
     "build": "babel src -d dist",
     "prepublish": "babel src -d dist",
     "devTest": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand"
