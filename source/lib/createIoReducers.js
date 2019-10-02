@@ -18,14 +18,14 @@ import {
   isNumber
 } from 'lodash';
 import { normalize } from 'normalizr';
-import selectedUpdate from '../lib/selectedUpdate';
-import { omitVirtualFields } from '../lib/fieldsOperations';
+import selectedUpdate from './selectedUpdate';
+import { parseLocalData } from './fieldsOperations';
 
 export const getEntityFromState = (state, name) =>
   ({ [name]: Object.assign({}, state[name]) });
 
 export const getAffectedEntities = (state, entities = {}) =>
-  pickBy(state, (value, key) => find(entities, key));
+  pickBy(state, (value, key) => entities[key]);
 
 export const normalizeToEntities = (data, name, options) => {
   let datasets = isArray(data) ? data : [data];
@@ -41,32 +41,32 @@ export const normalizeToEntities = (data, name, options) => {
 
 export const updateStatusesInState = (state, entities = {}, statuses = {}, options = {}) => {
   const affectedEntities = getAffectedEntities(state, entities);
-  affectedEntities.map((entity) =>
+  const updatedEntities = mapValues(affectedEntities, (entity) =>
     Object.assign({}, entity, statuses));
-  return Object.assign({}, state, affectedEntities);
+  return Object.assign({}, state, updatedEntities);
 };
 
 export const addEntitiesToState = (state, entities = {}, statuses = {}, options = {}) => {
   const affectedEntities = getAffectedEntities(state, entities);
-  affectedEntities.map((entity, name) => {
+  const updatedEntities = mapValues(affectedEntities, (entity, name) => {
     entity.items = [...entity.items, ...entities[name].items];
     return Object.assign({}, entity, statuses);
   });
-  return Object.assign({}, state, affectedEntities);
+  return Object.assign({}, state, updatedEntities);
 };
 
 export const mergeEntitiesToState = (state, entities = {}, statuses = {}, options = {}) => {
   const affectedEntities = getAffectedEntities(state, entities);
-  affectedEntities.map((entity, name) => {
+  const updatedEntities = mapValues(affectedEntities, (entity, name) => {
     entity.items = unionBy([entities[name].items, entity.items], options.keyName);
     return Object.assign({}, entity, statuses);
   });
-  return Object.assign({}, state, affectedEntities);
+  return Object.assign({}, state, updatedEntities);
 };
 
 export const updateEntitiesInState = (state, entities = {}, statuses = {}, options = {}) => {
   const affectedEntities = getAffectedEntities(state, entities);
-  affectedEntities.map((entity, name) => {
+  const updatedEntities = mapValues(affectedEntities, (entity, name) => {
     const [data] = entities[name].items;
     var updatedItem = find(entity.items, (item) => item[options.keyName] == data[options.keyName]);
     entity.items.splice(
@@ -77,12 +77,12 @@ export const updateEntitiesInState = (state, entities = {}, statuses = {}, optio
     entity.updatedItem = updatedItem;
     return Object.assign({}, entity, statuses);
   });
-  return Object.assign({}, state, affectedEntities);
+  return Object.assign({}, state, updatedEntities);
 };
 
 export const removeEntitiesFromState = (state, entities = {}, statuses = {}, options = {}) => {
   const affectedEntities = getAffectedEntities(state, entities);
-  affectedEntities.map((entity, name) => {
+  const updatedEntities = mapValues(affectedEntities, (entity, name) => {
     const [data] = entities[name].items;
     const update = {};
     update.destroyedItem = find(entity.items, (item) => item[options.keyName] == data[options.keyName]);
@@ -90,7 +90,7 @@ export const removeEntitiesFromState = (state, entities = {}, statuses = {}, opt
     entity.items.splice(update.destroyedItemIndex, 1);
     return Object.assign({}, entity, statuses);
   });
-  return Object.assign({}, state, affectedEntities);
+  return Object.assign({}, state, updatedEntities);
 };
 
 export default function createIoReducer(name, customState = {}, customActions = {}, options = {}) {
@@ -119,7 +119,7 @@ export default function createIoReducer(name, customState = {}, customActions = 
     throw new Error('Missing normalize scheme');
 
   return Object.assign({
-    [`RW_FIND_${actionName}`](state, action) {
+    [`FIND_${actionName}`](state, action) {
       let entities = getEntityFromState(state, name);
       let statuses = {
         isFinding: true,
@@ -130,7 +130,7 @@ export default function createIoReducer(name, customState = {}, customActions = 
       return updateStatusesInState(state, entities, statuses);
     },
 
-    [`RW_FIND_${actionName}_FAILED`](state, action) {
+    [`FIND_${actionName}_FAILED`](state, action) {
       let entities = getEntityFromState(state, name);
       let statuses = {
         findError: action.error || null,
@@ -140,7 +140,7 @@ export default function createIoReducer(name, customState = {}, customActions = 
       return updateStatusesInState(state, entities, statuses);
     },
 
-    [`RW_FIND_${actionName}_COMPLETED`](state, action) {
+    [`FIND_${actionName}_COMPLETED`](state, action) {
       let entities = normalizeToEntities(action.data, name, options);
       let statuses = {
         init: true,
@@ -152,12 +152,12 @@ export default function createIoReducer(name, customState = {}, customActions = 
       return mergeEntitiesToState(state, entities, statuses);
     },
 
-    [`RW_RECEIVE_${actionName}`](state, action) {
+    [`RECEIVE_${actionName}`](state, action) {
       let entities = normalizeToEntities(action.data, name, options);
       return mergeEntitiesToState(state, entities);
     },
 
-    [`RW_REMOVE_${actionName}`](state, action) {
+    [`REMOVE_${actionName}`](state, action) {
       let update = {};
       let { data } = action;
       let items = [...state.items];
@@ -171,8 +171,8 @@ export default function createIoReducer(name, customState = {}, customActions = 
       return Object.assign({}, state, update, selected);
     },
 
-    [`RW_CREATE_${actionName}`](state, action) {
-      let item = Object.assign({}, omitVirtualFields(action.data, options), { _temp: true });
+    [`CREATE_${actionName}`](state, action) {
+      let item = Object.assign({}, parseLocalData(action, options), { _temp: true });
       const normalizedData = normalize(item, options.schemas[name]);
       const entities = mapValues(normalizedData.entities, entity => ({ items: flatMap(entity) }));
       const statuses = {
@@ -181,7 +181,7 @@ export default function createIoReducer(name, customState = {}, customActions = 
       return addEntitiesToState(state, entities, statuses);
     },
 
-    [`RW_CREATE_${actionName}_FAILED`](state, action) {
+    [`CREATE_${actionName}_FAILED`](state, action) {
       var items = [...state.items];
       if (action._tempId) {
         items = filter(items, (item) => item[options.keyName] != action._tempId);
@@ -194,7 +194,7 @@ export default function createIoReducer(name, customState = {}, customActions = 
       });
     },
 
-    [`RW_CREATE_${actionName}_COMPLETED`](state, action) {
+    [`CREATE_${actionName}_COMPLETED`](state, action) {
       var items = [...state.items];
       if (action._tempId) {
         items = filter(items, (item) => item[options.keyName] != action._tempId);
@@ -207,11 +207,11 @@ export default function createIoReducer(name, customState = {}, customActions = 
       });
     },
 
-    [`RW_UPDATE_${actionName}`](state, action) {
+    [`UPDATE_${actionName}`](state, action) {
       var update = {
         isWriting: true
       };
-      var data = omitVirtualFields(action.data, options);
+      var data = parseLocalData(action, options);
       if (isObject(data) && data[options.keyName]) {
         var items = [...state.items];
         var updatedItem = find(items, (item) => item[options.keyName] == data[options.keyName]);
@@ -226,7 +226,7 @@ export default function createIoReducer(name, customState = {}, customActions = 
       return Object.assign({}, state, update);
     },
 
-    [`RW_UPDATE_${actionName}_FAILED`](state, action) {
+    [`UPDATE_${actionName}_FAILED`](state, action) {
       var update = {
         isWriting: false,
         updateError: action.error || null,
@@ -245,7 +245,7 @@ export default function createIoReducer(name, customState = {}, customActions = 
       return Object.assign({}, state, update);
     },
 
-    [`RW_UPDATE_${actionName}_COMPLETED`](state, action) {
+    [`UPDATE_${actionName}_COMPLETED`](state, action) {
       var update = {
         isWriting: false,
         updateError: null,
@@ -262,7 +262,7 @@ export default function createIoReducer(name, customState = {}, customActions = 
       return Object.assign({}, state, update, selected);
     },
 
-    [`RW_DESTROY_${actionName}`](state, action) {
+    [`DESTROY_${actionName}`](state, action) {
       var update = {
         isWriting: true
       };
@@ -276,7 +276,7 @@ export default function createIoReducer(name, customState = {}, customActions = 
       return Object.assign({}, state, update);
     },
 
-    [`RW_DESTROY_${actionName}_FAILED`](state, action) {
+    [`DESTROY_${actionName}_FAILED`](state, action) {
       var update = {
         isWriting: false,
         destroyError: action.error || null,
@@ -292,7 +292,7 @@ export default function createIoReducer(name, customState = {}, customActions = 
       return Object.assign({}, state, update);
     },
 
-    [`RW_DESTROY_${actionName}_COMPLETED`](state) {
+    [`DESTROY_${actionName}_COMPLETED`](state) {
       let selected = selectedUpdate(options, state, state.items);
       return Object.assign({}, state, {
         isWriting: false,
@@ -303,14 +303,14 @@ export default function createIoReducer(name, customState = {}, customActions = 
       }, selected);
     },
 
-    [`RW_CLEAR_${actionName}`](state) {
+    [`CLEAR_${actionName}`](state) {
       return Object.assign({}, state, {
         items: [],
         selected: null
       });
     },
 
-    [`RW_SELECT_${actionName}`](state, action) {
+    [`SELECT_${actionName}`](state, action) {
       let selected = null;
       if (isString(action.data) || isNumber(action.data)) selected = find(state.items, (item) => item[options.keyName] == action.data);
       else if (isObject(action.data) && action.data[options.keyName]) selected = find(state.items, (item) => item[options.keyName] == action.data[options.keyName]) || action.data;
@@ -320,8 +320,12 @@ export default function createIoReducer(name, customState = {}, customActions = 
       });
     },
 
-    [`RW_RESET_${actionName}`]() {
+    [`RESET_${actionName}`]() {
       return Object.assign({}, initialState);
     }
-  }, customActions);
+  },
+  mapValues(customActions, reducer => (state, action) => {
+    const instanceState = Object.assign({}, state[name]);
+    return Object.assign({}, state, { [name]: reducer(instanceState, action) });
+  }));
 }

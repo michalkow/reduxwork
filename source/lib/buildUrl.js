@@ -5,7 +5,7 @@ export const buildPath = (options, action) =>
     options.url ?
       options.url
       :
-      ('/' + action.reduxwork.name + '/' + action.reduxwork.operation)
+      ('/' + action.meta.name + '/' + action.meta.operation)
   );
 
 export const buildQuery = (action) => {

@@ -1,15 +1,14 @@
-import Reduxwork from '../src/Reduxwork';
+import Reduxwork from '../source/Reduxwork';
 import io from 'socket.io-client';
 import { schemas } from './test-data';
 
 const serverAdress = 'http://127.0.0.1:1234';
 const socket = io(serverAdress);
 
-const options = {
+const reduxwork = new Reduxwork({
   socket,
-  schemas
-};
-
-const reduxwork = new Reduxwork(options);
+  schemas,
+  addKeyOnCreate: true
+});
 
 export default reduxwork;

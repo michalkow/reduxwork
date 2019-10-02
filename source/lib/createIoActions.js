@@ -1,32 +1,26 @@
-import { createAction } from '../lib/createAction';
-import { ActionOperationEnum, TransportMethodEnum } from '../lib/constants';
+import { buildAction, buildActionType } from './buildAction';
+import { ActionOperationEnum } from './constants';
 
 export default function createIoActions(name, options) {
   return {
     [`clear${name}`]() {
-      return createAction(
-        Object.assign({}, options, { transport: TransportMethodEnum.REDUX }),
-        ActionOperationEnum.CLEAR,
-        name
-      );
+      return {
+        type: buildActionType(options, ActionOperationEnum.CLEAR, name)
+      };
     },
     [`reset${name}`]() {
-      return createAction(
-        Object.assign({}, options, { transport: TransportMethodEnum.REDUX }),
-        ActionOperationEnum.RESET,
-        name
-      );
+      return {
+        type: buildActionType(options, ActionOperationEnum.RESET, name)
+      };
     },
     [`select${name}`](data) {
-      return createAction(
-        Object.assign({}, options, { transport: TransportMethodEnum.REDUX }),
-        ActionOperationEnum.SELECT,
-        name,
+      return {
+        type: buildActionType(options, ActionOperationEnum.SELECT, name),
         data
-      );
+      };
     },
     [`find${name}`](data) {
-      return createAction(
+      return buildAction(
         options,
         ActionOperationEnum.FIND,
         name,
@@ -34,7 +28,7 @@ export default function createIoActions(name, options) {
       );
     },
     [`sync${name}`](data) {
-      return createAction(
+      return buildAction(
         options,
         ActionOperationEnum.SYNC,
         name,
@@ -43,7 +37,7 @@ export default function createIoActions(name, options) {
 
     },
     [`create${name}`](data) {
-      return createAction(
+      return buildAction(
         options,
         ActionOperationEnum.CREATE,
         name,
@@ -51,7 +45,7 @@ export default function createIoActions(name, options) {
       );
     },
     [`update${name}`](data) {
-      return createAction(
+      return buildAction(
         options,
         ActionOperationEnum.UPDATE,
         name,
@@ -59,7 +53,7 @@ export default function createIoActions(name, options) {
       );
     },
     [`destroy${name}`](data) {
-      return createAction(
+      return buildAction(
         options,
         ActionOperationEnum.DESTROY,
         name,
