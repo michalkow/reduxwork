@@ -1,35 +1,40 @@
-import { snakeCase, camelCase, union } from 'lodash';
+import { snakeCase, camelCase, union, isArray } from 'lodash';
 import { ActionOperationEnum, ActionStageEnum } from './constants';
-import uuid from 'uuid';
+import createUuid from 'uuid';
 
-export const parseData = (options, operation, payload) => {
+export const parseData = (options, operation, data) => {
   const { keyName, uuidVersion, uuidOptions } = options;
-  const data = Object.assign({}, payload);
-  if (options.addKeyOnCreate && operation == ActionOperationEnum.CREATE && !payload[keyName]) {
-    data.uuid = uuid[uuidVersion](uuidOptions);
-    data[keyName] = new Date().getTime();
-  }
-  return data;
+  const dataArray = isArray(data) ? data : [data];
+  if (options.addKeyOnCreate && operation == ActionOperationEnum.CREATE)
+    return dataArray.map(item => {
+      item.uuid = createUuid[uuidVersion](uuidOptions);
+      if (!item[keyName])
+        item[keyName] = new Date().getTime();
+      return item;
+    });
+  return dataArray;
 };
 
 export const buildActionType = (options, operation, name) => (
   operation ? snakeCase(operation) + '_' + snakeCase(name) : snakeCase(name)
 ).toUpperCase();
 
-export const mergeLocalFields = (options) =>
-  union(['_tempId', '_rewrite'], options);
+export const mergeLocalFields = (fields = []) =>
+  union(['_temp', '_rewrite'], fields);
 
-export const buildAction = (options, operation, name, payload) => {
-  const { localFieldsName, virtualFieldsName, transport } = options;
+export const buildAction = (options, operation, name, data) => {
+  const { localFieldsName, virtualFieldsName, transport, uuidVersion, uuidOptions } = options;
   const type = buildActionType(options, operation, name);
-  const data = parseData(options, operation, payload);
+  const payload = parseData(options, operation, data);
+  const uuid = createUuid[uuidVersion](uuidOptions);
   return {
     type,
-    data,
+    payload,
+    uuid,
     meta: {
       name: camelCase(name),
       operation,
-      [localFieldsName]: options[localFieldsName] || [],
+      [localFieldsName]: mergeLocalFields(options[localFieldsName]),
       [virtualFieldsName]: options[virtualFieldsName] || [],
       offline: {
         effect: {
@@ -37,11 +42,11 @@ export const buildAction = (options, operation, name, payload) => {
         },
         commit: {
           type: type + '_' + ActionStageEnum.COMPLETED,
-          data
+          uuid
         },
         rollback: {
           type: type + '_' + ActionStageEnum.FAILED,
-          data
+          uuid
         }
       }
     }

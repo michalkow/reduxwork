@@ -5,24 +5,25 @@ test('Find messages action test', () => {
     findMessages({ id: 2 })
   ).toEqual(
     {
-      type: 'RW_FIND_MESSAGES',
-      data: { id: 2 },
+      type: 'FIND_MESSAGES',
+      payload: [{ id: 2 }],
+      uuid: expect.anything(),
       meta: {
         name: 'messages',
         operation: 'find',
-        localFields: [],
+        localFields: ['_temp', '_rewrite'],
         virtualFields: [],
         offline: {
           effect: {
             transport: 'socket'
           },
           commit: {
-            type: 'RW_FIND_MESSAGES_COMPLETED',
-            data: { id: 2 }
+            type: 'FIND_MESSAGES_COMPLETED',
+            uuid: expect.anything()
           },
           rollback: {
-            type: 'RW_FIND_MESSAGES_FAILED',
-            data: { id: 2 }
+            type: 'FIND_MESSAGES_FAILED',
+            uuid: expect.anything()
           }
         }
       }
@@ -35,36 +36,31 @@ test('Create messages action test', () => {
     createMessages({ body: 'text' })
   ).toEqual(
     {
-      type: 'RW_CREATE_MESSAGES',
-      data: { 
-        body: 'text',
-        id: expect.anything(),
-        uuid: expect.anything()
-      },
+      type: 'CREATE_MESSAGES',
+      payload: [ 
+        {
+          body: 'text',
+          id: expect.anything(),
+          uuid: expect.anything()
+        }
+      ],
+      uuid: expect.anything(),
       meta: {
         name: 'messages',
         operation: 'create',
-        localFields: [],
+        localFields: ['_temp', '_rewrite'],
         virtualFields: [],
         offline: {
           effect: {
             transport: 'socket'
           },
           commit: {
-            type: 'RW_CREATE_MESSAGES_COMPLETED',
-            data: { 
-              body: 'text',
-              id: expect.anything(),
-              uuid: expect.anything()
-            }
+            type: 'CREATE_MESSAGES_COMPLETED',
+            uuid: expect.anything()
           },
           rollback: {
-            type: 'RW_CREATE_MESSAGES_FAILED',
-            data: { 
-              body: 'text',
-              id: expect.anything(),
-              uuid: expect.anything()
-            }
+            type: 'CREATE_MESSAGES_FAILED',
+            uuid: expect.anything()
           }
         }
       }

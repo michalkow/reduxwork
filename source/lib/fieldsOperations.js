@@ -5,7 +5,7 @@ import {
 export const parseActionData = (action, omitFields) => {
   if (!action[omitFields])
     return action;
-  return omit(action.data, action[omitFields]);
+  return omit(action.payload, action[omitFields]);
 };
 
 export const parseVirtualData = (action, options) =>

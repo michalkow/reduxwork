@@ -1,9 +1,8 @@
 import createIoActions from './lib/createIoActions';
-import createIoReducers from './lib/createIoReducers';
+import createIoReducers from './reducers/createIoReducers';
 import createReducer from './lib/createReducer';
 import buildEffect from './lib/buildEffect';
 import buildDiscard from './lib/buildDiscard';
-import { omitLocalFields, omitVirtualFields } from './lib/fieldsOperations';
 
 export default class Reduxwork {
 
@@ -31,11 +30,11 @@ export default class Reduxwork {
   createIoActions = (name, options = {}) =>
     createIoActions(name, this.mergeOptions(options));
 
-  createIoReducers = (name, customState = {}, customActions = {}, options = {}) =>
-    createIoReducers(name, customState, customActions, this.mergeOptions(options));
+  createIoReducers = (name, customActions = {}, options = {}) =>
+    createIoReducers(name, customActions, this.mergeOptions(options));
 
-  createReducer = (name, customState = {}, customActions = {}) =>
-    createReducer(name, customState, customActions);
+  createReducer = (name, customActions = {}) =>
+    createReducer(name, customActions);
 
   createOfflineOptions = (options) => {
     const effect = buildEffect(this.options);
