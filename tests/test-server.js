@@ -8,7 +8,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var _ = require('lodash');
 var socket_io = require('socket.io');
-var dataset = require('./test-data.js').data;
+var dataset = require('./test-data.js');
 
 var io = socket_io();
 var app = express();

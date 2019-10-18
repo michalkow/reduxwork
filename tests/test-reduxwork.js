@@ -1,6 +1,6 @@
 import Reduxwork from '../source/Reduxwork';
 import io from 'socket.io-client';
-import { schemas } from './test-data';
+import schemas from './test-schemas';
 
 const serverAdress = 'http://127.0.0.1:1234';
 const socket = io(serverAdress);
