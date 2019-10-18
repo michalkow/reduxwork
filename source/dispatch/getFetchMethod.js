@@ -1,4 +1,4 @@
-import { ActionOperationEnum, FetchMethodEnum } from './constants';
+import { ActionOperationEnum, FetchMethodEnum } from '../lib/constants';
 
 const operationFeatchMethod = {
   [ActionOperationEnum.POST]: FetchMethodEnum.POST,

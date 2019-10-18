@@ -1,27 +1,28 @@
 import createIoActions from './actions/createIoActions';
 import createIoReducers from './reducers/createIoReducers';
 import createReducer from './reducers/createReducer';
-import buildEffect from './lib/buildEffect';
-import buildDiscard from './lib/buildDiscard';
+import createOfflineOptions from './offline/createOfflineOptions';
+
+const DEFAULT_OPTIONS = {
+  keyName: 'id',
+  addKeyOnCreate: false,
+  rewriteOnUpdate: true,
+  socketEventName: 'redux_action_event',
+  socket: null,
+  transport: 'fetch',
+  virtualFieldsName: 'virtualFields',
+  localFieldsName: 'localFields',
+  uuidOptions: {},
+  uuidVersion: 'v4',
+  actionInject: (action) => action,
+  validationHook: null,
+  schemas: {}
+};
 
 export default class Reduxwork {
 
   constructor(options) {
-    this.options = Object.assign({}, {
-      keyName: 'id',
-      addKeyOnCreate: false,
-      rewriteOnUpdate: true,
-      socketEventName: 'redux_action_event',
-      socket: null,
-      transport: options.socket ? 'socket' : 'fetch',
-      virtualFieldsName: 'virtualFields',
-      localFieldsName: 'localFields',
-      uuidOptions: {},
-      uuidVersion: 'v4',
-      actionInject: (action) => action,
-      validationHook: null,
-      schemas: {}
-    }, options);
+    this.options = Object.assign({}, DEFAULT_OPTIONS, options);
   }
 
   mergeOptions = (options) =>
@@ -36,13 +37,6 @@ export default class Reduxwork {
   createReducer = (name, customActions = {}) =>
     createReducer(name, customActions);
 
-  createOfflineOptions = (options) => {
-    const effect = buildEffect(this.options);
-    const discard = buildDiscard(this.options);
-    return {
-      ...options,
-      effect,
-      discard
-    };
-  }
+  createOfflineOptions = (options) =>
+    createOfflineOptions(this.options, options);
 }

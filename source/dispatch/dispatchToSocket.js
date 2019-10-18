@@ -1,5 +1,5 @@
 import dispatchAction from './dispatchAction';
-import { parseVirtualData } from './fieldsOperations';
+import { parseVirtualData } from '../lib/fieldsOperations';
 
 const dispatchToSocket = (options, action) => {
   const { socket, socketEventName, actionInject } = options;

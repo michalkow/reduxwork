@@ -1,6 +1,6 @@
-import { TransportMethodEnum } from './constants';
-import dispatchToSocket from './dispatchToSocket';
-import dispatchToFetch from './dispatchToFetch';
+import { TransportMethodEnum } from '../lib/constants';
+import dispatchToSocket from '../dispatch/dispatchToSocket';
+import dispatchToFetch from '../dispatch/dispatchToFetch';
 
 export default (options) => (effect, action) => {
   switch (effect.transport) {

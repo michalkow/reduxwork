@@ -1,5 +1,5 @@
-import { FetchMethodEnum } from './constants';
-import { parseVirtualData } from './fieldsOperations';
+import { FetchMethodEnum } from '../lib/constants';
+import { parseVirtualData } from '../lib/fieldsOperations';
 
 const fetchDefaults = {
   credentials: 'same-origin',

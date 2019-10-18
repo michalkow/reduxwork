@@ -1,6 +1,6 @@
-import { FetchMethodEnum } from './constants';
+import { FetchMethodEnum } from '../lib/constants';
 
-export const buildPath = (options, action) => 
+export const buildPath = (options, action) =>
   options.baseURL + (
     options.url ?
       options.url
@@ -23,7 +23,7 @@ export const buildQuery = (action) => {
 export default function buildUrl(options, action, method) {
   let url = buildPath(options, action);
 
-  if (action.data && method == FetchMethodEnum.GET) 
+  if (action.data && method == FetchMethodEnum.GET)
     url += buildQuery(action);
 
   return url;

@@ -1,4 +1,4 @@
-import { parseVirtualData } from './fieldsOperations';
+import { parseVirtualData } from '../lib/fieldsOperations';
 
 const dispatchAction = (options, action, dispatchMethod) => {
   const { validationHook, actionInject } = options;
