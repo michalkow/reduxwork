@@ -1,4 +1,4 @@
-import buildAction from '../lib/buildAction';
+import buildAction from './buildAction';
 
 export function createSocketPostAction(config = {}, name) {
   const action = 'POST';

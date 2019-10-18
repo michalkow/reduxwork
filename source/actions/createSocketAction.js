@@ -1,4 +1,4 @@
-import buildAction from '../lib/buildAction';
+import buildAction from './buildAction';
 
 export default function createSocketAction(config = {}, name) {
   config.type = 'socket';

@@ -10,34 +10,20 @@ const initState = {
   lastAction: null
 };
 
-const state = {
-  messages: {},
-  users: {},
-  actionCache: {},
-  entitieStatus: {},
-  actionErrors: {},
-  lastAction: null
-};
-
-const setState = updatedState => Object.assign(state, updatedState);
-const resetState = () => Object.assign(state, initState);
-
 test('Create reducer', () => {
   const action = createMessages({ body: 'text', author: '8e8ba283-5d70-44fc-b91c-a8d94c937328' });
   const updatedState = testReducers.messages['CREATE_MESSAGES'](
     initState,
     action
   );
-  const { lastAction } = updatedState;
   const expectedState = {
     messages: { [action.payload[0].uuid]: action.payload[0] },
     users: {},
-    actionCache: { [lastAction]: { messages: { [action.payload[0].uuid]: action.payload[0] }} },
+    actionCache: { [action.uuid]: { messages: { [action.payload[0].uuid]: action.payload[0] }} },
     entitieStatus: { messages: { isWriting: true }},
     actionErrors: {},
-    lastAction: lastAction
+    lastAction: action.uuid
   };
-  setState(updatedState);
   expect(updatedState).toEqual(expectedState);
 });
 
@@ -47,20 +33,18 @@ test('Create reducer failed', () => {
     initState,
     action
   );
-  const { lastAction } = updatedState;
   const updatedStateFailed = testReducers.messages['CREATE_MESSAGES_FAILED'](
     updatedState,
-    { uuid: lastAction, error: 'Test Fail error' }
+    { uuid: action.uuid, error: 'Test Fail error' }
   );
   const expectedState = {
     messages: {},
     users: {},
     actionCache: {},
     entitieStatus: { messages: { isWriting: false }},
-    actionErrors: { [lastAction]: 'Test Fail error' },
-    lastAction: lastAction
+    actionErrors: { [action.uuid]: 'Test Fail error' },
+    lastAction: action.uuid
   };
-  setState(updatedState);
   expect(updatedStateFailed).toEqual(expectedState);
 });
 
@@ -70,10 +54,9 @@ test('Create reducer success', () => {
     initState,
     action
   );
-  const { lastAction } = updatedState;
   const updatedStateCompleted = testReducers.messages['CREATE_MESSAGES_COMPLETED'](
     updatedState,
-    { uuid: lastAction, error: 'Test Fail error' }
+    { uuid: action.uuid }
   );
   const expectedState = {
     messages: { [action.payload[0].uuid]: action.payload[0] },
@@ -81,8 +64,33 @@ test('Create reducer success', () => {
     actionCache: {},
     entitieStatus: { messages: { isWriting: false }},
     actionErrors: {},
-    lastAction: lastAction
+    lastAction: action.uuid
   };
-  setState(updatedState);
   expect(updatedStateCompleted).toEqual(expectedState);
+});
+
+test('Update reducer', () => {
+  const preAction = createMessages({ body: 'text', author: '8e8ba283-5d70-44fc-b91c-a8d94c937328' });
+  const preState = testReducers.messages['CREATE_MESSAGES'](
+    initState,
+    preAction
+  );
+  const preStateCompleted = testReducers.messages['CREATE_MESSAGES_COMPLETED'](
+    preState,
+    { uuid: preAction.uuid }
+  );
+  const action = updateMessages({ uuid: preAction.payload[0].uuid, body: 'text2' });
+  const updatedState = testReducers.messages['UPDATE_MESSAGES'](
+    preStateCompleted,
+    action
+  );
+  const expectedState = {
+    messages: { [preAction.payload[0].uuid]: Object.assign({}, preAction.payload[0], { body: 'text2' }) },
+    users: {},
+    actionCache: { [action.uuid]: { messages: { [preAction.payload[0].uuid]: preAction.payload[0] } } },
+    entitieStatus: { messages: { isWriting: true } },
+    actionErrors: {},
+    lastAction: action.uuid
+  };
+  expect(updatedState).toEqual(expectedState);
 });

@@ -1,4 +1,4 @@
-import buildAction from '../lib/buildAction';
+import buildAction from './buildAction';
 
 export function createSocketGetAction(config = {}, name) {
   const action = 'GET';

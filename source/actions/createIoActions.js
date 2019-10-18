@@ -1,5 +1,5 @@
 import { buildAction, buildActionType } from './buildAction';
-import { ActionOperationEnum } from './constants';
+import { ActionOperationEnum } from '../lib/constants';
 
 export default function createIoActions(name, options) {
   return {

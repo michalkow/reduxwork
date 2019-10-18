@@ -1,6 +1,6 @@
-import createIoActions from './lib/createIoActions';
+import createIoActions from './actions/createIoActions';
 import createIoReducers from './reducers/createIoReducers';
-import createReducer from './lib/createReducer';
+import createReducer from './reducers/createReducer';
 import buildEffect from './lib/buildEffect';
 import buildDiscard from './lib/buildDiscard';
 

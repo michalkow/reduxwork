@@ -1,5 +1,5 @@
 import { snakeCase, camelCase, union, isArray } from 'lodash';
-import { ActionOperationEnum, ActionStageEnum } from './constants';
+import { ActionOperationEnum, ActionStageEnum } from '../lib/constants';
 import createUuid from 'uuid';
 
 export const parseData = (options, operation, data) => {
