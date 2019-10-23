@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add normalizrcd c:\Users\reion\Documents\GitHub\reduxwork
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add redux-persist-node-storag --dev
 
 PATH: 
   C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Git\cmd;C:\Program Files\PuTTY\;C:\Program Files\Microsoft VS Code\bin;C:\Users\reion\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\Yarn\bin\;C:\Users\reion\AppData\Local\Programs\Python\Python35\Scripts\;C:\Users\reion\AppData\Local\Programs\Python\Python35\;C:\Users\reion\AppData\Local\Microsoft\WindowsApps;C:\Users\reion\AppData\Roaming\npm;C:\Users\reion\AppData\Local\Programs\Python\Python35\Tools\scripts;C:\Users\reion\AppData\Local\nvs\;C:\Users\reion\AppData\Local\GitHubDesktop\bin;C:\Users\reion\AppData\Local\Android\Sdk\platform-tools;C:\Users\reion\AppData\Local\Android\Sdk\emulator;C:\Users\reion\AppData\Local\Microsoft\WindowsApps;C:\Users\reion\.bin;C:\Users\reion\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\reion\AppData\Local\Yarn\bin
@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: https://registry.npmjs.org/normalizrcd: Not found
+  Error: https://registry.npmjs.org/redux-persist-node-storag: Not found
       at Request.params.callback [as _callback] (C:\Program Files (x86)\Yarn\lib\cli.js:62013:18)
       at Request.self.callback (C:\Program Files (x86)\Yarn\lib\cli.js:124357:22)
       at emitTwo (events.js:126:13)
@@ -34,16 +34,18 @@ npm manifest:
     "description": "Framework for creating redux actions and reducers that get data from server via ajax of websockets",
     "main": "dist/index.js",
     "dependencies": {
-      "babel-plugin-transform-remove-console": "^6.9.4",
       "bluebird": "^3.5.3",
       "lodash": "4.17.11",
-      "normalizr": "^3.4.1"
+      "normalizr": "^3.4.1",
+      "uuid": "^3.3.3"
     },
     "peerDependencies": {
       "redux": "4.0.1",
       "redux-thunk": "2.3.0"
     },
     "devDependencies": {
+          "@redux-offline/redux-offline": "^2.5.2",
+          "babel-plugin-transform-remove-console": "^6.9.4",
       "@babel/cli": "7.2.0",
       "@babel/core": "7.2.0",
       "@babel/node": "7.2.0",
@@ -63,7 +65,7 @@ npm manifest:
       "isomorphic-fetch": "2.2.1",
       "jest": "24.1.0",
       "morgan": "1.8.2",
-      "redux": "4.0.1",
+      "redux": "^4.0.1",
       "redux-logger": "3.0.6",
       "redux-mock-store": "1.5.3",
       "redux-thunk": "2.3.0",
@@ -73,8 +75,9 @@ npm manifest:
     "scripts": {
       "test": "jest tests --detectOpenHandles --forceExit",
       "test-server": "node tests/test-server.js",
-      "build": "babel src -d dist",
-      "prepublish": "babel src -d dist",
+      "qtest": "babel-node tests/qtest.js",
+      "build": "babel source -d dist",
+      "prepublish": "babel source -d dist",
       "devTest": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand"
     },
     "keywords": [
@@ -674,6 +677,13 @@ Lockfile:
       pirates "^4.0.0"
       source-map-support "^0.5.9"
   
+  "@babel/runtime@^7.5.5":
+    version "7.6.3"
+    resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.6.3.tgz#935122c74c73d2240cafd32ddb5fc2a6cd35cf1f"
+    integrity sha512-kq6anf9JGjW8Nt5rYfEuGRaEAaH1mkv3Bbu6rYvLOpPh/RusSJXuKPEAoZ7L7gybZkchE8+NV5g9vKF4AGAtsA==
+    dependencies:
+      regenerator-runtime "^0.13.2"
+  
   "@babel/template@^7.0.0", "@babel/template@^7.1.0", "@babel/template@^7.1.2", "@babel/template@^7.2.2":
     version "7.2.2"
     resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.2.2.tgz#005b3fdf0ed96e88041330379e0da9a708eb2907"
@@ -703,6 +713,14 @@ Lockfile:
       esutils "^2.0.2"
       lodash "^4.17.10"
       to-fast-properties "^2.0.0"
+  
+  "@redux-offline/redux-offline@^2.5.2":
+    version "2.5.2"
+    resolved "https://registry.yarnpkg.com/@redux-offline/redux-offline/-/redux-offline-2.5.2.tgz#f310623271ac47ec324b91377e5a15daf958bf4d"
+    integrity sha512-z/YJg/Ajr2bQXZUQZ5xlNixcG3d9AmH6MRQmYT/NxzPn7CI6bCfdrAd4BVzdUdqQ5ce7/CMftKXmNDlsjARdhA==
+    dependencies:
+      "@babel/runtime" "^7.5.5"
+      redux-persist "^4.6.0"
   
   abab@^2.0.0:
     version "2.0.0"
@@ -2862,9 +2880,10 @@ Lockfile:
     version "1.0.1"
     resolved "https://registry.yarnpkg.com/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz#9db7b59496ad3f3cfef30a75142d2d930ad72651"
   
-  json-stringify-safe@~5.0.1:
+  json-stringify-safe@^5.0.1, json-stringify-safe@~5.0.1:
     version "5.0.1"
     resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
+    integrity sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus=
   
   json5@^2.1.0:
     version "2.1.0"
@@ -2958,6 +2977,11 @@ Lockfile:
       p-locate "^3.0.0"
       path-exists "^3.0.0"
   
+  lodash-es@^4.17.4:
+    version "4.17.15"
+    resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.15.tgz#21bd96839354412f23d7a10340e5eac6ee455d78"
+    integrity sha512-rlrc3yU3+JNOpZ9zj5pQtxnx2THmvRykwL4Xlxoa8I9lHBlVbbyPhgyPMioxVZ4NqyxaVVtaJnzsyOidQIhyyQ==
+  
   lodash.isplainobject@^4.0.6:
     version "4.0.6"
     resolved "https://registry.yarnpkg.com/lodash.isplainobject/-/lodash.isplainobject-4.0.6.tgz#7c526a52d89b45c45cc690b88163be0497f550cb"
@@ -2970,6 +2994,11 @@ Lockfile:
   lodash@4.17.11, lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.5:
     version "4.17.11"
     resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
+  
+  lodash@^4.17.4:
+    version "4.17.15"
+    resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
+    integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
   
   loose-envify@^1.0.0, loose-envify@^1.4.0:
     version "1.4.0"
@@ -3735,13 +3764,23 @@ Lockfile:
     dependencies:
       lodash.isplainobject "^4.0.6"
   
+  redux-persist@^4.6.0:
+    version "4.10.2"
+    resolved "https://registry.yarnpkg.com/redux-persist/-/redux-persist-4.10.2.tgz#8efdb16cfe882c521a78a6d0bfdfef2437f49f96"
+    integrity sha512-U+e0ieMGC69Zr72929iJW40dEld7Mflh6mu0eJtVMLGfMq/aJqjxUM1hzyUWMR1VUyAEEdPHuQmeq5ti9krIgg==
+    dependencies:
+      json-stringify-safe "^5.0.1"
+      lodash "^4.17.4"
+      lodash-es "^4.17.4"
+  
   redux-thunk@2.3.0:
     version "2.3.0"
     resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.3.0.tgz#51c2c19a185ed5187aaa9a2d08b666d0d6467622"
   
-  redux@4.0.1:
-    version "4.0.1"
-    resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.1.tgz#436cae6cc40fbe4727689d7c8fae44808f1bfef5"
+  redux@^4.0.1:
+    version "4.0.4"
+    resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.4.tgz#4ee1aeb164b63d6a1bcc57ae4aa0b6e6fa7a3796"
+    integrity sha512-vKv4WdiJxOWKxK0yRoaK3Y4pxxB0ilzVx6dszU2W8wLxlb2yikRph4iV/ymtdJ6ZxpBLFbyrxklnT5yBbQSl3Q==
     dependencies:
       loose-envify "^1.4.0"
       symbol-observable "^1.2.0"
@@ -3759,6 +3798,11 @@ Lockfile:
   regenerator-runtime@^0.12.0:
     version "0.12.1"
     resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.12.1.tgz#fa1a71544764c036f8c49b13a08b2594c9f8a0de"
+  
+  regenerator-runtime@^0.13.2:
+    version "0.13.3"
+    resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.3.tgz#7cf6a77d8f5c6f60eb73c5fc1955b2ceb01e6bf5"
+    integrity sha512-naKIZz2GQ8JWh///G7L3X6LaQUAMp2lvb1rvwwsURe/VXwD6VMfr+/1NuNw3ag8v2kY1aQ/go5SNn79O9JU7yw==
   
   regenerator-transform@^0.13.3:
     version "0.13.3"
@@ -4518,6 +4562,11 @@ Lockfile:
   uuid@^3.3.2:
     version "3.3.2"
     resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
+  
+  uuid@^3.3.3:
+    version "3.3.3"
+    resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.3.tgz#4568f0216e78760ee1dbf3a4d2cf53e224112866"
+    integrity sha512-pW0No1RGHgzlpHJO1nsVrHKpOEIxkGg1xB+v0ZmdNH5OAeAwzAVrCnI2/6Mtx+Uys6iaylxa+D3g4j63IKKjSQ==
   
   v8flags@^3.1.1:
     version "3.1.2"

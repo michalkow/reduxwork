@@ -19,37 +19,37 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-var port = process.env.PORT || 1234;
-
+var serverPort = process.env.PORT || 1234;
+/*
 // Run server on port
-server.listen(port, () => {
+server.listen(serverPort, () => {
   var host = server.address().address;
   var port = server.address().port;
-  console.log('Example app listening at http://%s:%s', host, port);
+  //console.log('Example app listening at http://%s:%s', host, port);
 });
-
+*/
 // Actions
 var mockDB = {
   create: function(collection, data) {
-    console.log(data);
+    //console.log(data);
     if (!data.id) data.id = (_.maxBy(dataset[collection], 'id').id + 1);
-    console.log(data.id);
+    //console.log(data.id);
     dataset[collection].push(data);
-    return data;
+    return { error: null, data: data };
   },
   update: function(collection, data) {
     var item = _.find(dataset[collection], { id: data.id });
     item = _.assignIn(item, data);
     dataset[collection].splice(_.findIndex(dataset[collection], { id: data.id }), 1, item);
-    return item;
+    return { error: null, data: item };
   },
   destroy: function(collection, data) {
     dataset[collection] = _.reject(dataset[collection], data);
-    return true;
+    return { error: null, data: true };
   },
   find: function(collection, data) {
     if (!data) data = {};
-    return _.filter(dataset[collection], data);
+    return { error: null, data: _.filter(dataset[collection], data) };
   }
 };
 
@@ -71,17 +71,18 @@ app.get('/api/:collection/:action', (req, res, next) => {
 
 io.attach(server);
 io.on('connection', (socket) => {
-  console.log('Socket connected: ' + socket.id);
+  //console.log('Socket connected: ' + socket.id);
 
   socket.on('redux_action_event', (action, callback) => {
-    console.log('Socket action: ' + JSON.stringify(action));
-    console.log('Sending data: ' + JSON.stringify(mockDB[action.operation.toLowerCase()](action.name.toLowerCase(), action.data)));
-    callback(null, mockDB[action.operation.toLowerCase()](action.name.toLowerCase(), action.data));
+    //console.log('Socket action: ' + JSON.stringify(action));
+    //console.log('Sending data: ' + JSON.stringify(mockDB[action.data.meta.operation](action.data.meta.name, action.data.payload)));
+    var query = mockDB[action.data.meta.operation](action.data.meta.name, action.data.payload);
+    callback(query.error, query.data);
   });
 
   socket.on('disconnect', () => {
-    console.log('Got disconnect!');
+    //console.log('Got disconnect!');
   });
 });
 
-module.exports = app;
+module.exports = server;

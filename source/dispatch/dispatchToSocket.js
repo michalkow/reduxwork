@@ -1,5 +1,6 @@
 import dispatchAction from './dispatchAction';
 import { parseVirtualData } from '../lib/fieldsOperations';
+import { TransportMethodEnum } from '../lib/constants';
 
 const dispatchToSocket = (options, action) => {
   const { socket, socketEventName, actionInject } = options;
@@ -14,8 +15,10 @@ const dispatchToSocket = (options, action) => {
     });
     socket.emit(socketEventName, socketAction, (error, data) => {
       if (error)
-        return reject(error);
-
+        return reject({
+          transport: TransportMethodEnum.SOCKET,
+          error
+        });
       return resolve(data);
     });
   });

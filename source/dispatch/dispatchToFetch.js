@@ -2,6 +2,7 @@ import dispatchAction from './dispatchAction';
 import buildFetchOptions from './buildFetchOptions';
 import buildUrl from './buildUrl';
 import getFetchMethod from './getFetchMethod';
+import { TransportMethodEnum } from '../lib/constants';
 
 const dispatchToFetch = (options, action) => {
   const { fetch } = options;
@@ -18,7 +19,11 @@ const dispatchToFetch = (options, action) => {
       if (response.ok)
         return response.json();
       else
-        return reject(response);
+        return reject({
+          transport: TransportMethodEnum.FETCH,
+          error: response.statusText,
+          response
+        });
     }).then(data =>
       resolve(data)
     );

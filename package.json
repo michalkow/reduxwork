@@ -5,11 +5,9 @@
   "description": "Framework for creating redux actions and reducers that get data from server via ajax of websockets",
   "main": "dist/index.js",
   "dependencies": {
-    "babel-plugin-transform-remove-console": "^6.9.4",
     "bluebird": "^3.5.3",
     "lodash": "4.17.11",
     "normalizr": "^3.4.1",
-    "p-queue": "^6.1.1",
     "uuid": "^3.3.3"
   },
   "peerDependencies": {
@@ -25,8 +23,10 @@
     "@babel/plugin-transform-async-to-generator": "7.2.0",
     "@babel/plugin-transform-regenerator": "7.0.0",
     "@babel/preset-env": "7.2.0",
+    "@redux-offline/redux-offline": "^2.5.2",
     "babel-eslint": "^10.0.1",
     "babel-plugin-transform-promise-to-bluebird": "2.0.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "body-parser": "1.17.2",
     "cookie-parser": "1.4.3",
     "es6-promise": "4.1.0",
@@ -36,9 +36,10 @@
     "isomorphic-fetch": "2.2.1",
     "jest": "24.1.0",
     "morgan": "1.8.2",
-    "redux": "4.0.1",
+    "redux": "^4.0.1",
     "redux-logger": "3.0.6",
     "redux-mock-store": "1.5.3",
+    "redux-persist-node-storage": "^2.0.0",
     "redux-thunk": "2.3.0",
     "socket.io": "2.2.0",
     "socket.io-client": "2.2.0"
@@ -47,8 +48,8 @@
     "test": "jest tests --detectOpenHandles --forceExit",
     "test-server": "node tests/test-server.js",
     "qtest": "babel-node tests/qtest.js",
-    "build": "babel src -d dist",
-    "prepublish": "babel src -d dist",
+    "build": "babel source -d dist",
+    "prepublish": "babel source -d dist",
     "devTest": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand"
   },
   "keywords": [

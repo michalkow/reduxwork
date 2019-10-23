@@ -1,6 +1,8 @@
 import createIoActions from './actions/createIoActions';
 import createIoReducers from './reducers/createIoReducers';
+import createRootReducer from './reducers/createRootReducer';
 import createReducer from './reducers/createReducer';
+import createInitialState from './lib/createInitialState';
 import createOfflineOptions from './offline/createOfflineOptions';
 
 const DEFAULT_OPTIONS = {
@@ -16,6 +18,7 @@ const DEFAULT_OPTIONS = {
   uuidVersion: 'v4',
   actionInject: (action) => action,
   validationHook: null,
+  createKey: null,
   schemas: {}
 };
 
@@ -25,7 +28,7 @@ export default class Reduxwork {
     this.options = Object.assign({}, DEFAULT_OPTIONS, options);
   }
 
-  mergeOptions = (options) =>
+  mergeOptions = (options = {}) =>
     Object.assign({}, this.options, options);
 
   createIoActions = (name, options = {}) =>
@@ -37,6 +40,12 @@ export default class Reduxwork {
   createReducer = (name, customActions = {}) =>
     createReducer(name, customActions);
 
-  createOfflineOptions = (options) =>
+  createRootReducer = (reducers = []) =>
+    createRootReducer(reducers);
+
+  createInitialState = () =>
+    createInitialState();
+ 
+  createOfflineOptions = (options = {}) =>
     createOfflineOptions(this.options, options);
 }

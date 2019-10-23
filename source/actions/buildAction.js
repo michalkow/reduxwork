@@ -3,13 +3,13 @@ import { ActionOperationEnum, ActionStageEnum } from '../lib/constants';
 import createUuid from 'uuid';
 
 export const parseData = (options, operation, data) => {
-  const { keyName, uuidVersion, uuidOptions } = options;
+  const { keyName, uuidVersion, uuidOptions, createKey } = options;
   const dataArray = isArray(data) ? data : [data];
   if (options.addKeyOnCreate && operation == ActionOperationEnum.CREATE)
     return dataArray.map(item => {
-      item.uuid = createUuid[uuidVersion](uuidOptions);
       if (!item[keyName])
-        item[keyName] = new Date().getTime();
+        item[keyName] = createKey ? createKey() : createUuid[uuidVersion](uuidOptions);
+      item._temp = true;
       return item;
     });
   return dataArray;

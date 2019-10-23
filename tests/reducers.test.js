@@ -17,9 +17,9 @@ test('Create reducer', () => {
     action
   );
   const expectedState = {
-    messages: { [action.payload[0].uuid]: action.payload[0] },
+    messages: { [action.payload[0].id]: action.payload[0] },
     users: {},
-    actionCache: { [action.uuid]: { messages: { [action.payload[0].uuid]: action.payload[0] }} },
+    actionCache: { [action.uuid]: { messages: { [action.payload[0].id]: action.payload[0] }} },
     entitieStatus: { messages: { isWriting: true }},
     actionErrors: {},
     lastAction: action.uuid
@@ -59,7 +59,7 @@ test('Create reducer success', () => {
     { uuid: action.uuid }
   );
   const expectedState = {
-    messages: { [action.payload[0].uuid]: action.payload[0] },
+    messages: { [action.payload[0].id]: action.payload[0] },
     users: {},
     actionCache: {},
     entitieStatus: { messages: { isWriting: false }},
@@ -79,15 +79,15 @@ test('Update reducer', () => {
     preState,
     { uuid: preAction.uuid }
   );
-  const action = updateMessages({ uuid: preAction.payload[0].uuid, body: 'text2' });
+  const action = updateMessages({ id: preAction.payload[0].id, body: 'text2' });
   const updatedState = testReducers.messages['UPDATE_MESSAGES'](
     preStateCompleted,
     action
   );
   const expectedState = {
-    messages: { [preAction.payload[0].uuid]: Object.assign({}, preAction.payload[0], { body: 'text2' }) },
+    messages: { [preAction.payload[0].id]: Object.assign({}, preAction.payload[0], { body: 'text2' }) },
     users: {},
-    actionCache: { [action.uuid]: { messages: { [preAction.payload[0].uuid]: preAction.payload[0] } } },
+    actionCache: { [action.uuid]: { messages: { [preAction.payload[0].id]: preAction.payload[0] } } },
     entitieStatus: { messages: { isWriting: true } },
     actionErrors: {},
     lastAction: action.uuid

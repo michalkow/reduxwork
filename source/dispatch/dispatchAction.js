@@ -6,7 +6,7 @@ const dispatchAction = (options, action, dispatchMethod) => {
     if (validationHook) {
       let validationAction = actionInject({
         type: action.type,
-        data: parseVirtualData(action, options)
+        payload: parseVirtualData(action, options)
       });
       let validationError = validationHook(validationAction);
       if (validationError)

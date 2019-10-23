@@ -56,13 +56,19 @@ export const addEntitiesToState = (state, { uuid, entities = {}, statuses = {}, 
   });
 };
 
-export const updateEntitiesInState = (state, { uuid, entities = {}, statuses = {}, cache = false, error }) => {
+export const updateEntitiesInState = (state, { uuid, entities = {}, statuses = {}, cache = false, error }, { keyName }) => {
   const affectedEntities = mapValues(entities, (entity, name) =>
     pick(state[name], keys(entity))
   );
   let entitiesUpdate = mapValues(entities, (entity, name) =>
     Object.assign({}, state[name], mapValues(state[name], item =>
-      entity[item.uuid] ? Object.assign({}, item, entity[item.uuid]) : item
+      entity[item[keyName]] ?
+        omit(
+          Object.assign({}, item, entity[item[keyName]], { _temp: true }),
+          cache ? [] : ['_temp']
+        )
+        :
+        item
     ))
   );
   return updateState(state, {

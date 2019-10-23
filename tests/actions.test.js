@@ -40,8 +40,7 @@ test('Create messages action test', () => {
       payload: [ 
         {
           body: 'text',
-          id: expect.anything(),
-          uuid: expect.anything()
+          id: expect.anything()
         }
       ],
       uuid: expect.anything(),

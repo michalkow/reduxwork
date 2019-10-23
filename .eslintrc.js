@@ -16,6 +16,8 @@ module.exports = {
     "test": true,
     "expect": true,
     "fetch": true,
+    "beforeAll": true,
+    "afterAll": true
   },
   "rules": {
     "import/no-duplicates": ["error"],

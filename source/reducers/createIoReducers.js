@@ -104,17 +104,12 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
     },
 
     [`CREATE_${actionName}_COMPLETED`](state, action) {
-      // UPDATE _temp and ids
       const { uuid } = action;
       const statuses = {
         isWriting: false
       };
-      const entities = { [entityName]: {}};
-      return updateState(state, {
-        statusUpdate: { statuses, entities },
-        cacheUpdate: { uuid },
-        uuid
-      });
+      const entities = state.actionCache[uuid];
+      return updateEntitiesInState(state, { uuid, entities, statuses, cache: false }, options);
     },
 
     [`UPDATE_${actionName}`](state, action) {
@@ -123,7 +118,7 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
       const statuses = {
         isWriting: true
       };
-      return updateEntitiesInState(state, { uuid, entities, statuses, cache: true });
+      return updateEntitiesInState(state, { uuid, entities, statuses, cache: true }, options);
     },
 
     [`UPDATE_${actionName}_FAILED`](state, action) {
@@ -132,20 +127,16 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
       const statuses = {
         isWriting: false
       };
-      return updateEntitiesInState(state, { uuid, entities, statuses, error, cache: false });
+      return updateEntitiesInState(state, { uuid, entities, statuses, error, cache: false }, options);
     },
 
     [`UPDATE_${actionName}_COMPLETED`](state, action) {
-      // UPDATE _temp and ids
       const { uuid } = action;
       const statuses = {
         isWriting: false
       };
-      const entities = { [entityName]: {}};
-      return updateState(state, {
-        statusUpdate: { statuses, entities },
-        uuid
-      });
+      const entities = state.actionCache[uuid];
+      return updateEntitiesInState(state, { uuid, entities, statuses, cache: false }, options);
     },
 
     [`DESTROY_${actionName}`](state, action) {
@@ -180,9 +171,9 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
 
     [`SELECT_${actionName}`](state, action) {
       const { data } = action;
-      // Object workaround
-      let id = isObject(data) ? data[options.keyName] : data;
-      let selected = isArray(id) ? id : [id];
+      // TODO: Object workaround
+      let key = isObject(data) ? data[options.keyName] : data;
+      let selected = isArray(key) ? key : [key];
       const statuses = {
         selected
       };
@@ -199,6 +190,7 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
     },
 
     [`RESET_${actionName}`](state) {
+      // TODO: Reset errors and cache
       return Object.assign({}, state, {
         [entityName]: {}
       });
