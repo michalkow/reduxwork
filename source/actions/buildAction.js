@@ -9,7 +9,6 @@ export const parseData = (options, operation, data) => {
     return dataArray.map(item => {
       if (!item[keyName])
         item[keyName] = createKey ? createKey() : createUuid[uuidVersion](uuidOptions);
-      item._temp = true;
       return item;
     });
   return dataArray;

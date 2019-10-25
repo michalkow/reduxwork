@@ -8,7 +8,6 @@ import {
   forEach
 } from 'lodash';
 import { normalize } from 'normalizr';
-import { parseLocalData } from '../lib/fieldsOperations';
 import {
   updateState,
   upsertEntitiesToState,
@@ -40,8 +39,7 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
     [`FIND_${actionName}`](state, action) {
       const { uuid } = action;
       const statuses = {
-        isFinding: true,
-        findError: null
+        isFinding: true
       };
       const entities = { [entityName]: {}};
       return updateState(state, {
@@ -58,7 +56,7 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
       const entities = { [entityName]: {}};
       return updateState(state, {
         statusUpdate: { statuses, entities },
-        errorsUpdate: { uuid, error },
+        errorUpdate: { uuid, error },
         uuid
       });
     },
@@ -135,7 +133,7 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
       const statuses = {
         isWriting: false
       };
-      const entities = state.actionCache[uuid];
+      const entities = normalizeToEntities(action.payload, entityName, options);
       return updateEntitiesInState(state, { uuid, entities, statuses, cache: false }, options);
     },
 

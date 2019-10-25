@@ -45,7 +45,14 @@ export const upsertEntitiesToState = (state, { uuid, entities = {}, statuses = {
 
 export const addEntitiesToState = (state, { uuid, entities = {}, statuses = {}, cache = false, error }) => {
   let entitiesUpdate = mapValues(entities, (entity, name) =>
-    Object.assign({}, state[name], entity)
+    Object.assign({}, state[name], (
+      cache ?
+        mapValues(entity, item =>
+          Object.assign({}, item, { _temp: true })
+        )
+        :
+        entity
+    ))
   );
   return updateState(state, {
     entitiesUpdate,
@@ -56,15 +63,15 @@ export const addEntitiesToState = (state, { uuid, entities = {}, statuses = {}, 
   });
 };
 
-export const updateEntitiesInState = (state, { uuid, entities = {}, statuses = {}, cache = false, error }, { keyName }) => {
+export const updateEntitiesInState = (state, { uuid, entities = {}, statuses = {}, cache = false, error }) => {
   const affectedEntities = mapValues(entities, (entity, name) =>
     pick(state[name], keys(entity))
   );
   let entitiesUpdate = mapValues(entities, (entity, name) =>
-    Object.assign({}, state[name], mapValues(state[name], item =>
-      entity[item[keyName]] ?
+    Object.assign({}, state[name], mapValues(state[name], (item, key) =>
+      entity[key] ?
         omit(
-          Object.assign({}, item, entity[item[keyName]], { _temp: true }),
+          Object.assign({}, item, entity[key], { _temp: true }),
           cache ? [] : ['_temp']
         )
         :
