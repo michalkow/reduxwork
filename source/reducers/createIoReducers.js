@@ -44,7 +44,8 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
       const entities = { [entityName]: {}};
       return updateState(state, {
         statusUpdate: { statuses, entities },
-        uuid
+        uuid,
+        entityName
       });
     },
 
@@ -57,7 +58,8 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
       return updateState(state, {
         statusUpdate: { statuses, entities },
         errorUpdate: { uuid, error },
-        uuid
+        uuid,
+        entityName
       });
     },
 
@@ -68,19 +70,19 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
         init: true,
         isFinding: false
       };
-      return upsertEntitiesToState(state, { uuid, entities, statuses });
+      return upsertEntitiesToState(state, { uuid, entities, statuses, entityName });
     },
 
     [`RECEIVE_${actionName}`](state, action) {
       const { uuid } = action;
       const entities = normalizeToEntities(action.data, name, options);
-      return upsertEntitiesToState(state, { uuid, entities });
+      return upsertEntitiesToState(state, { uuid, entities, entityName });
     },
 
     [`REMOVE_${actionName}`](state, action) {
       const { uuid } = action;
       const entities = normalizeToEntities(action.data, name, options);
-      return removeEntitiesFromState(state, { uuid, entities, cache: false });
+      return removeEntitiesFromState(state, { uuid, entities, cache: false, entityName });
     },
 
     [`CREATE_${actionName}`](state, action) {
@@ -89,7 +91,7 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
       const statuses = {
         isWriting: true
       };
-      return addEntitiesToState(state, { uuid, entities, statuses, cache: true });
+      return addEntitiesToState(state, { uuid, entities, statuses, cache: true, entityName });
     },
 
     [`CREATE_${actionName}_FAILED`](state, action) {
@@ -98,7 +100,7 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
       const statuses = {
         isWriting: false
       };
-      return removeEntitiesFromState(state, { uuid, entities, statuses, error, cache: false });
+      return removeEntitiesFromState(state, { uuid, entities, statuses, error, cache: false, entityName });
     },
 
     [`CREATE_${actionName}_COMPLETED`](state, action) {
@@ -106,8 +108,8 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
       const statuses = {
         isWriting: false
       };
-      const entities = state.actionCache[uuid];
-      return updateEntitiesInState(state, { uuid, entities, statuses, cache: false }, options);
+      const entities = normalizeToEntities(action.payload, entityName, options);
+      return upsertEntitiesToState(state, { uuid, entities, statuses, cache: false, entityName }, options);
     },
 
     [`UPDATE_${actionName}`](state, action) {
@@ -116,7 +118,7 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
       const statuses = {
         isWriting: true
       };
-      return updateEntitiesInState(state, { uuid, entities, statuses, cache: true }, options);
+      return updateEntitiesInState(state, { uuid, entities, statuses, cache: true, entityName }, options);
     },
 
     [`UPDATE_${actionName}_FAILED`](state, action) {
@@ -125,7 +127,7 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
       const statuses = {
         isWriting: false
       };
-      return updateEntitiesInState(state, { uuid, entities, statuses, error, cache: false }, options);
+      return updateEntitiesInState(state, { uuid, entities, statuses, error, cache: false, entityName }, options);
     },
 
     [`UPDATE_${actionName}_COMPLETED`](state, action) {
@@ -134,7 +136,7 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
         isWriting: false
       };
       const entities = normalizeToEntities(action.payload, entityName, options);
-      return updateEntitiesInState(state, { uuid, entities, statuses, cache: false }, options);
+      return updateEntitiesInState(state, { uuid, entities, statuses, cache: false, entityName }, options);
     },
 
     [`DESTROY_${actionName}`](state, action) {
@@ -143,7 +145,7 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
       const statuses = {
         isWriting: true
       };
-      return removeEntitiesFromState(state, { uuid, entities, statuses, cache: true });
+      return removeEntitiesFromState(state, { uuid, entities, statuses, cache: true, entityName });
     },
 
     [`DESTROY_${actionName}_FAILED`](state, action) {
@@ -152,7 +154,7 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
       const statuses = {
         isWriting: false
       };
-      return addEntitiesToState(state, { uuid, entities, statuses, error, cache: false });
+      return addEntitiesToState(state, { uuid, entities, statuses, error, cache: false, entityName });
     },
 
     [`DESTROY_${actionName}_COMPLETED`](state, action) {
@@ -163,7 +165,8 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
       const entities = { [entityName]: {}};
       return updateState(state, {
         statusUpdate: { statuses, entities },
-        uuid
+        uuid,
+        entityName
       });
     },
 
@@ -177,7 +180,8 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
       };
       const entities = { [entityName]: {}};
       return updateState(state, {
-        statusUpdate: { statuses, entities }
+        statusUpdate: { statuses, entities },
+        entityName
       });
     },
 

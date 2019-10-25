@@ -70,5 +70,4 @@ test('State after create', (done) => {
   });
 
   store.dispatch(action);
-
 });

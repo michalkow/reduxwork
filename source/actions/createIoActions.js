@@ -19,7 +19,7 @@ export default function createIoActions(name, options) {
         data
       };
     },
-    [`find${name}`](data) {
+    [`find${name}`](data = []) {
       return buildAction(
         options,
         ActionOperationEnum.FIND,
@@ -27,7 +27,7 @@ export default function createIoActions(name, options) {
         data
       );
     },
-    [`sync${name}`](data) {
+    [`sync${name}`](data = []) {
       return buildAction(
         options,
         ActionOperationEnum.SYNC,
@@ -36,7 +36,7 @@ export default function createIoActions(name, options) {
       );
 
     },
-    [`create${name}`](data) {
+    [`create${name}`](data = []) {
       return buildAction(
         options,
         ActionOperationEnum.CREATE,
@@ -44,7 +44,7 @@ export default function createIoActions(name, options) {
         data
       );
     },
-    [`update${name}`](data) {
+    [`update${name}`](data = []) {
       return buildAction(
         options,
         ActionOperationEnum.UPDATE,
@@ -52,7 +52,7 @@ export default function createIoActions(name, options) {
         data
       );
     },
-    [`destroy${name}`](data) {
+    [`destroy${name}`](data = []) {
       return buildAction(
         options,
         ActionOperationEnum.DESTROY,

@@ -2,6 +2,22 @@
 
 import testReducers from './test-reducers';
 import { findMessages, createMessages, updateMessages, destroyMessages } from './test-actions';
+import { getMessegesByIndexes } from './test-data';
+import {
+  createInitialState,
+  createFindState,
+  createFindFailedState,
+  createFindCompletedState,
+  createCreateState,
+  createCreateFailedState,
+  createCreateCompletedState,
+  createUpdateState,
+  createUpdateFailedState,
+  createUpdateCompletedState,
+  createDestroyState,
+  createDestroyFailedState,
+  createDestroyCompletedState
+} from './test-state';
 
 const initState = {
   messages: {},
@@ -13,130 +29,87 @@ const initState = {
 };
 
 test('Find reducer', () => {
+  const state = createInitialState();
   const action = findMessages();
-  const updatedState = testReducers.messages['FIND_MESSAGES'](
-    initState,
-    action
-  );
-  const expectedState = {
-    messages: { },
-    users: {},
-    actionCache: { },
-    entitieStatus: { messages: { isFinding: true }},
-    actionErrors: {},
-    lastAction: action.uuid
-  };
+  const updatedState = testReducers.messages['FIND_MESSAGES'](state, action);
+  const expectedState = createFindState(state, action);
   expect(updatedState).toEqual(expectedState);
 });
 
 test('Find reducer completed', () => {
-  const action = findMessages();
-  const updatedState = testReducers.messages['FIND_MESSAGES_COMPLETED'](
-    initState,
-    {
-      uuid: action.uuid,
-      payload: [
-        {
-          body: 'text',
-          id: '8e8ba283-5d70-44fc-b91c-a8d94c937328',
-          author: { id: '8e8ba283-5d70-44fc-b91c-a8d94c937323', name: 'Jack' }
-        }
-      ]
-    }
-  );
-  const expectedState = {
-    messages: {
-      '8e8ba283-5d70-44fc-b91c-a8d94c937328': {
-        body: 'text',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937328',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      }},
-    users: { '8e8ba283-5d70-44fc-b91c-a8d94c937323': { id: '8e8ba283-5d70-44fc-b91c-a8d94c937323', name: 'Jack' }},
-    actionCache: {},
-    entitieStatus: {
-      messages: { isFinding: false, init: true },
-      users: { isFinding: false, init: true }
-    },
-    actionErrors: {},
-    lastAction: action.uuid
-  };
+  const initialState = createInitialState();
+  const initialAction = findMessages();
+  const state = createFindState(initialState, initialAction);
+  const action = { uuid: initialAction.uuid, payload: getMessegesByIndexes('payload', [2, 3]) };
+  const updatedState = testReducers.messages['FIND_MESSAGES_COMPLETED'](state, action);
+  const expectedState = createFindCompletedState(state, action, [[2, 3]], [2, 3]);
   expect(updatedState).toEqual(expectedState);
 });
 
 test('Find reducer failed', () => {
-  const action = findMessages();
-  const updatedState = testReducers.messages['FIND_MESSAGES_FAILED'](
-    initState,
-    { uuid: action.uuid, error: 'Test Fail error' }
-  );
-  const expectedState = {
-    messages: {},
-    users: {},
-    actionCache: {},
-    entitieStatus: { messages: { isFinding: false }},
-    actionErrors: { [action.uuid]: 'Test Fail error' },
-    lastAction: action.uuid
-  };
+  const initialState = createInitialState();
+  const initialAction = findMessages();
+  const state = createFindState(initialState, initialAction);
+  const action = { uuid: initialAction.uuid, error: 'failed find' };
+  const updatedState = testReducers.messages['FIND_MESSAGES_FAILED'](state, action);
+  const expectedState = createFindFailedState(state, action);
   expect(updatedState).toEqual(expectedState);
 });
 
 test('Create reducer', () => {
-  const action = createMessages({ body: 'text', author: '8e8ba283-5d70-44fc-b91c-a8d94c937328' });
-  const updatedState = testReducers.messages['CREATE_MESSAGES'](
-    initState,
-    action
-  );
-  const expectedState = {
-    messages: { [action.payload[0].id]: { id: action.payload[0].id, body: 'text', author: '8e8ba283-5d70-44fc-b91c-a8d94c937328', _temp: true }},
-    users: {},
-    actionCache: { [action.uuid]: { messages: { [action.payload[0].id]: { id: action.payload[0].id, body: 'text', author: '8e8ba283-5d70-44fc-b91c-a8d94c937328' }}}},
-    entitieStatus: { messages: { isWriting: true }},
-    actionErrors: {},
-    lastAction: action.uuid
-  };
+  const state = createInitialState({}, {}, [[0, 4]], [0, 4]);
+  const action = createMessages(getMessegesByIndexes('data', [3, 2]));
+  const updatedState = testReducers.messages['CREATE_MESSAGES'](state, action);
+  const expectedState = createCreateState(state, action, [[0, 2, 3, 4], [3, 2]], [0, 4], { messages: [3, 2] });
   expect(updatedState).toEqual(expectedState);
 });
 
 test('Create reducer failed', () => {
-  const action = createMessages({ body: 'text', author: '8e8ba283-5d70-44fc-b91c-a8d94c937328' });
-  const updatedState = testReducers.messages['CREATE_MESSAGES'](
-    initState,
-    action
-  );
-  const updatedStateFailed = testReducers.messages['CREATE_MESSAGES_FAILED'](
-    updatedState,
-    { uuid: action.uuid, error: 'Test Fail error' }
-  );
-  const expectedState = {
-    messages: {},
-    users: {},
-    actionCache: {},
-    entitieStatus: { messages: { isWriting: false }},
-    actionErrors: { [action.uuid]: 'Test Fail error' },
-    lastAction: action.uuid
-  };
-  expect(updatedStateFailed).toEqual(expectedState);
+  const initialState = createInitialState({}, {}, [[0, 4]], [0, 4]);
+  const initialAction = createMessages(getMessegesByIndexes('data', [3, 2]));
+  const state = createCreateState(initialState, initialAction, [[0, 2, 3, 4], [3, 2]], [0, 4], { messages: [3, 2] });
+  const action = { uuid: initialAction.uuid, error: 'failed create' };
+  const updatedState = testReducers.messages['CREATE_MESSAGES_FAILED'](state, action);
+  const expectedState = createCreateFailedState(state, action, [[0, 4]], [0, 4]);
+  expect(updatedState).toEqual(expectedState);
 });
 
 test('Create reducer success', () => {
-  const action = createMessages({ body: 'text', author: '8e8ba283-5d70-44fc-b91c-a8d94c937328' });
-  const updatedState = testReducers.messages['CREATE_MESSAGES'](
-    initState,
-    action
-  );
-  const updatedStateCompleted = testReducers.messages['CREATE_MESSAGES_COMPLETED'](
-    updatedState,
-    { uuid: action.uuid }
-  );
-  const expectedState = {
-    messages: { [action.payload[0].id]: action.payload[0] },
-    users: {},
-    actionCache: {},
-    entitieStatus: { messages: { isWriting: false }},
-    actionErrors: {},
-    lastAction: action.uuid
-  };
-  expect(updatedStateCompleted).toEqual(expectedState);
+  const initialState = createInitialState({}, {}, [[0, 4]], [0, 4]);
+  const initialAction = createMessages(getMessegesByIndexes('data', [3, 2]));
+  const state = createCreateState(initialState, initialAction, [[0, 2, 3, 4], [3, 2]], [0, 4], { messages: [3, 2] });
+  const action = { uuid: initialAction.uuid, payload: getMessegesByIndexes('payload', [3, 2]) };
+  const updatedState = testReducers.messages['CREATE_MESSAGES_COMPLETED'](state, action);
+  const expectedState = createCreateCompletedState(state, action, [[0, 2, 3, 4]], [0, 2, 3, 4]);
+  expect(updatedState).toEqual(expectedState);
+});
+
+test('Destroy reducer', () => {
+  const state = createInitialState({}, {}, [[0, 2, 4]], [0, 2, 4]);
+  const action = destroyMessages(getMessegesByIndexes('data', [0, 2]));
+  const updatedState = testReducers.messages['DESTROY_MESSAGES'](state, action);
+  const expectedState = createDestroyState(state, action, [[4]], [0, 2, 4], { messages: [0, 2] });
+  expect(updatedState).toEqual(expectedState);
+});
+
+test('Destroy reducer failed', () => {
+  const initialState = createInitialState({}, {}, [[0, 2, 4]], [0, 2, 4]);
+  const initialAction = destroyMessages(getMessegesByIndexes('data', [0, 2]));
+  const state = createDestroyState(initialState, initialAction, [[4]], [0, 2, 4], { messages: [0, 2] });
+  const action = { uuid: initialAction.uuid, error: 'failed destroy' };
+  const updatedState = testReducers.messages['DESTROY_MESSAGES_FAILED'](state, action);
+  const expectedState = createDestroyFailedState(state, action, [[0, 2, 4]], [0, 2, 4]);
+  expect(updatedState).toEqual(expectedState);
+});
+
+test('Destroy reducer success', () => {
+  const initialState = createInitialState({}, {}, [[0, 2, 4]], [0, 2, 4]);
+  const initialAction = destroyMessages(getMessegesByIndexes('data', [0, 2]));
+  const state = createDestroyState(initialState, initialAction, [[4]], [0, 2, 4], { messages: [0, 2] });
+  const action = { uuid: initialAction.uuid };
+  const updatedState = testReducers.messages['DESTROY_MESSAGES_COMPLETED'](state, action);
+  const expectedState = createDestroyCompletedState(state, action, [[4]], [0, 2, 4]);
+  expect(updatedState).toEqual(expectedState);
 });
 
 test('Update reducer', () => {
@@ -306,157 +279,6 @@ test('Update reducer completed', () => {
       }
     },
     users: { '8e8ba283-5d70-44fc-b91c-a8d94c937323': { id: '8e8ba283-5d70-44fc-b91c-a8d94c937323', name: 'Jack2' }},
-    actionCache: {},
-    entitieStatus: { messages: { isWriting: false }, users: { isWriting: false }},
-    actionErrors: { },
-    lastAction: uuid
-  };
-  expect(updatedState).toEqual(expectedState);
-});
-
-test('Destroy reducer', () => {
-  const action = destroyMessages([{ id: '8e8ba283-5d70-44fc-b91c-a8d94c937329' }]);
-  const state = Object.assign({}, initState, {
-    messages: {
-      '8e8ba283-5d70-44fc-b91c-a8d94c937328': {
-        body: 'text',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937328',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      },
-      '8e8ba283-5d70-44fc-b91c-a8d94c937329': {
-        body: 'test',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937329',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      }
-    },
-    users: { '8e8ba283-5d70-44fc-b91c-a8d94c937323': { id: '8e8ba283-5d70-44fc-b91c-a8d94c937323', name: 'Jack' }},
-    actionCache: {},
-    entitieStatus: { },
-    actionErrors: {},
-    lastAction: action.uuid
-  });
-  const updatedState = testReducers.messages['DESTROY_MESSAGES'](
-    state,
-    action
-  );
-  const expectedState = {
-    messages: {
-      '8e8ba283-5d70-44fc-b91c-a8d94c937328': {
-        body: 'text',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937328',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      }
-    },
-    users: { '8e8ba283-5d70-44fc-b91c-a8d94c937323': { id: '8e8ba283-5d70-44fc-b91c-a8d94c937323', name: 'Jack' }},
-    actionCache: {
-      [action.uuid]: {
-        messages: {
-          '8e8ba283-5d70-44fc-b91c-a8d94c937329': {
-            body: 'test',
-            id: '8e8ba283-5d70-44fc-b91c-a8d94c937329',
-            author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-          }
-        }
-      }
-    },
-    entitieStatus: { messages: { isWriting: true }},
-    actionErrors: {},
-    lastAction: action.uuid
-  };
-  expect(updatedState).toEqual(expectedState);
-});
-
-test('Destroy reducer failed', () => {
-  const { uuid } = destroyMessages([]);
-  const state = Object.assign({}, initState, {
-    messages: {
-      '8e8ba283-5d70-44fc-b91c-a8d94c937328': {
-        body: 'text',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937328',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      }
-    },
-    users: { '8e8ba283-5d70-44fc-b91c-a8d94c937323': { id: '8e8ba283-5d70-44fc-b91c-a8d94c937323', name: 'Jack' }},
-    actionCache: {
-      [uuid]: {
-        messages: {
-          '8e8ba283-5d70-44fc-b91c-a8d94c937329': {
-            body: 'test',
-            id: '8e8ba283-5d70-44fc-b91c-a8d94c937329',
-            author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-          }
-        }
-      }
-    },
-    entitieStatus: { messages: { isWriting: true }},
-    actionErrors: {},
-    lastAction: uuid
-  });
-  const updatedState = testReducers.messages['DESTROY_MESSAGES_FAILED'](
-    state,
-    { uuid, error: 'failed destroy' }
-  );
-  const expectedState = {
-    messages: {
-      '8e8ba283-5d70-44fc-b91c-a8d94c937328': {
-        body: 'text',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937328',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      },
-      '8e8ba283-5d70-44fc-b91c-a8d94c937329': {
-        body: 'test',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937329',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      }
-    },
-    users: { '8e8ba283-5d70-44fc-b91c-a8d94c937323': { id: '8e8ba283-5d70-44fc-b91c-a8d94c937323', name: 'Jack' }},
-    actionCache: {},
-    entitieStatus: { messages: { isWriting: false }},
-    actionErrors: { [uuid]: 'failed destroy' },
-    lastAction: uuid
-  };
-  expect(updatedState).toEqual(expectedState);
-});
-
-test('Destroy reducer completed', () => {
-  const { uuid } = destroyMessages([]);
-  const state = Object.assign({}, initState, {
-    messages: {
-      '8e8ba283-5d70-44fc-b91c-a8d94c937328': {
-        body: 'text',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937328',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      }
-    },
-    users: { '8e8ba283-5d70-44fc-b91c-a8d94c937323': { id: '8e8ba283-5d70-44fc-b91c-a8d94c937323', name: 'Jack' }},
-    actionCache: {
-      [uuid]: {
-        messages: {
-          '8e8ba283-5d70-44fc-b91c-a8d94c937329': {
-            body: 'test',
-            id: '8e8ba283-5d70-44fc-b91c-a8d94c937329',
-            author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-          }
-        }
-      }
-    },
-    entitieStatus: { messages: { isWriting: true }},
-    actionErrors: {},
-    lastAction: uuid
-  });
-  const updatedState = testReducers.messages['DESTROY_MESSAGES_COMPLETED'](
-    state,
-    { uuid }
-  );
-  const expectedState = {
-    messages: {
-      '8e8ba283-5d70-44fc-b91c-a8d94c937328': {
-        body: 'text',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937328',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      }
-    },
-    users: { '8e8ba283-5d70-44fc-b91c-a8d94c937323': { id: '8e8ba283-5d70-44fc-b91c-a8d94c937323', name: 'Jack' }},
     actionCache: {},
     entitieStatus: { messages: { isWriting: false }},
     actionErrors: { },
