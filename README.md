@@ -1,6 +1,6 @@
 # Reduxwork
 
-[![Build Status](https://travis-ci.org/michalkow/reduxwork.svg?branch=master)](https://travis-ci.org/michalkow/reduxwork)
+[![Build Status](https://travis-ci.org/michalkow/reduxwork.svg?branch=v1)](https://travis-ci.org/michalkow/reduxwork)
 
 A small [Redux](http://redux.js.org) framework for creating actions and reducers that work with AJAX or WebSocket functions and create real-time apps. 
 
@@ -9,14 +9,9 @@ A small [Redux](http://redux.js.org) framework for creating actions and reducers
 Install from npm:
 
 ```bash
-npm install reduxwork 
+npm install git://github.com/michalkow/reduxwork#v1
 ```
 
-Or install from bower:
-
-```bash
-bower install reduxwork
-```
 You need to have redux and redux-thunk 
 
 ## Usage
