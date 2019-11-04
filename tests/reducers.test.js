@@ -113,176 +113,29 @@ test('Destroy reducer success', () => {
 });
 
 test('Update reducer', () => {
-  const state = Object.assign({}, initState, {
-    messages: {
-      '8e8ba283-5d70-44fc-b91c-a8d94c937328': {
-        body: 'text',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937328',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      },
-      '8e8ba283-5d70-44fc-b91c-a8d94c937329': {
-        body: 'text2',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937329',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      }
-    },
-    users: { '8e8ba283-5d70-44fc-b91c-a8d94c937323': { id: '8e8ba283-5d70-44fc-b91c-a8d94c937323', name: 'Jack' }}
-  });
-  const action = updateMessages([{ id: '8e8ba283-5d70-44fc-b91c-a8d94c937329', body: 'test' }]);
-  const updatedState = testReducers.messages['UPDATE_MESSAGES'](
-    state,
-    action
-  );
-  const expectedState = {
-    messages: {
-      '8e8ba283-5d70-44fc-b91c-a8d94c937328': {
-        body: 'text',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937328',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      },
-      '8e8ba283-5d70-44fc-b91c-a8d94c937329': {
-        _temp: true,
-        body: 'test',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937329',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      }
-    },
-    users: { '8e8ba283-5d70-44fc-b91c-a8d94c937323': { id: '8e8ba283-5d70-44fc-b91c-a8d94c937323', name: 'Jack' }},
-    actionCache: {
-      [action.uuid]: {
-        messages: {
-          '8e8ba283-5d70-44fc-b91c-a8d94c937329': {
-            body: 'text2',
-            id: '8e8ba283-5d70-44fc-b91c-a8d94c937329',
-            author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-          }
-        }
-      }
-    },
-    entitieStatus: { messages: { isWriting: true }},
-    actionErrors: {},
-    lastAction: action.uuid
-  };
+  const state = createInitialState({}, {}, [[0, 1, 2, 4]], [0, 1, 2, 4]);
+  const action = updateMessages(getMessegesByIndexes('data', [], [], [1, 2]));
+  const updatedState = testReducers.messages['UPDATE_MESSAGES'](state, action);
+  const expectedState = createUpdateState(state, action, [[0, 1, 2, 4], [1, 2], [1, 2]], [0, 1, 2, 4], { messages: [1, 2] });
   expect(updatedState).toEqual(expectedState);
 });
 
 test('Update reducer failed', () => {
-  const { uuid } = updateMessages([]);
-  const state = Object.assign({}, initState, {
-    messages: {
-      '8e8ba283-5d70-44fc-b91c-a8d94c937328': {
-        body: 'text',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937328',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      },
-      '8e8ba283-5d70-44fc-b91c-a8d94c937329': {
-        _temp: true,
-        body: 'test',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937329',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      }
-    },
-    users: { '8e8ba283-5d70-44fc-b91c-a8d94c937323': { id: '8e8ba283-5d70-44fc-b91c-a8d94c937323', name: 'Jack' }},
-    actionCache: {
-      [uuid]: {
-        messages: {
-          '8e8ba283-5d70-44fc-b91c-a8d94c937329': {
-            body: 'text2',
-            id: '8e8ba283-5d70-44fc-b91c-a8d94c937329',
-            author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-          }
-        }
-      }
-    },
-    entitieStatus: { messages: { isWriting: true }},
-    actionErrors: {},
-    lastAction: uuid
-  });
-  const updatedState = testReducers.messages['UPDATE_MESSAGES_FAILED'](
-    state,
-    { uuid, error: 'failed update' }
-  );
-  const expectedState = {
-    messages: {
-      '8e8ba283-5d70-44fc-b91c-a8d94c937328': {
-        body: 'text',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937328',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      },
-      '8e8ba283-5d70-44fc-b91c-a8d94c937329': {
-        body: 'text2',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937329',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      }
-    },
-    users: { '8e8ba283-5d70-44fc-b91c-a8d94c937323': { id: '8e8ba283-5d70-44fc-b91c-a8d94c937323', name: 'Jack' }},
-    actionCache: {},
-    entitieStatus: { messages: { isWriting: false }},
-    actionErrors: { [uuid]: 'failed update' },
-    lastAction: uuid
-  };
+  const initialState = createInitialState({}, {}, [[0, 1, 2, 4]], [0, 1, 2, 4]);
+  const initialAction = updateMessages(getMessegesByIndexes('data', [], [], [1, 2]));
+  const state = createUpdateState(initialState, initialAction, [[0, 1, 2, 4], [3, 2], [1, 2]], [0, 1, 2, 4], { messages: [1, 2] });
+  const action = { uuid: initialAction.uuid, error: 'failed update' };
+  const updatedState = testReducers.messages['UPDATE_MESSAGES_FAILED'](state, action);
+  const expectedState = createUpdateFailedState(state, action, [[0, 1, 2, 4]], [0, 1, 2, 4]);
   expect(updatedState).toEqual(expectedState);
 });
 
-test('Update reducer completed', () => {
-  const { uuid } = updateMessages([]);
-  const state = Object.assign({}, initState, {
-    messages: {
-      '8e8ba283-5d70-44fc-b91c-a8d94c937328': {
-        body: 'text',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937328',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      },
-      '8e8ba283-5d70-44fc-b91c-a8d94c937329': {
-        _temp: true,
-        body: 'test',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937329',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      }
-    },
-    users: { '8e8ba283-5d70-44fc-b91c-a8d94c937323': { id: '8e8ba283-5d70-44fc-b91c-a8d94c937323', name: 'Jack' }},
-    actionCache: {
-      [uuid]: {
-        messages: {
-          '8e8ba283-5d70-44fc-b91c-a8d94c937329': {
-            body: 'text2',
-            id: '8e8ba283-5d70-44fc-b91c-a8d94c937329',
-            author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-          }
-        }
-      }
-    },
-    entitieStatus: { messages: { isWriting: true }},
-    actionErrors: {},
-    lastAction: uuid
-  });
-  const updatedState = testReducers.messages['UPDATE_MESSAGES_COMPLETED'](
-    state,
-    {
-      uuid, payload: [{
-        body: 'test',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937329',
-        author: { id: '8e8ba283-5d70-44fc-b91c-a8d94c937323', name: 'Jack2' }
-      }] }
-  );
-  const expectedState = {
-    messages: {
-      '8e8ba283-5d70-44fc-b91c-a8d94c937328': {
-        body: 'text',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937328',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      },
-      '8e8ba283-5d70-44fc-b91c-a8d94c937329': {
-        body: 'test',
-        id: '8e8ba283-5d70-44fc-b91c-a8d94c937329',
-        author: '8e8ba283-5d70-44fc-b91c-a8d94c937323'
-      }
-    },
-    users: { '8e8ba283-5d70-44fc-b91c-a8d94c937323': { id: '8e8ba283-5d70-44fc-b91c-a8d94c937323', name: 'Jack2' }},
-    actionCache: {},
-    entitieStatus: { messages: { isWriting: false }},
-    actionErrors: { },
-    lastAction: uuid
-  };
+test('Update reducer success', () => {
+  const initialState = createInitialState({}, {}, [[0, 1, 2, 4]], [0, 1, 2, 4]);
+  const initialAction = updateMessages(getMessegesByIndexes('data', [], [], [1, 2]));
+  const state = createUpdateState(initialState, initialAction, [[0, 1, 2, 4], [1, 2], [1, 2]], [0, 1, 2, 4], { messages: [1, 2] });
+  const action = { uuid: initialAction.uuid, payload: getMessegesByIndexes('payload', [], [], [1, 2]) };
+  const updatedState = testReducers.messages['UPDATE_MESSAGES_COMPLETED'](state, action);
+  const expectedState = createUpdateCompletedState(state, action, [[0, 1, 2, 4], [], [1, 2]], [0, 1, 2, 4]);
   expect(updatedState).toEqual(expectedState);
 });

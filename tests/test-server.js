@@ -8,7 +8,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var _ = require('lodash');
 var socket_io = require('socket.io');
-var dataset = require('./test-data.js').data;
+var getPayloadByIds = require('./test-data.js').getPayloadByIds;
 
 var io = socket_io();
 var app = express();
@@ -20,36 +20,49 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 var serverPort = process.env.PORT || 1234;
-/*
+
 // Run server on port
+/*
 server.listen(serverPort, () => {
   var host = server.address().address;
   var port = server.address().port;
   //console.log('Example app listening at http://%s:%s', host, port);
 });
 */
+
+var database = {
+  messages: [],
+  users: []
+}
+
 // Actions
 var mockDB = {
   create: function(collection, data) {
-    //console.log(data);
-    if (!data.id) data.id = (_.maxBy(dataset[collection], 'id').id + 1);
-    //console.log(data.id);
-    dataset[collection].push(data);
-    return { error: null, data: data };
+    //console.log('Request', data);
+    database[collection] = _.unionBy(database[collection], getPayloadByIds(data), 'id');
+    const response = { error: null, data: getPayloadByIds(data) };
+    //console.log('Response', response);
+    return response;
   },
   update: function(collection, data) {
-    var item = _.find(dataset[collection], { id: data.id });
-    item = _.assignIn(item, data);
-    dataset[collection].splice(_.findIndex(dataset[collection], { id: data.id }), 1, item);
-    return { error: null, data: item };
+    //console.log('Request', data);
+    database[collection] = _.unionBy(database[collection], getPayloadByIds(data, true), 'id');
+    const response = { error: null, data: getPayloadByIds(data, true) };
+    //console.log('Response', response);
+    return response;
   },
   destroy: function(collection, data) {
-    dataset[collection] = _.reject(dataset[collection], data);
-    return { error: null, data: true };
+    //console.log('Request', data);
+    database[collection] = _.reject(database[collection], (item) => _.find(data, { id: item.id }));
+    const response = { error: null, data: true };
+    //console.log('Response', response);
+    return response;
   },
   find: function(collection, data) {
-    if (!data) data = {};
-    return { error: null, data: _.filter(dataset[collection], data) };
+    //console.log('Request', data);
+    const response = { error: null, data: database[collection] };
+    //console.log('Response', response);
+    return response;
   }
 };
 

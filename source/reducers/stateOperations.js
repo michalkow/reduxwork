@@ -16,33 +16,38 @@ export const updateActionCache = (state, uuid, cache) =>
     addActionToCache(state, uuid, cache) :
     removeActionFromCache(state, uuid);
 
-export const updateActionErrors = (state, uuid, error) =>
-  Object.assign({}, state.actionErrors, { [uuid]: error });
+export const updateActionErrors = (state, action) =>
+  Object.assign({}, state.actionErrors, {
+    [action.uuid]: {
+      message: action.error,
+      action
+    }
+  });
 
 export const updateEntitieStatus = (state, name, statuses) =>
   Object.assign({}, state.entitieStatus, { [name]: Object.assign({}, state.entitieStatus[name], statuses) });
 
-export const updateState = (state, { entitiesUpdate = {}, cacheUpdate, statusUpdate, errorUpdate, uuid, entityName }) =>
+export const updateState = (state, action, { entitiesUpdate = {}, cacheUpdate, statusUpdate, entityName }) =>
   Object.assign({}, state, entitiesUpdate, {
     actionCache: cacheUpdate ? updateActionCache(state, cacheUpdate.uuid, cacheUpdate.entities) : {},
     entitieStatus: statusUpdate ? updateEntitieStatus(state, entityName, statusUpdate.statuses) : {},
-    actionErrors: errorUpdate ? updateActionErrors(state, errorUpdate.uuid, errorUpdate.error) : {},
-    lastAction: uuid
+    actionErrors: action.error ? updateActionErrors(state, action) : {},
+    lastAction: action
   });
 
-export const upsertEntitiesToState = (state, { uuid, entities = {}, statuses = {}, entityName}) => {
+export const upsertEntitiesToState = (state, action, { entities = {}, statuses = {}, entityName }) => {
   let entitiesUpdate = mapValues(entities, (entity, name) =>
     Object.assign({}, state[name], entity)
   );
-  return updateState(state, {
+  return updateState(state, action, {
     entitiesUpdate,
     statusUpdate: { statuses, entities },
-    uuid,
     entityName
   });
 };
 
-export const addEntitiesToState = (state, { uuid, entities = {}, statuses = {}, cache = false, error, entityName }) => {
+export const addEntitiesToState = (state, action, { entities = {}, statuses = {}, cache = false, entityName }) => {
+  const { uuid } = action;
   let entitiesUpdate = mapValues(entities, (entity, name) =>
     Object.assign({}, state[name], (
       cache ?
@@ -53,17 +58,16 @@ export const addEntitiesToState = (state, { uuid, entities = {}, statuses = {}, 
         entity
     ))
   );
-  return updateState(state, {
+  return updateState(state, action, {
     entitiesUpdate,
     cacheUpdate: { uuid, entities: cache ? entities : null },
     statusUpdate: { statuses, entities },
-    errorUpdate: error ? { uuid, error } : null,
-    uuid,
     entityName
   });
 };
 
-export const updateEntitiesInState = (state, { uuid, entities = {}, statuses = {}, cache = false, error, entityName }) => {
+export const updateEntitiesInState = (state, action, { entities = {}, statuses = {}, cache = false, entityName }) => {
+  const { uuid } = action;
   const affectedEntities = mapValues(entities, (entity, name) =>
     pick(state[name], keys(entity))
   );
@@ -78,29 +82,26 @@ export const updateEntitiesInState = (state, { uuid, entities = {}, statuses = {
         item
     ))
   );
-  return updateState(state, {
+  return updateState(state, action, {
     entitiesUpdate,
     cacheUpdate: { uuid, entities: cache ? affectedEntities : null },
     statusUpdate: { statuses, entities },
-    errorUpdate: error ? { uuid, error } : null,
-    uuid,
     entityName
   });
 };
 
-export const removeEntitiesFromState = (state, { uuid, entities = {}, statuses = {}, cache = false, error, entityName }) => {
+export const removeEntitiesFromState = (state, action, { entities = {}, statuses = {}, cache = false, entityName }) => {
+  const { uuid } = action;
   const affectedEntities = mapValues(entities, (entity, name) =>
     pick(state[name], keys(entity))
   );
   let entitiesUpdate = mapValues(entities, (entity, name) =>
     omit(state[name], keys(entity))
   );
-  return updateState(state, {
+  return updateState(state, action, {
     entitiesUpdate,
     cacheUpdate: { uuid, entities: cache ? affectedEntities : null },
     statusUpdate: { statuses, entities },
-    errorUpdate: error ? { uuid, error } : null,
-    uuid,
     entityName
   });
 };

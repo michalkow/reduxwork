@@ -5,8 +5,8 @@ import { AsyncNodeStorage } from 'redux-persist-node-storage';
 import reduxwork from './test-reduxwork';
 import reducers from './test-reducers';
 import server from './test-server';
-import { get, omit } from 'lodash';
 import { findMessages, createMessages, updateMessages, destroyMessages } from './test-actions';
+import { getMessegesByIndexes } from './test-data';
 
 const offlineOptions = Object.assign({}, offlineConfig, {
   persistOptions: { storage: new AsyncNodeStorage('tmp/') }
@@ -21,9 +21,22 @@ const store = createStore(
 );
 
 const serverPort = process.env.PORT || 1234;
+const outbox = [];
 
 const startServer = () => server.listen(serverPort);
 const stopServer = () => server.close();
+const waitForAction = (action, variant = null, callback) => {
+  let wait = true;
+  return store.subscribe(() => {
+    const state = store.getState();
+    const { lastAction } = state;
+    const type = variant ? action.meta.offline[variant].type : action.type;
+    if (lastAction.uuid == action.uuid && lastAction.type == type && wait) {
+      wait = false;
+      callback(state);
+    }
+  });
+};
 
 beforeAll(() => {
   startServer();
@@ -57,16 +70,117 @@ test('Initial state', () => {
 });
 
 test('State after create', (done) => {
-  let isWriting = false;
-  const action = createMessages({ body: 'text1' });
-  store.subscribe(() => {
-    const state = store.getState();
-    if (isWriting && !get(state, 'entitieStatus.messages.isWriting')) {
-      const [item] = action.payload;
-      expect(state.messages).toEqual({ [item.id]: omit(item, ['_temp']) });
+  const action = createMessages(getMessegesByIndexes('data', [0, 1]));
+  waitForAction(action, 'commit', (state) => {
+    expect(state.messages).toEqual(getMessegesByIndexes('entities', [0, 1]));
+    done();
+  });
+
+  store.dispatch(action);
+});
+
+test('State after create 2', (done) => {
+  const action = createMessages(getMessegesByIndexes('data', [2]));
+  waitForAction(action, 'commit', (state) => {
+    try {
+      expect(state.messages).toEqual(getMessegesByIndexes('entities', [0, 1, 2]));
       done();
+    } catch (error) {
+      done(error);
     }
-    isWriting = get(state, 'entitieStatus.messages.isWriting');
+
+  });
+
+  store.dispatch(action);
+});
+
+test('State after create 3', (done) => {
+  stopServer();
+  const action = createMessages(getMessegesByIndexes('data', [3]));
+  outbox.push(action);
+  waitForAction(action, null, (state) => {
+    expect(state.messages).toEqual(getMessegesByIndexes('entities', [0, 1, 2, 3], [3]));
+    done();
+  });
+
+  store.dispatch(action);
+});
+
+test('State after create 4', (done) => {
+  const action = outbox.pop();
+  waitForAction(action, 'commit', (state) => {
+    expect(state.messages).toEqual(getMessegesByIndexes('entities', [0, 1, 2, 3]));
+    done();
+  });
+
+  startServer();
+});
+
+test('State after destroy', (done) => {
+  const action = destroyMessages(getMessegesByIndexes('data', [1, 3]));
+  waitForAction(action, 'commit', (state) => {
+    expect(state.messages).toEqual(getMessegesByIndexes('entities', [0, 2]));
+    done();
+  });
+
+  store.dispatch(action);
+});
+
+test('State after update', (done) => {
+  const action = updateMessages(getMessegesByIndexes('data', [], [], [2]));
+  waitForAction(action, 'commit', (state) => {
+    expect(state.messages).toEqual(getMessegesByIndexes('entities', [0, 2], [], [2]));
+    done();
+  });
+
+  store.dispatch(action);
+});
+
+test('State after update 2', (done) => {
+  const action = updateMessages(getMessegesByIndexes('data', [], [], [0, 1]));
+  waitForAction(action, 'commit', (state) => {
+    expect(state.messages).toEqual(getMessegesByIndexes('entities', [0, 1, 2], [], [0, 1, 2]));
+    done();
+  });
+
+  store.dispatch(action);
+});
+
+test('State after destroy 2', (done) => {
+  const action = destroyMessages(getMessegesByIndexes('data', [0, 1, 2]));
+  waitForAction(action, 'commit', (state) => {
+    expect(state.messages).toEqual(getMessegesByIndexes('entities', []));
+    done();
+  });
+
+  store.dispatch(action);
+});
+
+test('State after create 5 ', (done) => {
+  const action = createMessages(getMessegesByIndexes('data', [0, 1, 3, 4]));
+  waitForAction(action, 'commit', (state) => {
+    expect(state.messages).toEqual(getMessegesByIndexes('entities', [0, 1, 3, 4]));
+    done();
+  });
+
+  store.dispatch(action);
+});
+
+test('State after destroy 3', (done) => {
+  const action = destroyMessages(getMessegesByIndexes('data', [1]));
+  waitForAction(action, 'commit', (state) => {
+    expect(state.messages).toEqual(getMessegesByIndexes('entities', [0, 3, 4]));
+    done();
+  });
+
+  store.dispatch(action);
+});
+
+test('State after find', (done) => {
+  const action = findMessages();
+  waitForAction(action, 'commit', (state) => {
+    expect(state.messages).toEqual(getMessegesByIndexes('entities', [0, 3, 4]));
+    done();
   });
 
   store.dispatch(action);

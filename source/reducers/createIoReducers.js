@@ -37,135 +37,117 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
 
   return Object.assign({
     [`FIND_${actionName}`](state, action) {
-      const { uuid } = action;
       const statuses = {
         isFinding: true
       };
       const entities = { [entityName]: {}};
-      return updateState(state, {
+      return updateState(state, action, {
         statusUpdate: { statuses, entities },
-        uuid,
         entityName
       });
     },
 
     [`FIND_${actionName}_FAILED`](state, action) {
-      const { uuid, error } = action;
       const statuses = {
         isFinding: false
       };
       const entities = { [entityName]: {}};
-      return updateState(state, {
+      return updateState(state, action, {
         statusUpdate: { statuses, entities },
-        errorUpdate: { uuid, error },
-        uuid,
         entityName
       });
     },
 
     [`FIND_${actionName}_COMPLETED`](state, action) {
-      const { uuid } = action;
       const entities = normalizeToEntities(action.payload, entityName, options);
       const statuses = {
         init: true,
         isFinding: false
       };
-      return upsertEntitiesToState(state, { uuid, entities, statuses, entityName });
+      return upsertEntitiesToState(state, action, { entities, statuses, entityName });
     },
 
     [`RECEIVE_${actionName}`](state, action) {
-      const { uuid } = action;
       const entities = normalizeToEntities(action.data, name, options);
-      return upsertEntitiesToState(state, { uuid, entities, entityName });
+      return upsertEntitiesToState(state, action, { entities, entityName });
     },
 
     [`REMOVE_${actionName}`](state, action) {
-      const { uuid } = action;
       const entities = normalizeToEntities(action.data, name, options);
-      return removeEntitiesFromState(state, { uuid, entities, cache: false, entityName });
+      return removeEntitiesFromState(state, action, { entities, cache: false, entityName });
     },
 
     [`CREATE_${actionName}`](state, action) {
-      const { uuid } = action;
       const entities = normalizeToEntities(action.payload, entityName, options);
       const statuses = {
         isWriting: true
       };
-      return addEntitiesToState(state, { uuid, entities, statuses, cache: true, entityName });
+      return addEntitiesToState(state, action, { entities, statuses, cache: true, entityName });
     },
 
     [`CREATE_${actionName}_FAILED`](state, action) {
-      const { uuid, error } = action;
-      const entities = state.actionCache[uuid];
+      const entities = state.actionCache[action.uuid];
       const statuses = {
         isWriting: false
       };
-      return removeEntitiesFromState(state, { uuid, entities, statuses, error, cache: false, entityName });
+      return removeEntitiesFromState(state, action, { entities, statuses, cache: false, entityName });
     },
 
     [`CREATE_${actionName}_COMPLETED`](state, action) {
-      const { uuid } = action;
       const statuses = {
         isWriting: false
       };
       const entities = normalizeToEntities(action.payload, entityName, options);
-      return upsertEntitiesToState(state, { uuid, entities, statuses, cache: false, entityName }, options);
+      return upsertEntitiesToState(state, action, { entities, statuses, cache: false, entityName }, options);
     },
 
     [`UPDATE_${actionName}`](state, action) {
-      const { uuid } = action;
       const entities = normalizeToEntities(action.payload, entityName, options);
       const statuses = {
         isWriting: true
       };
-      return updateEntitiesInState(state, { uuid, entities, statuses, cache: true, entityName }, options);
+      return updateEntitiesInState(state, action, { entities, statuses, cache: true, entityName }, options);
     },
 
     [`UPDATE_${actionName}_FAILED`](state, action) {
-      const { uuid, error } = action;
-      const entities = state.actionCache[uuid];
+      const entities = state.actionCache[action.uuid];
       const statuses = {
         isWriting: false
       };
-      return updateEntitiesInState(state, { uuid, entities, statuses, error, cache: false, entityName }, options);
+      return updateEntitiesInState(state, action, { entities, statuses, cache: false, entityName }, options);
     },
 
     [`UPDATE_${actionName}_COMPLETED`](state, action) {
-      const { uuid } = action;
       const statuses = {
         isWriting: false
       };
       const entities = normalizeToEntities(action.payload, entityName, options);
-      return updateEntitiesInState(state, { uuid, entities, statuses, cache: false, entityName }, options);
+      return upsertEntitiesToState(state, action, { entities, statuses, cache: false, entityName }, options);
     },
 
     [`DESTROY_${actionName}`](state, action) {
-      const { uuid } = action;
       const entities = normalizeToEntities(action.payload, entityName, options);
       const statuses = {
         isWriting: true
       };
-      return removeEntitiesFromState(state, { uuid, entities, statuses, cache: true, entityName });
+      return removeEntitiesFromState(state, action, { entities, statuses, cache: true, entityName });
     },
 
     [`DESTROY_${actionName}_FAILED`](state, action) {
-      const { uuid, error } = action;
-      const entities = state.actionCache[uuid];
+      const entities = state.actionCache[action.uuid];
       const statuses = {
         isWriting: false
       };
-      return addEntitiesToState(state, { uuid, entities, statuses, error, cache: false, entityName });
+      return addEntitiesToState(state, action, { entities, statuses, cache: false, entityName });
     },
 
     [`DESTROY_${actionName}_COMPLETED`](state, action) {
-      const { uuid } = action;
       const statuses = {
         isWriting: false
       };
       const entities = { [entityName]: {}};
-      return updateState(state, {
+      return updateState(state, action, {
         statusUpdate: { statuses, entities },
-        uuid,
         entityName
       });
     },
@@ -179,7 +161,7 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
         selected
       };
       const entities = { [entityName]: {}};
-      return updateState(state, {
+      return updateState(state, action, {
         statusUpdate: { statuses, entities },
         entityName
       });

@@ -3,8 +3,3 @@ node_js:
   - 8.11.3
 install:
   - npm install
-  - npm install forever -g
-before_script:
-  - forever start tests/test-server.js
-after_script:
-  - forever stopall
