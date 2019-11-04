@@ -21,9 +21,9 @@ export const buildActionType = (options, operation, name) => (
 export const mergeLocalFields = (fields = []) =>
   union(['_temp', '_rewrite'], fields);
 
-export const buildAction = (options, operation, name, data) => {
+export const buildAction = (options, operation, name, data, customType) => {
   const { localFieldsName, virtualFieldsName, transport, uuidVersion, uuidOptions } = options;
-  const type = buildActionType(options, operation, name);
+  const type = customType || buildActionType(options, operation, name);
   const payload = parseData(options, operation, data);
   const uuid = createUuid[uuidVersion](uuidOptions);
   return {

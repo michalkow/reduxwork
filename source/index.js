@@ -1,7 +1,7 @@
 import createIoActions from './actions/createIoActions';
+import { createGetAction, createPostAction, createPutAction, createDeleteAction } from './actions/createCrudAction';
 import createIoReducers from './reducers/createIoReducers';
 import createRootReducer from './reducers/createRootReducer';
-import createReducer from './reducers/createReducer';
 import createInitialState from './lib/createInitialState';
 import createOfflineOptions from './offline/createOfflineOptions';
 
@@ -34,18 +34,27 @@ export default class Reduxwork {
   createIoActions = (name, options = {}) =>
     createIoActions(name, this.mergeOptions(options));
 
+  createGetAction = (name, options = {}) =>
+    createGetAction(name, this.mergeOptions(options));
+
+  createPostAction = (name, options = {}) =>
+    createPostAction(name, this.mergeOptions(options));
+
+  createPutAction = (name, options = {}) =>
+    createPutAction(name, this.mergeOptions(options));
+
+  createDeleteAction = (name, options = {}) =>
+    createDeleteAction(name, this.mergeOptions(options));
+
   createIoReducers = (name, customActions = {}, options = {}) =>
     createIoReducers(name, customActions, this.mergeOptions(options));
-
-  createReducer = (name, customActions = {}) =>
-    createReducer(name, customActions);
 
   createRootReducer = (reducers = []) =>
     createRootReducer(reducers);
 
   createInitialState = () =>
     createInitialState();
- 
+
   createOfflineOptions = (options = {}) =>
     createOfflineOptions(this.options, options);
 }

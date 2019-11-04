@@ -11,8 +11,8 @@
     "uuid": "^3.3.3"
   },
   "peerDependencies": {
-    "redux": "4.0.1",
-    "redux-thunk": "2.3.0"
+    "redux": "^4.0.1",
+    "@redux-offline/redux-offline": "^2.5.2"
   },
   "devDependencies": {
     "@babel/cli": "7.2.0",

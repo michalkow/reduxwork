@@ -4,6 +4,8 @@
 
 A small [Redux](http://redux.js.org) framework for creating actions and reducers that work with AJAX or WebSocket functions and create real-time apps. 
 
+For the previous version and installation, instructions, pleas check the [https://github.com/michalkow/reduxwork/tree/v1](v1 branch). 
+
 ## Install
 
 Install from npm:
@@ -12,41 +14,61 @@ Install from npm:
 npm install reduxwork 
 ```
 
-Or install from bower:
-
-```bash
-bower install reduxwork
-```
-You need to have redux and redux-thunk 
+You need to have redux and redux-offline
 
 ## Usage
 
-### Actions and reducer configuration options
+### Actions and reducer configuration options and defaults
 
 ```javascript
-const config = {
-  keyName: '_id', // Name of identificator key in your database. Default: 'id'
-  addKeyOnCreate: true, // Reducers only. When creating a temporary item (before socket/fetch) random indentificator will be added. Default: false
-  eventName: "redux_action_event", // Actions only. Name of event that will be send by socket.io. Default: "redux_action_event"
-  socketIoFunction: function(action, data, cb) { 
-  	return socket.emit(action, data, cb) 
-  }, // Actions only. Socket funtion to use for transport. Default: null
-  fetchFunction: function(url, options) { 
-  	return fetch(url, options)
-  } // Actions only. Ajax funtion to use for transport. Default: null
-}
+const reduxwork = new Reduxwork({
+  keyName: 'id',// Name of identificator key in your database.
+  addKeyOnCreate: false, // Reducers only. When creating a temporary item (before socket/fetch) random indentificator will be added.
+  rewriteOnUpdate: true,
+  socketEventName: 'redux_action_event', // Actions only. Name of event that will be send by socket.io.
+  socket: null, // Actions only. Socket funtion to use for transport.
+  transport: 'fetch',
+  virtualFieldsName: 'virtualFields',
+  localFieldsName: 'localFields',
+  uuidOptions: {},
+  uuidVersion: 'v4',
+  actionInject: (action) => action,
+  validationHook: null,
+  createKey: null,
+  schemas: {}
+});
+```
+
+### Use with redux and redux-offline
+
+```javascript
+import { applyMiddleware, createStore, compose } from 'redux';
+import { createOffline } from '@redux-offline/redux-offline';
+import offlineConfig from '@redux-offline/redux-offline/lib/defaults';
+import reduxwork from './reduxwork';
+import reducers from './reducers';
+
+const offlineOptions = Object.assign({}, offlineConfig, reduxwork.createOfflineOptions());
+
+const { middleware, enhanceReducer, enhanceStore } = createOffline(offlineOptions);
+
+const store = createStore(
+  enhanceReducer(reduxwork.createRootReducer([reducers])),
+  reduxwork.createInitialState(),
+  compose(enhanceStore, applyMiddleware(middleware))
+);
 ```
 
 ### Reducer creators
 
 ```javascript
+import reduxwork from './reduxwork';
+
 export default {
 	// Standard creator
-  messages: createIoReducers(config, 'messages'),
+  messages: reduxwork.createIoReducers('messages'),
   // Creator with added state and actions to handle
-  users: createLocalReducers(config, 'users', {
-  	online: []
-  }, {
+  users: reduxwork.createIoReducers('users', {
    	WENT_ONLINE(state, action) {
       return Object.assign({}, state, {
       	online: [...state.online, action.data]
@@ -57,16 +79,6 @@ export default {
       	online: _.reject([...state.online], action.data)
       })        
     }
-  }),
-  // Custom reducer
-  modal: createReducer(config, 'modal', {
-  	show: false
-  }, {
-   	TOGGLE_MODAL(state, action) {
-      return Object.assign({}, state, {
-      	show: action.data
-      })        
-    }
   })
 }
 ```
@@ -74,6 +86,8 @@ export default {
 ### Action creators
 
 ```javascript
+import reduxwork from './reduxwork';
+
 export var {
   findMessages,
   createMessages,
@@ -84,7 +98,7 @@ export var {
   syncMessages,
   receiveMessages,
   resetMessages
-} = createSocketActions(config, 'Messages');
+} = reduxwork.createIoActions('Messages');
 
 export var {
   findUsers,
@@ -96,49 +110,10 @@ export var {
   syncUsers,
   receiveUsers,
   resetUsers
-} = createSocketActions(config, 'Users');
+} = reduxwork.createIoActions('Users');
 
-export var wentOffline = createSocketAction(config, 'WENT_OFFLINE');
-export var wentOnline = createSocketAction(config, 'WENT_ONLINE');
-
-export var toggleModal = createAction(config, 'TOGGLE_MODAL', 'data');
-
-```
-
-### Importing and dispatching io actions with Redux
-
-```javascript
-import reducers from './reducers.js';
-import { 
-	findMessages, 
-	createMessages, 
-	updateMessages, 
-	destroyMessages, 
-	clearMessages, 
-	selectMessages, 
-	syncMessages, 
-	receiveMessages, 
-	resetMessages 
-} from './actions.js';
-
-var store = createStore(
-	combineReducers(Object.assign({}, reducers)), 
-	applyMiddleware(thunk)
-);
-
-store.dispatch(createMessages({body: "test message"}))
-.then((res) => {
-	console.log("message sent")
-}, (err) => {
-	console.log(err)
-});
-
-// OR 
-
-store.dispatch(createMessages({body: "test message"}, (err, res) => {
-	if(!err) console.log("message sent")
-	else console.log(err)
-}));
+export var wentOffline = reduxwork.createPostAction('WENT_OFFLINE');
+export var wentOnline = reduxwork.createPostAction('WENT_ONLINE');
 ```
 
 ## Framework
