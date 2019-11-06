@@ -1,6 +1,6 @@
 import { TransportMethodEnum } from '../lib/constants';
 
-export default (options) => ({ transport, error, response }, action, retries) => {
+export default (options, transport) => ({ transport, error, response }, action, retries) => {
   switch (transport) {
     case TransportMethodEnum.SOCKET:
       return !!error;

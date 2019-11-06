@@ -7,10 +7,16 @@ import reducers from './test-reducers';
 import server from './test-server';
 import { findMessages, createMessages, updateMessages, destroyMessages } from './test-actions';
 import { getMessegesByIndexes } from './test-data';
+import io from 'socket.io-client';
+
+const serverAdress = 'http://127.0.0.1:1234';
+const socket = io(serverAdress, {
+  transports: ['websocket', 'polling']
+});
 
 const offlineOptions = Object.assign({}, offlineConfig, {
   persistOptions: { storage: new AsyncNodeStorage('tmp/') }
-}, reduxwork.createOfflineOptions());
+}, reduxwork.createOfflineOptions({ socket }));
 const { middleware, enhanceReducer, enhanceStore } = createOffline(offlineOptions);
 const store = createStore(
   enhanceReducer(

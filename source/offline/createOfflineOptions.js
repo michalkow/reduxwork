@@ -2,12 +2,12 @@ import buildEffect from './buildEffect';
 import buildDiscard from './buildDiscard';
 import buildDetectNetwork from './buildDetectNetwork';
 
-export default (reduxWorkOptions, options) => {
-  const effect = buildEffect(reduxWorkOptions);
-  const discard = buildDiscard(reduxWorkOptions);
-  const detectNetwork = buildDetectNetwork(reduxWorkOptions);
+export default (reduxWorkOptions, transportOptions, offlineOptions) => {
+  const effect = buildEffect(reduxWorkOptions, transportOptions);
+  const discard = buildDiscard(reduxWorkOptions, transportOptions);
+  const detectNetwork = buildDetectNetwork(reduxWorkOptions, transportOptions);
   return {
-    ...options,
+    ...offlineOptions,
     effect,
     discard,
     detectNetwork

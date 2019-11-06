@@ -2,8 +2,8 @@ import dispatchAction from './dispatchAction';
 import { parseVirtualData } from '../lib/fieldsOperations';
 import { TransportMethodEnum } from '../lib/constants';
 
-const dispatchToSocket = (options, action) => {
-  const { socket, socketEventName, actionInject } = options;
+const dispatchToSocket = (options, socket, action) => {
+  const { socketEventName, actionInject } = options;
 
   if (!socket)
     throw new Error('Reduxwork: socket is not configured.');

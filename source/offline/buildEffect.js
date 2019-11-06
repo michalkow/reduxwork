@@ -2,11 +2,11 @@ import { TransportMethodEnum } from '../lib/constants';
 import dispatchToSocket from '../dispatch/dispatchToSocket';
 import dispatchToFetch from '../dispatch/dispatchToFetch';
 
-export default (options) => (effect, action) => {
+export default (options, { socket, fetch }) => (effect, action) => {
   switch (effect.transport) {
     case TransportMethodEnum.SOCKET:
-      return dispatchToSocket(options, action);
+      return dispatchToSocket(options, socket, action);
     case TransportMethodEnum.FETCH:
-      return dispatchToFetch(options, action);
+      return dispatchToFetch(options, fetch, action);
   }
 }

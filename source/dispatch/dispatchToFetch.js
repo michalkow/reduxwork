@@ -4,15 +4,13 @@ import buildUrl from './buildUrl';
 import getFetchMethod from './getFetchMethod';
 import { TransportMethodEnum } from '../lib/constants';
 
-const dispatchToFetch = (options, action) => {
-  const { fetch } = options;
-
-  if (!fetch)
+const dispatchToFetch = (options, fetchFunction, action) => {
+  if (!fetchFunction)
     throw new Error('Reduxwork: fetch is not configured.');
 
   return dispatchAction(options, action, (resolve, reject) => {
     const fetchMethod = getFetchMethod(action, options);
-    return fetch(
+    return fetchFunction(
       buildUrl(options, action, fetchMethod),
       buildFetchOptions(options, action, fetchMethod)
     ).then(response => {

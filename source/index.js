@@ -55,8 +55,8 @@ export default class Reduxwork {
   createInitialState = () =>
     createInitialState();
 
-  createOfflineOptions = (options = {}) =>
-    createOfflineOptions(this.options, options);
+  createOfflineOptions = (transportOptions = {}, options = {}) =>
+    createOfflineOptions(this.options, transportOptions, options);
 
   normalizeToEntities = (data, name, options) =>
     normalizeToEntities(data, name, this.mergeOptions(options));
