@@ -1,6 +1,6 @@
 import createIoActions from './actions/createIoActions';
 import { createGetAction, createPostAction, createPutAction, createDeleteAction } from './actions/createCrudAction';
-import createIoReducers from './reducers/createIoReducers';
+import createIoReducers, { normalizeToEntities } from './reducers/createIoReducers';
 import createRootReducer from './reducers/createRootReducer';
 import createInitialState from './lib/createInitialState';
 import createOfflineOptions from './offline/createOfflineOptions';
@@ -57,4 +57,9 @@ export default class Reduxwork {
 
   createOfflineOptions = (options = {}) =>
     createOfflineOptions(this.options, options);
+
+  normalizeToEntities = (data, name, options) =>
+    normalizeToEntities(data, name, this.mergeOptions(options));
 }
+
+export * from './reducers/stateOperations';
