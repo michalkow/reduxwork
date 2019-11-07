@@ -148,6 +148,7 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
       const entities = { [entityName]: {}};
       return updateState(state, action, {
         statusUpdate: { statuses, entities },
+        cacheUpdate: { uuid: action.uuid },
         entityName
       });
     },
