@@ -37,30 +37,30 @@ var database = {
 
 // Actions
 var mockDB = {
-  create: function(collection, data) {
+  CREATE_MESSAGES: function(data) {
     //console.log('Request', data);
-    database[collection] = _.unionBy(database[collection], getPayloadByIds(data), 'id');
+    database['messages'] = _.unionBy(database['messages'], getPayloadByIds(data), 'id');
     const response = { error: null, data: getPayloadByIds(data) };
     //console.log('Response', response);
     return response;
   },
-  update: function(collection, data) {
+  UPDATE_MESSAGES: function(data) {
     //console.log('Request', data);
-    database[collection] = _.unionBy(database[collection], getPayloadByIds(data, true), 'id');
+    database['messages'] = _.unionBy(database['messages'], getPayloadByIds(data, true), 'id');
     const response = { error: null, data: getPayloadByIds(data, true) };
     //console.log('Response', response);
     return response;
   },
-  destroy: function(collection, data) {
+  DESTROY_MESSAGES: function(data) {
     //console.log('Request', data);
-    database[collection] = _.reject(database[collection], (item) => _.find(data, { id: item.id }));
+    database['messages'] = _.reject(database['messages'], (item) => _.find(data, { id: item.id }));
     const response = { error: null, data: true };
     //console.log('Response', response);
     return response;
   },
-  find: function(collection, data) {
+  FIND_MESSAGES: function(data) {
     //console.log('Request', data);
-    const response = { error: null, data: database[collection] };
+    const response = { error: null, data: database['messages'] };
     //console.log('Response', response);
     return response;
   }
@@ -89,7 +89,7 @@ io.on('connection', (socket) => {
   socket.on('redux_action_event', (action, callback) => {
     //console.log('Socket action: ' + JSON.stringify(action));
     //console.log('Sending data: ' + JSON.stringify(mockDB[action.data.meta.operation](action.data.meta.name, action.data.payload)));
-    var query = mockDB[action.data.meta.operation](action.data.meta.name, action.data.payload);
+    var query = mockDB[action.type](action.data);
     callback(query.error, query.data);
   });
 

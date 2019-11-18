@@ -5,7 +5,7 @@ import {
 
 export const parseActionData = (action, omitFields) => {
   if (!action[omitFields])
-    return action;
+    return action.payload;
   return map(action.payload, item => omit(item, action[omitFields]));
 };
 
