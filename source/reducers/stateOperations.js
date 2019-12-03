@@ -24,13 +24,13 @@ export const updateActionErrors = (state, action) =>
     }
   });
 
-export const updateEntitieStatus = (state, name, statuses) =>
-  Object.assign({}, state.entitieStatus, { [name]: Object.assign({}, state.entitieStatus[name], statuses) });
+export const updateEntitiesStatus = (state, name, statuses) =>
+  Object.assign({}, state.entitiesStatus, { [name]: Object.assign({}, state.entitiesStatus[name], statuses) });
 
 export const updateState = (state, action, { entitiesUpdate = {}, cacheUpdate, statusUpdate, entityName }) =>
   Object.assign({}, state, entitiesUpdate, {
     actionCache: cacheUpdate ? updateActionCache(state, cacheUpdate.uuid, cacheUpdate.entities) : {},
-    entitieStatus: statusUpdate ? updateEntitieStatus(state, entityName, statusUpdate.statuses) : {},
+    entitiesStatus: statusUpdate ? updateEntitiesStatus(state, entityName, statusUpdate.statuses) : {},
     actionErrors: action.error ? updateActionErrors(state, action) : {},
     lastAction: action
   });

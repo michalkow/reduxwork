@@ -52,11 +52,11 @@ afterAll(() => {
   stopServer();
 });
 
-test('Initial state', () => {
+test('should correctly setup the initial store', () => {
   const state = store.getState();
   const initialState = {
     actionCache: {},
-    entitieStatus: {},
+    entitiesStatus: {},
     actionErrors: {},
     lastAction: null,
     offline: {

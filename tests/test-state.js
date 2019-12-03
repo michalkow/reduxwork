@@ -5,7 +5,7 @@ export const createInitialState = (state = {}, action, messages = [], users = []
     messages: getMessegesByIndexes('entities', messages[0], messages[1]),
     users: getUsersByMessegeIndexes('entities', users),
     actionCache: {},
-    entitieStatus: {},
+    entitiesStatus: {},
     actionErrors: {},
     lastAction: null
   });
@@ -15,7 +15,7 @@ export const createFindState = (state = {}, action, messages = [], users = []) =
     messages: getMessegesByIndexes('entities', messages[0], messages[1]),
     users: getUsersByMessegeIndexes('entities', users),
     actionCache: {},
-    entitieStatus: {
+    entitiesStatus: {
       messages: { isFinding: true }
     },
     actionErrors: {},
@@ -27,7 +27,7 @@ export const createFindFailedState = (state = {}, action, messages = [], users =
     messages: getMessegesByIndexes('entities', messages[0], messages[1]),
     users: getUsersByMessegeIndexes('entities', users),
     actionCache: {},
-    entitieStatus: {
+    entitiesStatus: {
       messages: { isFinding: false }
     },
     actionErrors: { [action.uuid]: { message: 'failed find', action }},
@@ -39,7 +39,7 @@ export const createFindCompletedState = (state = {}, action, messages = [], user
     messages: getMessegesByIndexes('entities', messages[0], messages[1]),
     users: getUsersByMessegeIndexes('entities', users),
     actionCache: {},
-    entitieStatus: {
+    entitiesStatus: {
       messages: { isFinding: false, init: true }
     },
     actionErrors: {},
@@ -51,7 +51,7 @@ export const createCreateState = (state = {}, action, messages = [], users = [],
     messages: getMessegesByIndexes('entities', messages[0], messages[1]),
     users: getUsersByMessegeIndexes('entities', users),
     actionCache: { [action.uuid]: { messages: getMessegesByIndexes('entities', cache.messages) }},
-    entitieStatus: { messages: { isWriting: true }},
+    entitiesStatus: { messages: { isWriting: true }},
     actionErrors: {},
     lastAction: action
   });
@@ -61,7 +61,7 @@ export const createCreateFailedState = (state = {}, action, messages = [], users
     messages: getMessegesByIndexes('entities', messages[0], messages[1]),
     users: getUsersByMessegeIndexes('entities', users),
     actionCache: {},
-    entitieStatus: { messages: { isWriting: false }},
+    entitiesStatus: { messages: { isWriting: false }},
     actionErrors: { [action.uuid]: { message: 'failed create', action }},
     lastAction: action
   });
@@ -71,7 +71,7 @@ export const createCreateCompletedState = (state = {}, action, messages = [], us
     messages: getMessegesByIndexes('entities', messages[0], messages[1]),
     users: getUsersByMessegeIndexes('entities', users),
     actionCache: {},
-    entitieStatus: { messages: { isWriting: false }},
+    entitiesStatus: { messages: { isWriting: false }},
     actionErrors: {},
     lastAction: action
   });
@@ -81,7 +81,7 @@ export const createUpdateState = (state = {}, action, messages = [], users = [],
     messages: getMessegesByIndexes('entities', messages[0], messages[1], messages[2]),
     users: getUsersByMessegeIndexes('entities', users),
     actionCache: { [action.uuid]: { messages: getMessegesByIndexes('entities', cache.messages) }},
-    entitieStatus: { messages: { isWriting: true }},
+    entitiesStatus: { messages: { isWriting: true }},
     actionErrors: {},
     lastAction: action
   });
@@ -91,7 +91,7 @@ export const createUpdateFailedState = (state = {}, action, messages = [], users
     messages: getMessegesByIndexes('entities', messages[0], messages[1]),
     users: getUsersByMessegeIndexes('entities', users),
     actionCache: {},
-    entitieStatus: { messages: { isWriting: false }},
+    entitiesStatus: { messages: { isWriting: false }},
     actionErrors: { [action.uuid]: { message: 'failed update', action }},
     lastAction: action
   });
@@ -101,7 +101,7 @@ export const createUpdateCompletedState = (state = {}, action, messages = [], us
     messages: getMessegesByIndexes('entities', messages[0], messages[1], messages[2]),
     users: getUsersByMessegeIndexes('entities', users),
     actionCache: {},
-    entitieStatus: { messages: { isWriting: false }},
+    entitiesStatus: { messages: { isWriting: false }},
     actionErrors: {},
     lastAction: action
   });
@@ -111,7 +111,7 @@ export const createDestroyState = (state = {}, action, messages = [], users = []
     messages: getMessegesByIndexes('entities', messages[0], messages[1]),
     users: getUsersByMessegeIndexes('entities', users),
     actionCache: { [action.uuid]: { messages: getMessegesByIndexes('entities', cache.messages) }},
-    entitieStatus: { messages: { isWriting: true }},
+    entitiesStatus: { messages: { isWriting: true }},
     actionErrors: {},
     lastAction: action
   });
@@ -121,7 +121,7 @@ export const createDestroyFailedState = (state = {}, action, messages = [], user
     messages: getMessegesByIndexes('entities', messages[0], messages[1]),
     users: getUsersByMessegeIndexes('entities', users),
     actionCache: {},
-    entitieStatus: { messages: { isWriting: false }},
+    entitiesStatus: { messages: { isWriting: false }},
     actionErrors: { [action.uuid]: { message: 'failed destroy', action }},
     lastAction: action
   });
@@ -131,7 +131,7 @@ export const createDestroyCompletedState = (state = {}, action, messages = [], u
     messages: getMessegesByIndexes('entities', messages[0], messages[1]),
     users: getUsersByMessegeIndexes('entities', users),
     actionCache: {},
-    entitieStatus: { messages: { isWriting: false }},
+    entitiesStatus: { messages: { isWriting: false }},
     actionErrors: {},
     lastAction: action
   });

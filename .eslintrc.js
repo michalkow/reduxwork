@@ -13,11 +13,7 @@ module.exports = {
     "sourceType": "module"
   },
   "globals": {
-    "test": true,
-    "expect": true,
-    "fetch": true,
-    "beforeAll": true,
-    "afterAll": true
+    "fetch": true
   },
   "rules": {
     "import/no-duplicates": ["error"],
