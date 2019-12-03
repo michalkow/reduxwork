@@ -23,7 +23,7 @@ const initState = {
   messages: {},
   users: {},
   actionCache: {},
-  entitieStatus: {},
+  entitiesStatus: {},
   actionErrors: {},
   lastAction: null
 };

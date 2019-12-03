@@ -1,6 +1,6 @@
 const initialState = {
   actionCache: {},
-  entitieStatus: {},
+  entitiesStatus: {},
   actionErrors: {},
   lastAction: null
 };
