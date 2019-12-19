@@ -1,6 +1,9 @@
 node_modules/
 tmp/
 npm-debug.log
+.vscode/
+dist/
+
 
 # Windows image file caches
 Thumbs.db
