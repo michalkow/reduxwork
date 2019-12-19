@@ -25,7 +25,7 @@ export const updateActionErrors = (state, action) =>
   });
 
 export const updateEntitiesStatus = (state, name, statuses) =>
-  Object.assign({}, state.entitiesStatus, { [name]: Object.assign({}, state.entitiesStatus[name], statuses) });
+  Object.assign({}, state.entitiesStatus, { [name]: Object.assign({}, (state.entitiesStatus[name] || {}), statuses) });
 
 export const updateState = (state, action, { entitiesUpdate = {}, cacheUpdate, statusUpdate, entityName }) =>
   Object.assign({}, state, entitiesUpdate, {
