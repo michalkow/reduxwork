@@ -181,8 +181,7 @@ export default function createIoReducer(name, customActions = {}, options = {}) 
       });
     }
   },
-  mapValues(customActions, reducer => (state, action) => {
-    const instanceState = Object.assign({}, state[name]);
-    return Object.assign({}, state, { [name]: reducer(instanceState, action) });
-  }));
+  mapValues(customActions, reducer => (state, action) =>
+    Object.assign({}, state, reducer(state, action))
+  ));
 }
