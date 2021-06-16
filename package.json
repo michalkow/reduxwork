@@ -1,14 +1,14 @@
 {
   "name": "reduxwork",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "repository": "https://github.com/michalkow/reduxwork.git",
   "description": "Framework for creating redux actions and reducers that get data from server via ajax of websockets",
   "main": "dist/index.js",
   "dependencies": {
-    "bluebird": "^3.5.3",
-    "lodash": "4.17.11",
-    "normalizr": "^3.4.1",
-    "uuid": "^3.3.3"
+    "bluebird": "^3.7.2",
+    "lodash": "4.17.21",
+    "normalizr": "^3.6.1",
+    "uuid": "^8.3.2"
   },
   "peerDependencies": {
     "redux": "^4.0.1",

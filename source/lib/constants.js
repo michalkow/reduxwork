@@ -10,6 +10,8 @@ export const ActionOperationEnum = {
   DESTROY: 'destroy',
   CLEAR: 'clear',
   RESET: 'reset',
+  RECEIVE: 'receive',
+  REMOVE: 'remove',
   SELECT: 'select'
 };
 

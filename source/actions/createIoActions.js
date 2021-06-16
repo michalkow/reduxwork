@@ -19,6 +19,18 @@ export default function createIoActions(name, options) {
         data
       };
     },
+    [`receive${name}`](data) {
+      return {
+        type: buildActionType(options, ActionOperationEnum.RECEIVE, name),
+        data
+      };
+    },
+    [`remove${name}`](data) {
+      return {
+        type: buildActionType(options, ActionOperationEnum.REMOVE, name),
+        data
+      };
+    },
     [`find${name}`](data = []) {
       return buildAction(
         options,

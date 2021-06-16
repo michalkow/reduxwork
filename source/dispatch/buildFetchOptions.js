@@ -10,7 +10,7 @@ const fetchDefaults = {
 };
 
 export default function buildFetchOptions(options, action, method) {
-  let fetchAction = options.injectAction(action);
+  let fetchAction = options.actionInject(action);
   let fetchOptions = options.fetchOptions || fetchDefaults;
   let json = parseVirtualData(fetchAction, options);
   fetchOptions.method = method;

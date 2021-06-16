@@ -12,9 +12,11 @@ const operationFeatchMethod = {
   [ActionOperationEnum.DESTROY]: FetchMethodEnum.DESTROY
 };
 
-export default function getFetchMethod(operation, options = {}) {
+export default function getFetchMethod(action, options = {}) {
   if (options.fetchMethod)
     return options.fetchMethod;
+
+  let { operation } = action.meta;
 
   if (operationFeatchMethod[operation])
     return operationFeatchMethod[operation];
